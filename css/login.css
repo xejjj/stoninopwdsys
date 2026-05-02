@@ -1,0 +1,187 @@
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f4f5f6;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* retorn boton */
+        .return-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 10px 16px;
+            border-radius: 7px;
+            color: black;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inside;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.2s ease;
+        }
+
+        .return-btn:active {
+            transform: scale(.95);
+        }
+
+        .return-btn:hover {
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        /* main panel */
+        .card-container {
+            display: flex;
+            width: 1300px;
+            height: 700px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        /* gradient thing */
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(190deg, #d3ab79 0%, #871115 100%);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: white;
+        }
+        /* text sa tabi ng admin icon */
+        .admin-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 30px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* border lang ng shield icon lakihan if needed */
+        .shield-icon {
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 4px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+        }
+        /* main text sa left banner */
+        .left-panel h1 {
+            font-size: 52px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            margin-left: 30px;
+        }
+
+        /* da right panel */
+        .right-panel {
+            flex: 1.1;
+            padding: 60px 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* mabuhay!!!!!!! */
+        .right-panel h2 {
+            font-size: 40px;
+            color: darkred;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        /* ilalim ng mabohy */
+        .subtitle {
+            color: gray;
+            font-size: 15px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #334155;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input::placeholder {
+            color: #94a3b8;
+        }
+
+        /* kapag pinindot mo mag iiba outliune */
+        .input-group input:focus {
+            border-color: #871115;
+            box-shadow: 0 0 0 3px rgba(135, 17, 21, 0.1);
+        }
+
+
+        .submit-btn {
+            width: 100%;
+            background-color: #98171d;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #7a1217;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.95);
+        }
