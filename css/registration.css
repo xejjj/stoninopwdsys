@@ -30,7 +30,7 @@
     min-height: 100vh;
   }
 
-  /* ── SIDEBAR ─────────────────────────────────── */
+ /* ── SIDEBAR ── */
   .sidebar {
     width: var(--sidebar-w);
     min-height: 100vh;
@@ -59,7 +59,6 @@
     box-shadow: 0 2px 6px rgba(168,64,64,0.35);
     flex-shrink: 0;
   }
-
   .brand-icon svg { width: 20px; height: 20px; fill: #fff; }
 
   .brand-text { display: flex; flex-direction: column; }
@@ -74,7 +73,7 @@
     padding: 0 8px 8px;
   }
 
-  .nav-group { margin-bottom: 20px; }
+  .nav-group { margin-bottom: 4px; }
 
   .nav-item {
     display: flex; align-items: center; gap: 9px;
@@ -86,17 +85,28 @@
     transition: background .15s, color .15s;
     text-decoration: none;
     margin-bottom: 1px;
+    user-select: none;
   }
   .nav-item:hover { background: #f5f0f0; color: var(--text); }
-  .nav-item.active { background: var(--active-nav); color: var(--active-nav-txt); }
+  .nav-item.active { background: var(--active-nav); color: var(--active-nav-txt); font-weight: 700; }
   .nav-item.active svg { stroke: var(--active-nav-txt); }
-
   .nav-item svg {
     width: 16px; height: 16px;
     stroke: currentColor; fill: none; stroke-width: 2;
     flex-shrink: 0;
   }
 
+  /* Chevron for expandable items */
+  .nav-item .chevron {
+    margin-left: auto;
+    width: 14px; height: 14px;
+    transition: transform .2s;
+    stroke: currentColor; fill: none; stroke-width: 2.5;
+    flex-shrink: 0;
+  }
+  .nav-item.open .chevron { transform: rotate(180deg); }
+
+  /* Sub-menu */
   .nav-sub {
     margin-left: 12px;
     border-left: 1.5px solid var(--border);
@@ -107,7 +117,7 @@
     max-height: 0;
     transition: max-height .25s ease;
   }
-.nav-item.open .chevron { transform: rotate(180deg); }
+  
   .nav-sub.open { max-height: 200px; }
 
   .nav-sub-item {
@@ -121,7 +131,7 @@
     text-decoration: none;
   }
   .nav-sub-item:hover { background: #f5f0f0; color: var(--text); }
-  .nav-sub-item.active { color: var(--active-nav-txt); }
+  .nav-sub-item.active { color: var(--active-nav-txt); font-weight: 700; }
   .nav-sub-item.active::before {
     content: '';
     width: 5px; height: 5px;
@@ -134,7 +144,6 @@
     padding: 14px 12px;
     border-top: 1px solid var(--border);
   }
-
   .logout-btn {
     display: flex; align-items: center; gap: 9px;
     padding: 8px 10px; border-radius: 8px;

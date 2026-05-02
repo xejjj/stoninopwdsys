@@ -21,15 +21,15 @@
             left: 30px;
             background: white;
             border: 1px solid #e2e8f0;
-            padding: 10px 16px;
+            padding: 10px 25px;
             border-radius: 7px;
             color: black;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
             cursor: pointer;
-            display: inside;
+            display: inline;
             align-items: center;
-            gap: 8px;
+            row-gap: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
             transition: all 0.2s ease;
         }

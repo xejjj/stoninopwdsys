@@ -9,8 +9,8 @@
 </head>
 
 <body>
-    <button class="return-btn">
-        <!-- PALAGAY NALANG ARROW ICON DITO -->
+    <button class="return-btn" onclick="toHome()">
+        <img src="assets/leftarrow1.png" width="12">
         Return to Home
     </button>
 
@@ -52,7 +52,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn">
+                <button type="submit" class="submit-btn" onclick="toDashboard()">
                     Sign In to dashboard 
                     
                     <!-- PUT ARROW POINTING RIGHT ICON -->
@@ -64,4 +64,24 @@
     </div>
 
 </body>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.querySelector('.eye-icon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            // eyeIcon.src = 'assets/eye-open.png'; // Change to open eye icon
+        } else {
+            passwordInput.type = 'password';
+            // eyeIcon.src = 'assets/eye-closed.png'; // Change to closed eye icon
+        }
+    }
+
+    function toDashboard() {
+        window.location.href = "dashboard.html";
+    }
+    function toHome() {
+        window.location.href = "index.html";
+    }
+</script>
 </html>

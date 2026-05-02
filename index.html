@@ -11,7 +11,7 @@
         <header>
             <div class="header-branding">
 
-               <img src="J:\Misc\signignment\COLLEGE ASSIGNMENTS\2ND YEAR\Information Management\Sign and Symbol\test.jpg" alt="Company Logo" width="50">
+               <img src="assets/barangay-logo.png" alt="Company Logo" width="50">
                         <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
                  
                 <div class="header-text">
@@ -30,23 +30,34 @@
 
                 <div class="portal-cards-grid">
                     <div class="portal-card">
-                           <img src="J:\Misc\signignment\COLLEGE ASSIGNMENTS\2ND YEAR\Information Management\Sign and Symbol\test.jpg" alt="Company Logo" width="50">
+                           <img src="assets/users.png" alt="Company Logo" width="40">
                         <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
                         <h2>Resident Registration</h2>
                         <p>Apply for your PWD ID or update <br> your existing records online.<br> Quick, easy, and accessible to <br>everyone.</p>
-                        <button class="card-button">Start Registration</button>
+                        <button class="card-button" onclick= "toLogin()"> 
+                            Start Registration
+                        </button>
                     </div>
 
                     <div class="portal-card">
-                        <img src="J:\Misc\signignment\COLLEGE ASSIGNMENTS\2ND YEAR\Information Management\Sign and Symbol\test.jpg" alt="Company Logo" width="50">
+                        <img src="assets/users.png" alt="Company Logo" width="40">
                         <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
                         <h2>Administrator Portal</h2>
                         <p>Secure access for barangay<br> officials to review submissions,<br> manage records, and view<br> analytical reports.</p>
-                        <button class="card-button">Admin Login</button>
+                        <button class="card-button" onclick = "toLogin()"> 
+                         
+                                Admin Login
+                          
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 </body>
+<script>
+    function toLogin() {
+        window.location.href = "login.html";
+    }
+</script>
 </html>

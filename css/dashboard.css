@@ -24,6 +24,8 @@
     color: var(--text);
     display: flex;
     min-height: 100vh;
+    padding-left: 10%;
+    padding-right: 10%;
   }
 
   /* ── SIDEBAR ── */
