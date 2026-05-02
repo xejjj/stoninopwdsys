@@ -18,11 +18,7 @@
         
         <div class="left-panel">
             <div class="admin-badge">
-                <div class="shield-icon">
-
-                    <!-- PALAGAY SHIELD ICON DITO -->
-
-                </div>
+                <div class="shield-icon"></div>
                 Admin Portal
             </div>
             <h1>PWD & CWD<br>Database</h1>
@@ -32,56 +28,45 @@
             <h2>Mabuhay!</h2>
             <p class="subtitle">Enter your credentials to access the<br>dashboard.</p>
 
-            <form onsubmit="event.preventDefault();">
+            <!-- FORM (no PHP logic yet) -->
+            <form action="dashboard.php" method="GET">
                 <div class="input-group">
                     <label for="username">Username</label>
                     <div class="input-wrapper">
-                        <input type="text" id="username" placeholder="Enter Username">
+                        <input type="text" id="username" name="username" placeholder="Enter Username">
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label for="password">Password</label>
                     <div class="input-wrapper">
-                        <input type="password" id="password" placeholder="Enter Password">
-                        <span class="eye-icon" onclick="togglePassword()">
-                            
-                            <!-- PUT EYE ICON -->
-
-                        </span>
+                        <input type="password" id="password" name="password" placeholder="Enter Password">
+                        <span class="eye-icon" onclick="togglePassword()"></span>
                     </div>
                 </div>
 
-                <button type="submit" class="submit-btn" onclick="toDashboard()">
+                <button type="submit" class="submit-btn">
                     Sign In to dashboard 
-                    
-                    <!-- PUT ARROW POINTING RIGHT ICON -->
-                     
                 </button>
             </form>
         </div>
 
     </div>
 
-</body>
 <script>
     function togglePassword() {
         const passwordInput = document.getElementById('password');
-        const eyeIcon = document.querySelector('.eye-icon');
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            // eyeIcon.src = 'assets/eye-open.png'; // Change to open eye icon
         } else {
             passwordInput.type = 'password';
-            // eyeIcon.src = 'assets/eye-closed.png'; // Change to closed eye icon
         }
     }
 
-    function toDashboard() {
-        window.location.href = "dashboard.html";
-    }
     function toHome() {
-        window.location.href = "index.html";
+        window.location.href = "index.php";
     }
 </script>
+
+</body>
 </html>

@@ -25,7 +25,7 @@
     <div class="nav-section-label">Main Menu</div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="#">
+      <a class="nav-item active" href="overview.php">
         <img src = "assets/overviewicon.png" width="20">
         Overview
       </a>
@@ -38,8 +38,8 @@
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="mgmt-sub">
-        <a class="nav-sub-item" href="#">View Residents</a>
-        <a class="nav-sub-item" href="registration.html">New Registration</a>
+        <a class="nav-sub-item" href="resident.php">View Residents</a>
+        <a class="nav-sub-item" href="registration.php">New Registration</a>
         <a class="nav-sub-item" href="#">Review Submissions</a>
       </div>
     </div>
