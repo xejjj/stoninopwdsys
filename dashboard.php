@@ -25,7 +25,7 @@
     <div class="nav-section-label">Main Menu</div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="overview.php">
+      <a class="nav-item active" href="dashboard.php">
         <img src = "assets/overviewicon.png" width="20">
         Overview
       </a>
@@ -79,11 +79,15 @@
   <p class="page-sub">Welcome to the Brgy. Sto. Niño PWD/CWD database!</p>
 
   <!-- Top stat cards -->
-  <div class="top-row">
+  
+
+  <!-- Charts row -->
+<div class="chart-row">
+  <div class="chart-comb">
     <div class="stat-card">
       <div class="stat-header">
         <div class="stat-icon">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"/></svg>
+          <img src="assets/users2icon.png" width="30">
         </div>
         <div>
           <div class="stat-label">Total Citizens Registered</div>
@@ -94,13 +98,16 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Charts row -->
-  <div class="chart-row">
     <!-- Age Demographics Bar Chart -->
     <div class="chart-card">
-      <div class="chart-title">Age Demographics</div>
+      
+
+      <div class="chart-title">
+        <!-- Icon kulang pa-->
+        Age Demographics
+      </div>
+      
       <div class="bar-chart">
         <!-- Minors (0-17): medium length, light salmon-red -->
         <div class="bar-row">
@@ -127,12 +134,13 @@
         <div class="legend-item"><div class="legend-dot" style="background:#4A1010;"></div> Seniors (60+)</div>
       </div>
     </div>
+  </div>
 
     <!-- Registration Status Pie Chart -->
     <div class="chart-card">
       <div class="chart-title">Registration Status</div>
       <div class="pie-wrap">
-        <svg width="180" height="180" viewBox="0 0 180 180">
+        <svg width="320" height="320" viewBox="0 0 180 180">
           <!-- Active ~55%: light salmon-red, largest slice -->
           <path class="pie-slice" d="M90,90 L90,10 A80,80 0 1,1 65.3,166.1 Z" fill="#D4736F"/>
           <!-- Pending ~30%: medium dark red -->
@@ -147,7 +155,7 @@
         </div>
       </div>
     </div>
-  </div>
+</div>
 
   <!-- Directory Table -->
   <div class="dir-card">

@@ -25,7 +25,7 @@
     <div class="nav-section-label">Main Menu</div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="overview.php">
+      <a class="nav-item active" href="dashboard.php">
         <img src = "assets/overviewicon.png" width="20">
         Overview
       </a>

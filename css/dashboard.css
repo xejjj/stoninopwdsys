@@ -178,6 +178,9 @@
     border-radius: var(--radius-card);
     box-shadow: var(--shadow-card);
     padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
 
   .stat-header {
@@ -197,12 +200,19 @@
   .stat-unit   { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-left: 4px; }
 
   /* ── CHART ROW ── */
+  .chart-comb {
+    display: grid;
+    gap: 18px;
+  }
+
   .chart-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    align-items:  start;
     gap: 18px;
-    margin-bottom: 22px;
+    margin-bottom: 18px;
   }
+
 
   .chart-card {
     background: var(--card-bg);
@@ -221,9 +231,9 @@
   .bar-chart { display: flex; flex-direction: column; gap: 14px; }
   .bar-row { display: flex; align-items: center; gap: 10px; }
   .bar-track {
-    flex: 1; height: 18px; background: #f0eded; border-radius: 99px; overflow: hidden;
+    flex: 1; height: 50px; background: white; border-radius: 0px; overflow: hidden;
   }
-  .bar-fill { height: 100%; border-radius: 99px; }
+  .bar-fill { height: 100%; border-radius: 0px 10px 10px 0px; }
 
   .bar-legend {
     display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap;
@@ -236,14 +246,14 @@
 
   /* Pie chart */
   .pie-wrap {
-    display: flex; align-items: center; justify-content: flex-end; gap: 18px;
+    display: flex; align-items: center; justify-content: left; gap: 18px;
   }
   .pie-wrap svg { flex-shrink: 0; }
 
   .pie-legend { display: flex; flex-direction: column; gap: 10px; }
   .pie-legend-item {
     display: flex; align-items: center; gap: 7px;
-    font-size: 12px; font-weight: 600; color: var(--text);
+    font-size: 20px; font-weight: 600; color: var(--text);
   }
   .pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
