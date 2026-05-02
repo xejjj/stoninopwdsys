@@ -35,9 +35,9 @@
       <a class="nav-item open" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src = "assets/users.png" width="20" >
         Management
-        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
-      <div class="nav-sub open" id="mgmt-sub">
+      <div class="nav-sub" id="mgmt-sub">
         <a class="nav-sub-item" href="#">View Residents</a>
         <a class="nav-sub-item" href="registration.html">New Registration</a>
         <a class="nav-sub-item" href="#">Review Submissions</a>
@@ -52,10 +52,16 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item" href="#">
+      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src = "assets/settingicon.png" width="20" >
         System
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
+      <div class="nav-sub" id="system-sub">
+        <a class="nav-sub-item" href="#">System Tools</a>
+        <a class="nav-sub-item" href="#">Accounts</a>
+        <a class="nav-sub-item" href="#">Archive</a>
+      </div>
     </div>
   </nav>
 
