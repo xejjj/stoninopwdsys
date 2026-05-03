@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Archived Residents</title>
+<title>Accounts</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/account.css" />
 </head>
@@ -58,9 +58,9 @@
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="system-sub">
-        <a class="nav-sub-item" href="#">System Tools</a>
+        <a class="nav-sub-item" href="system.php">System Tools</a>
         <a class="nav-sub-item active" href="account.php">Accounts</a>
-        <a class="nav-sub-item" href="dashboard.php">
+        <a class="nav-sub-item" href="archive.php">
         Archive
       </a>
       </div>

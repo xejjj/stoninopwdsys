@@ -58,7 +58,7 @@
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="system-sub">
-        <a class="nav-sub-item" href="#">System Tools</a>
+        <a class="nav-sub-item" href="system.php">System Tools</a>
         <a class="nav-sub-item" href="account.php">Accounts</a>
         <a class="nav-sub-item active" href="dashboard.php">
         Archive

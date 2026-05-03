@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reports</title>
+<title>System</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/reports.css" />
+<link rel="stylesheet" href="css/system.css" />
 </head>
 <body>
 
@@ -45,20 +45,20 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="reports.php">
+      <a class="nav-item" href="reports.php">
         <img src = "assets/reporticon.png" width="20" >
         Reports
       </a>
     </div>
 
     <div class="nav-group">
-      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src = "assets/settingicon.png" width="20" >
         System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="system-sub">
-        <a class="nav-sub-item" href="system.php">System Tools</a>
+        <a class="nav-sub-item active" href="system.php">System Tools</a>
         <a class="nav-sub-item" href="account.php">Accounts</a>
         <a class="nav-sub-item" href="archive.php">Archive</a>
       </div>
@@ -77,44 +77,40 @@
 <main class="main-content">
     <div class="page-title">
         <img src = "assets/leftchevron.png" width="12" onclick="toDashboard()">
-        <h1>Reports</h1>
+        <h1>System Tools</h1>
       </div>
   <div class="content-card">
     
     <div class="card-header">
         <div class = "page-title">
             <div class="report-icon">
-                <img src = "assets/reporticon2.png" width="20" >
+                <img src = "assets/systoolsicon.png" width="20" >
             </div>
-            <h1> Generate Reports </h1>
+            <h1> Data and System </h1>
         </div>
     </div>
 
     <div class = "card-content">
                 <div class = "card-item">
                     <div class = "card-item-text">
-                        <h2> Master List </h2> 
-                        <p> Complete list of all registered PWDs and CWDs</p>
+                        <h2> Export Data </h2> 
+                        <p> Download database as excel file</p>
                     </div>
                     <div class = "card-item-actions">
                         <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
+                            <img src = "assets/exporticon.png" width="16" > Export
                         </button>
                     </div>
                 </div>
 
                 <div class = "card-item">
                     <div class = "card-item-text">
-                        <h2> PWD/CWD Summary </h2> 
-                        <p> Aggregated statistics by age</p>
+                        <h2> System Backup </h2> 
+                        <p> Create a snapshot of the database</p>
                     </div>
                     <div class = "card-item-actions">
-                      <button class="btn-options">
-                            
-                            Options
-                        </button>
                         <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
+                            <img src = "assets/exporticon.png" width="16" > Export
                         </button>
                         
                     </div>
@@ -122,16 +118,14 @@
 
                 <div class = "card-item">
                     <div class = "card-item-text">
-                        <h2> Disability Classification Summary </h2> 
-                        <p> Distribution of PWDs and CWDs across different disability types</p>
+                        <h2> Restore Data </h2> 
+                        <p> Restore database from a backup file</p>
                     </div>
                     <div class="card-item-actions">
-                      <button class="btn-options">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                      Options
-                    </button>
-                    <button class="btn-print"> <img src="assets/printicon.png" width="16"> Print</button>
-                  </div>
+                    <button class="btn-print"> 
+                        <img src="assets/exporticon.png" width="16"> 
+                        Export
+                        
                 </div>
             </div>
         </div>
@@ -161,19 +155,6 @@ function toggleDropdown(event) {
     // Prevent the click from immediately bubbling up to the window object
     event.stopPropagation(); 
     document.getElementById("optionsMenu").classList.toggle("show");
-}
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-toggle')) {
-        var dropdowns = document.getElementsByClassName("dropdown-menu");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
 }
 </script>
 </body>

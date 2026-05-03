@@ -162,7 +162,7 @@ body {
   .logout-btn svg { width: 16px; height: 16px; stroke: var(--primary); fill: none; stroke-width: 2; }
 
 
-/* ── MAIN CONTENT ── */
+/* ── everything inside right side ── */
 .main-content {
   flex: 1;
   margin-left: var(--sidebar-w);
@@ -253,7 +253,7 @@ body {
   height: 18px;
 }
 
-/* ── TABLE CARD ── */
+/* ── buong table card ── */
 .table-container {
   background-color: var(--card-bg);
   border-radius: 14px;
