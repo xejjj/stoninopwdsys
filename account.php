@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reports</title>
+<title>Accounts</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/reports.css" />
+<link rel="stylesheet" href="css/account.css" />
 </head>
 <body>
 
@@ -45,21 +45,21 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="reports.php">
+      <a class="nav-item" href="reports.php">
         <img src = "assets/reporticon.png" width="20" >
         Reports
       </a>
     </div>
 
     <div class="nav-group">
-      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+      <a class="nav-item active" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src = "assets/settingicon.png" width="20" >
         System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
-      <div class="nav-sub" id="system-sub">
+      <div class="nav-sub active" id="system-sub">
         <a class="nav-sub-item" href="#">System Tools</a>
-        <a class="nav-sub-item" href="account.php">Accounts</a>
+        <a class="nav-sub-item active" href="account.php">Accounts</a>
         <a class="nav-sub-item" href="archive.php">Archive</a>
       </div>
     </div>
@@ -76,8 +76,8 @@
 <!--  MAIN  -->
 <main class="main-content">
     <div class="page-title">
-        <img src = "assets/leftchevron.png" width="12" onclick="toDashboard()">
-        <h1>Reports</h1>
+        <img style="cursor:pointer" src = "assets/leftchevron.png" width="12" onclick="toDashboard()">
+        <h1>Accounts</h1>
       </div>
   <div class="content-card">
     
@@ -91,50 +91,7 @@
     </div>
 
     <div class = "card-content">
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> Master List </h2> 
-                        <p> Complete list of all registered PWDs and CWDs</p>
-                    </div>
-                    <div class = "card-item-actions">
-                        <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
-                        </button>
-                    </div>
-                </div>
-
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> PWD/CWD Summary </h2> 
-                        <p> Aggregated statistics by age</p>
-                    </div>
-                    <div class = "card-item-actions">
-                      <button class="btn-options">
-                            
-                            Options
-                        </button>
-                        <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
-                        </button>
-                        
-                    </div>
-                </div>
-
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> Disability Classification Summary </h2> 
-                        <p> Distribution of PWDs and CWDs across different disability types</p>
-                    </div>
-                    <div class="card-item-actions">
-                      <button class="btn-options">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                      Options
-                    </button>
-                    <button class="btn-print"> <img src="assets/printicon.png" width="16"> Print</button>
-                  </div>
-                </div>
-            </div>
-        </div>
+                
   </div>
 </main>
 
