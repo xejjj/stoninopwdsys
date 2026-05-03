@@ -52,7 +52,7 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="#" onclick="toggleMenu(event,'system-sub')">
+      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src = "assets/settingicon.png" width="20" >
         System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
