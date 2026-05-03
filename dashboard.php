@@ -60,7 +60,7 @@
       <div class="nav-sub" id="system-sub">
         <a class="nav-sub-item" href="#">System Tools</a>
         <a class="nav-sub-item" href="#">Accounts</a>
-        <a class="nav-sub-item" href="#">Archive</a>
+        <a class="nav-sub-item" href="archive.php">Archive</a>
       </div>
     </div>
   </nav>

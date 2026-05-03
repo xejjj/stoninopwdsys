@@ -13,7 +13,7 @@
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"/></svg>
+      <img src="assets/barangay-logo.png" width="50">
     </div>
     <div class="brand-text">
       <span class="brand-name">PWD/CWD Hub</span>
@@ -60,7 +60,7 @@
       <div class="nav-sub" id="system-sub">
         <a class="nav-sub-item" href="#">System Tools</a>
         <a class="nav-sub-item" href="#">Accounts</a>
-        <a class="nav-sub-item" href="#">Archive</a>
+        <a class="nav-sub-item" href="archive.php">Archive</a>
       </div>
     </div>
   </nav>
