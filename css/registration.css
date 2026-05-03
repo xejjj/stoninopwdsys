@@ -105,7 +105,13 @@
     flex-shrink: 0;
   }
   .nav-item.open .chevron { transform: rotate(180deg); }
-
+.chevron {
+    margin-left: auto;
+    width: 14px; height: 14px;
+    transition: transform .2s;
+    stroke: currentColor; fill: none; stroke-width: 2.5;
+    flex-shrink: 0;
+  }
   /* Sub-menu */
   .nav-sub {
     margin-left: 12px;
@@ -183,8 +189,10 @@
 
   /* ── CONTENT ─────────────────────────────────── */
   .content {
-    padding: 28px 32px 60px;
-    max-width: 1340px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 28px 32px 10px;
+    max-width: 1660px;
   }
 
   /* ── CARD ────────────────────────────────────── */

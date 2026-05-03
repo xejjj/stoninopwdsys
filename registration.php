@@ -32,7 +32,7 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item open" href="#" onclick="toggleMenu(event,'mgmt-sub')">
+      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src = "assets/users.png" width="20" >
         Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
@@ -45,7 +45,7 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="reports.php">
         <img src = "assets/reporticon.png" width="20" >
         Reports
       </a>

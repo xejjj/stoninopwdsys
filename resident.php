@@ -13,7 +13,7 @@
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"/></svg>
+         <img src="assets/barangay-logo.png" width="50">
     </div>
     <div class="brand-text">
       <span class="brand-name">PWD/CWD Hub</span>
@@ -25,27 +25,27 @@
     <div class="nav-section-label">Main Menu</div>
 
     <div class="nav-group">
-      <a class="nav-item active" href="dashboard.php">
+      <a class="nav-item" href="dashboard.php">
         <img src = "assets/overviewicon.png" width="20">
         Overview
       </a>
     </div>
 
     <div class="nav-group">
-      <a class="nav-item open" href="#" onclick="toggleMenu(event,'mgmt-sub')">
+      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src = "assets/users.png" width="20" >
         Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="mgmt-sub">
-        <a class="nav-sub-item" href="resident.php">View Residents</a>
+        <a class="nav-sub-item active" href="resident.php">View Residents</a>
         <a class="nav-sub-item" href="registration.php">New Registration</a>
         <a class="nav-sub-item" href="#">Review Submissions</a>
       </div>
     </div>
 
     <div class="nav-group">
-      <a class="nav-item" href="#">
+      <a class="nav-item" href="reports.php">
         <img src = "assets/reporticon.png" width="20" >
         Reports
       </a>
@@ -79,7 +79,7 @@
     
     <div class="card-header">
       <div class="page-title">
-        <img src = "assets/leftchevron.png" width="12">
+        <img src = "assets/leftchevron.png" width="12" onclick="toDashboard()">
         <h1>Residents List</h1>
       </div>
       <div class="search-bar">
@@ -183,6 +183,9 @@ function toggleMenu(event, id) {
 
   // Toggle submenu
   submenu.classList.toggle("open");
+}
+function toDashboard() {
+  window.location.href = "dashboard.php";
 }
 </script>
 </body>
