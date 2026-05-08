@@ -168,6 +168,11 @@ function toDashboard() {
   window.location.href = "dashboard.php";
 }
 
+function logout(){
+  // Clear session or authentication tokens here if needed
+  window.location.href = "login.php"; // Redirect to login page
+}
+
 function toggleTable() {
   var table = document.getElementById("myTable");
   table.classList.toggle("show");

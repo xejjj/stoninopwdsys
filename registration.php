@@ -320,7 +320,7 @@ function toggleMenu(event, id) {
 
 function logout(){
   // Clear session or authentication tokens here if needed
-  window.location.href = "login.html"; // Redirect to login page
+  window.location.href = "login.php"; // Redirect to login page
 }
 </script>
 

@@ -34,7 +34,7 @@
                         <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
                         <h2>Resident Registration</h2>
                         <p>Apply for your PWD ID or update <br> your existing records online.<br> Quick, easy, and accessible to <br>everyone.</p>
-                        <button class="card-button" onclick= "toLogin()"> 
+                        <button class="card-button" onclick = "toSelfReg()">
                             Start Registration
                         </button>
                     </div>
@@ -56,6 +56,10 @@
     </div>
 </body>
 <script>
+
+    function toSelfReg() {
+        window.location.href = "selfregistration.php";
+    }
     function toLogin() {
         window.location.href = "login.php";
     }
