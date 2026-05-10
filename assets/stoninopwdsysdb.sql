@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2026 at 06:02 PM
+-- Generation Time: May 10, 2026 at 06:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,6 +40,45 @@ CREATE TABLE `admincreds` (
 
 INSERT INTO `admincreds` (`ID`, `username`, `password`, `role`) VALUES
 (1, 'test', 'test', 'admin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `archive`
+--
+
+CREATE TABLE `archive` (
+  `ID` int(11) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `civil_status` enum('Single','Married','Widowed','Separated') NOT NULL,
+  `birthdate` date NOT NULL,
+  `age` int(11) NOT NULL,
+  `birthplace` varchar(255) NOT NULL,
+  `sex` enum('male','female') NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `contact_num` varchar(255) NOT NULL,
+  `emergency_cont` varchar(255) NOT NULL,
+  `emergency_cont_num` varchar(255) NOT NULL,
+  `emergency_cont_rel` varchar(255) NOT NULL,
+  `socials` varchar(255) NOT NULL,
+  `disablity_type` enum('Cognitive','Visual','Physical','Auditory','Speech','Psychosocial') NOT NULL,
+  `disability_remarks` varchar(255) DEFAULT NULL,
+  `resident_type` enum('PWD','CWD') NOT NULL,
+  `guardian_name` varchar(255) NOT NULL,
+  `guardian_cont_num` varchar(255) NOT NULL,
+  `guardian_rel` varchar(255) NOT NULL,
+  `father_name` varchar(255) NOT NULL,
+  `mother_name` varchar(255) NOT NULL,
+  `spouse_name` varchar(255) NOT NULL,
+  `pwdid_num` varchar(255) NOT NULL,
+  `control_num` varchar(255) NOT NULL,
+  `idissue_date` date NOT NULL,
+  `idexpiration_date` date NOT NULL,
+  `profile` varchar(255) NOT NULL,
+  `status` enum('Active','Pending','Expired') DEFAULT 'Pending'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -130,6 +169,12 @@ ALTER TABLE `admincreds`
   ADD UNIQUE KEY `username_unique` (`username`);
 
 --
+-- Indexes for table `archive`
+--
+ALTER TABLE `archive`
+  ADD PRIMARY KEY (`ID`);
+
+--
 -- Indexes for table `residents`
 --
 ALTER TABLE `residents`
@@ -144,6 +189,12 @@ ALTER TABLE `residents`
 --
 ALTER TABLE `admincreds`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `archive`
+--
+ALTER TABLE `archive`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `residents`
