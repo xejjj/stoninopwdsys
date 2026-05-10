@@ -105,7 +105,7 @@
         <option value="">All Disability Types</option>
         <option value="Cognitive"    <?= $filter_disab === "Cognitive"    ? "selected" : "" ?>>Cognitive</option>
         <option value="Visual"       <?= $filter_disab === "Visual"       ? "selected" : "" ?>>Visual</option>
-        <option value="Motor"        <?= $filter_disab === "Motor"        ? "selected" : "" ?>>Motor</option>
+        <option value="Physical"        <?= $filter_disab === "Physical"        ? "selected" : "" ?>>Physical</option>
         <option value="Auditory"     <?= $filter_disab === "Auditory"     ? "selected" : "" ?>>Auditory</option>
         <option value="Speech"       <?= $filter_disab === "Speech"       ? "selected" : "" ?>>Speech</option>
         <option value="Psychosocial" <?= $filter_disab === "Psychosocial" ? "selected" : "" ?>>Psychosocial</option>
@@ -258,7 +258,7 @@ const filterOptions = {
     {value:'', label:'All Disability Types'},
     {value:'Cognitive',    label:'Cognitive'},
     {value:'Visual',       label:'Visual'},
-    {value:'Motor',        label:'Motor'},
+    {value:'Physical',        label:'Physical'},
     {value:'Auditory',     label:'Auditory'},
     {value:'Speech',       label:'Speech'},
     {value:'Psychosocial', label:'Psychosocial'},

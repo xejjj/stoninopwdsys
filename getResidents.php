@@ -74,12 +74,12 @@ function badgeClass($type) {
     $map = [
         "cognitive"    => "badge-cognitive",
         "visual"       => "badge-visual",
-        "motor"        => "badge-motor",
+        "physical"        => "badge-physical",
         "auditory"     => "badge-auditory",
         "speech"       => "badge-speech",
         "psychosocial" => "badge-psycho",
     ];
-    return $map[strtolower(trim($type))] ?? "badge-motor";
+    return $map[strtolower(trim($type))] ?? "badge-physical";
 }
 
 // ── Keep filters in pagination links ─────────────────

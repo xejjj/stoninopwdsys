@@ -62,12 +62,12 @@ function badgeClass($type) {
     $map = [
         "cognitive"    => "badge-cognitive",
         "visual"       => "badge-visual",
-        "motor"        => "badge-motor",
+        "physical"        => "badge-physical",
         "auditory"     => "badge-auditory",
         "speech"       => "badge-speech",
         "psychosocial" => "badge-psycho",
     ];
     $key = strtolower(trim(explode(",", $type)[0]));
-    return $map[$key] ?? "badge-motor";
+    return $map[$key] ?? "badge-physical";
 }
 ?>
