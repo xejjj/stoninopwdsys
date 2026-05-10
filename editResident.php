@@ -221,7 +221,7 @@ function isChecked($val, $arr) {
             <div class="checkbox-grid">
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive" <?= isChecked("Cognitive", $saved_disabilities) ?>> Cognitive</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"    <?= isChecked("Visual",    $saved_disabilities) ?>> Visual</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Motor"     <?= isChecked("Motor",     $saved_disabilities) ?>> Motor</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical"     <?= isChecked("Physical",     $saved_disabilities) ?>> Physical</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"  <?= isChecked("Auditory",  $saved_disabilities) ?>> Auditory</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"    <?= isChecked("Speech",    $saved_disabilities) ?>> Speech</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial" <?= isChecked("Psychosocial", $saved_disabilities) ?>> Psychosocial</label>
