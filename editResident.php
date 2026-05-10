@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PWD/CWD Hub – New Registration</title>
+<title>PWD/CWD Hub – Edit Registration</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/registration.css" />
+<link rel="stylesheet" href="css/editResident.css" />
 </head>
 <body>
 
@@ -76,7 +76,7 @@
 <!-- ─── MAIN ───────────────────────────────────────── -->
 <div class="main">
   <header class="topbar">
-    <h1 class="topbar-title">New Registration</h1>
+    <h1 class="topbar-title">Edit Registration</h1>
   </header>
 
   <div class="content">
