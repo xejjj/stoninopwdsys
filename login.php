@@ -30,7 +30,9 @@
             <h2>Mabuhay!</h2>
             <p class="subtitle">Enter your credentials to access the<br>dashboard.</p>
 
-            <!-- FORM (no PHP logic yet) -->
+          
+
+            <!-- success and error FOR NOW, will replace with popups later -->
             <?php if (isset($_SESSION["login_error"])): ?>
             <div class="error-msg">
                 <?= htmlspecialchars($_SESSION["login_error"]) ?>

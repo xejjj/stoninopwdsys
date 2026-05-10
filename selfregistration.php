@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,8 +36,25 @@
     </div>
   </div>
 
-  <form action="selfregistration.php" method="POST" enctype="multipart/form-data">
-    
+  <form action="sqlFormaction.php" method="POST" enctype="multipart/form-data">
+
+     <!-- success and error FOR NOW, will replace with popups later -->
+    <?php if (isset($_SESSION["reg_success"])): ?>
+      <div class="alert alert-success">
+        ✅ <?= htmlspecialchars($_SESSION["reg_success"]) ?>
+      </div>
+    <?php unset($_SESSION["reg_success"]); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION["reg_error"])): ?>
+      <div class="alert alert-error">
+          ⚠️ <?= htmlspecialchars($_SESSION["reg_error"]) ?>
+      </div>
+    <?php unset($_SESSION["reg_error"]); ?>
+    <?php endif; ?>
+
+
+
     <div class="card">
       <div class="card-title">Personal Information</div>
       <div class="form-grid cols-4">
@@ -159,7 +177,7 @@
     </div>
 
     <div class="card">
-      <div class="card-title">(Extended) Family Information</div>
+      <div class="card-title">Family Information</div>
       <div class="form-grid cols-3">
         <div class="field">
           <label>Father Name<span class="req">*</span></label>
@@ -194,14 +212,6 @@
         <div class="field">
           <label>Expiration Date <span class="req">*</span></label>
           <input type="date" name="expiration_date">
-        </div>
-        <div class="field">
-          <label>Status <span class="req">*</span></label>
-          <select name="status">
-            <option value=""></option>
-            <option>Active</option>
-            <option>Inactive</option>
-          </select>
         </div>
       </div>
     </div>
