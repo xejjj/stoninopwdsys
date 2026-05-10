@@ -94,7 +94,6 @@
     flex-shrink: 0;
   }
 
-  /* Chevron for expandable items */
   .nav-item .chevron {
     margin-left: auto;
     width: 14px; height: 14px;
@@ -104,7 +103,6 @@
   }
   .nav-item.open .chevron { transform: rotate(180deg); }
 
-  /* Sub-menu */
   .nav-sub {
     margin-left: 12px;
     border-left: 1.5px solid var(--border);
@@ -115,7 +113,6 @@
     max-height: 0;
     transition: max-height .25s ease;
   }
-  
   .nav-sub.open { max-height: 200px; }
 
   .nav-sub-item {
@@ -153,205 +150,207 @@
   .logout-btn:hover { background: #fbf0f0; }
   .logout-btn svg { width: 16px; height: 16px; stroke: var(--primary); fill: none; stroke-width: 2; }
 
-  /* ── main stuff, yung buong card ── */
-.main-content {
-  margin-left: var(--sidebar-w); 
-  width: calc(100% - var(--sidebar-w));
-  padding: 40px;
-  box-sizing: border-box;
-}
+  /* ── MAIN ── */
+  .main-content {
+    margin-left: var(--sidebar-w);
+    width: calc(100% - var(--sidebar-w));
+    padding: 40px;
+    box-sizing: border-box;
+  }
 
-.content-card {
-  background: var(--card-bg);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-card);
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 80px);
-}
+  /* FIX: position:relative so pagination can anchor to it,
+     padding-bottom reserves space for the pinned pagination bar */
+  .content-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    padding: 30px 40px 80px 40px;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
+    position: relative;
+  }
 
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
 
-/* first top 20% resident list and search bar */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-}
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+  }
 
-.page-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text); 
-}
+  .back-icon { stroke: var(--text); cursor: pointer; }
 
-.back-icon {
-  stroke: var(--text);
-  cursor: pointer;
-}
+  .page-title h1 {
+    font-size: 40px;
+    font-weight: 800;
+    margin: 0;
+    letter-spacing: -0.5px;
+    color: #412f2f;
+  }
 
-.page-title h1 {
-  font-size: 40px;
-  font-weight: 800;
-  margin: 0;
-  letter-spacing: -0.5px;
-  color: #412f2f;
-}
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background: #F4F4F4;
+    border-radius: 8px;
+    padding: 8px 16px;
+    width: 400px;
+    height: 40px;
+    border: 1px solid var(--border);
+  }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: var(--text);
+    width: 100%;
+    margin-left: 8px;
+  }
+  .search-bar input::placeholder { color: #999; font-weight: 500; }
 
-.search-bar {
-  display: flex;
-  align-items: center;
-  background: #F4F4F4;
-  border-radius: 8px;
-  padding: 8px 16px;
-  width: 400px;
-  height: 40px;
-  border: 1px solid var(--border);
-}
+  /* FIX: table-wrap grows to fill remaining space,
+     pushing pagination to the bottom */
+  .table-wrap {
+    flex: 1;
+  }
 
-.search-bar input {
-  border: none;
-  background: transparent;
-  outline: none;
-  font-family: inherit;
-  font-size: 13.5px;
-  color: var(--text);
-  width: 100%;
-  margin-left: 8px;
-}
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .data-table thead tr { background-color: #F4F4F4; }
+  .data-table tbody tr { background-color: transparent; }
+  .data-table th {
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: none;
+  }
+  .th-chevron { vertical-align: middle; margin-bottom: 2px; cursor: pointer; }
+  .data-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid #F0ECEC;
+    font-size: 15px;
+    vertical-align: middle;
+    color: #412f2f;
+  }
 
-.search-bar input::placeholder {
-  color: #999;
-  font-weight: 500;
-}
+  .fw-bold { font-weight: 700; color: var(--text); }
 
-/* lahat ng nasa baba ng resident list/search bar */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  .badge {
+    display: inline-block;
+    padding: 4px 0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    text-align: center;
+    width: 110px;
+    border: 1px solid transparent;
+  }
+  .badge-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .badge-cognitive { background: #F1E3FE; color: #9747FF; border-color: #dcd2dd; }
+  .badge-visual    { background: #E1EBFD; color: #4A81FB; border-color: #ced2de; }
+  .badge-motor     { background: #FCE1E1; color: #ED5F5F; border-color: #e6c6c9; }
+  .badge-auditory  { background: #FEF4D4; color: #DCA311; border-color: #e3e0c1; }
+  .badge-speech    { background: #FDE8D4; color: #E87221; border-color: #e0d2c5; }
 
-.data-table thead tr {
-  background-color: #F4F4F4;
-}
+  .status {
+    display: inline-block;
+    padding: 4px 0;
+    border-radius: 12px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid transparent;
+    width: 65px;
+  }
+  .status-active  { background: #EAF9EE; color: #38C966; border-color: #B2EAC4; }
+  .status-pending { background: #FFF3E8; color: #F18831; border-color: #FCD5B5; }
+  .status-expired { background: #FFE0E0; color: #c0392b; border-color: #f5c6c6; }
 
-.data-table tbody tr {
-  background-color: transparent;
-}
+  .actions { display: flex; gap: 12px; }
+  .actions button {
+    background: none; border: none; padding: 0;
+    cursor: pointer; color: #A09898; transition: color 0.2s;
+  }
+  .actions button:hover { color: var(--primary); }
 
-.data-table th {
-  text-align: left;
-  padding: 16px 20px;
-  font-size: 15px;
-  font-weight: 900;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: none;
-}
+  /* ── th filter headers ── */
+  .th-filter { cursor: pointer; user-select: none; white-space: nowrap; }
+  .th-filter:hover { color: var(--primary); }
+  .th-active { color: var(--primary) !important; }
 
-.th-chevron {
-  vertical-align: middle;
-  margin-bottom: 2px;
-  cursor: pointer;
-}
+  /* ── FIX: Pagination pinned to bottom-right of content-card ── */
+  .pagination {
+    position: absolute;
+    bottom: 24px;
+    left: 40px;
+    right: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .pagination-info {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .pagination-btns { display: flex; gap: 4px; }
+  .page-btn {
+    min-width: 32px; height: 32px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none;
+    transition: background .15s, color .15s;
+    padding: 0 8px;
+  }
+  .page-btn:hover  { background: #f5f0f0; color: var(--text); }
+  .page-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .page-btn.disabled { opacity: 0.35; pointer-events: none; cursor: default; }
 
-.data-table td {
-  padding: 16px 20px;
-  border-bottom: 1px solid #F0ECEC;
-  font-size: 15px;
-  font-weight: 1500;
-  vertical-align: middle;
-  color: #412f2f;
-}
-
-.action-wrapper {
-  display: flex; 
-  gap: 12px;
-}
-
-.action-wrapper button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #A09898;
-  transition: color 0.2s;
-}
-
-.action-wrapper button:hover {
-  color: var(--primary);
-}
-
-.fw-bold {
-  font-weight: 700;
-  color: var(--text);
-}
-
-/* type of disability stuff */
-.badge {
-  display: inline-block; 
-  padding: 4px 0;
-  border-radius: 6px;
-  font-size: 11px; 
-  font-weight: 800; 
-  text-align: center; 
-  width: 110px;
-  border: 1px solid transparent;
-}
-
-.badge-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-}
-
-/* kulay ng mga disability types */
-.badge-cognitive { background: #F1E3FE; color: #9747FF; border-color: #dcd2dd;}
-.badge-visual    { background: #E1EBFD; color: #4A81FB; border-color: #ced2de;}
-.badge-motor     { background: #FCE1E1; color: #ED5F5F; border-color: #e6c6c9;}
-.badge-auditory  { background: #FEF4D4; color: #DCA311; border-color: #e3e0c1;}
-.badge-speech    { background: #FDE8D4; color: #E87221; border-color: #e0d2c5;}
-
-/* active/pending stuff */
-.status {
-  display: inline-block;
-  padding: 4px 0;
-  border-radius: 12px;
-  font-size: 10.5px;
-  font-weight: 700;
-  text-align: center;
-  border: 1px solid transparent;
-  width: 65px;
-}
-
-.status-active { background: #EAF9EE; color: #38C966; border-color: #B2EAC4; }
-.status-pending { background: #FFF3E8; color: #F18831; border-color: #FCD5B5; }
-
-/* mga bagay na pwede pindutin */
-.actions { display: flex; gap: 12px; }
-
-.actions button {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: #A09898;
-  transition: color 0.2s;
-}
-
-.actions button:hover { color: var(--primary); }
-
-/* da page 1 of 1 */
-.card-footer {
-  margin-top: auto; 
-  padding-top: 24px;
-  text-align: right;
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--text-muted);
-  letter-spacing: 0.5px;
-}
+  /* ── Filter dropdown (fixed to viewport, outside card) ── */
+  .filter-dropdown {
+    position: fixed;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 9999;
+    min-width: 160px;
+    overflow: hidden;
+  }
+  .filter-option {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: background .12s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .filter-option:hover    { background: #f5f0f0; color: var(--primary); }
+  .filter-option.selected { color: var(--primary); font-weight: 800; }
