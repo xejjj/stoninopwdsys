@@ -261,11 +261,12 @@
     border: 1px solid transparent;
   }
   .badge-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
-  .badge-cognitive { background: #F1E3FE; color: #9747FF; border-color: #dcd2dd; }
-  .badge-visual    { background: #E1EBFD; color: #4A81FB; border-color: #ced2de; }
-  .badge-physical     { background: #FCE1E1; color: #ED5F5F; border-color: #e6c6c9; }
-  .badge-auditory  { background: #FEF4D4; color: #DCA311; border-color: #e3e0c1; }
-  .badge-speech    { background: #FDE8D4; color: #E87221; border-color: #e0d2c5; }
+  .badge-visual    { background: #E6EAFB; color: #155DA4; }
+  .badge-auditory  { background: #FFF8D7; color: #C5AD11; }
+  .badge-cognitive { background: #F7E6FB; color: #7E15A4; }
+  .badge-physical     { background: #FFDCDC; color: #A41515; }
+  .badge-speech    { background: #FFE9D7; color: #D13E0D; }
+  .badge-psycho    { background: #E6FBE6; color: #15A44E; }
 
   .status {
     display: inline-block;
