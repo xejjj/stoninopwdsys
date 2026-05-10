@@ -136,53 +136,7 @@
         </div>
       </div>
 
-      <div class="card card-contact">
-        <div class="card-header">
-          <div class="icon-box bg-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
-          <h3>Contact and Address</h3>
-        </div>
-        <div class="contact-grid">
-          <div class="info-list">
-            <div class="info-group">
-              <span class="info-label">Mobile Number</span>
-              <span class="info-value">09171234567</span>
-            </div>
-            <div class="info-group">
-              <span class="info-label">House No. / Street</span>
-              <span class="info-value">123 Mabini Street</span>
-            </div>
-          </div>
-          <div class="info-list">
-            <div class="info-group">
-              <span class="info-label">Emergency Contact Name</span>
-              <span class="info-value">Maria Santos</span>
-            </div>
-            <div class="info-group">
-              <span class="info-label">Emergency Contact Number</span>
-              <span class="info-value">09187654321</span>
-            </div>
-            <div class="info-group">
-              <span class="info-label">Relationship</span>
-              <span class="info-value">Mother</span>
-            </div>
-          </div>
-          <div class="info-list">
-            <div class="info-group">
-              <span class="info-label">Parent/Guardian Name</span>
-              <span class="info-value">N/A</span>
-            </div>
-            <div class="info-group">
-              <span class="info-label">Parent/Guardian Contact Number</span>
-              <span class="info-value">N/A</span>
-            </div>
-            <div class="info-group">
-              <span class="info-label">Relationship with Child</span>
-              <span class="info-value">N/A</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      
       <div class="card">
         <div class="card-header">
           <div class="icon-box bg-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg></div>
@@ -211,66 +165,72 @@
         </div>
         <div class="info-list">
           <div class="info-group">
-            <span class="info-label">PWD ID Date Issued</span>
-            <span class="info-value">March 18, 2026</span>
+            <span class="info-label">PWD ID Number</span>
+            <span class="info-value">123456789</span>
           </div>
           <div class="info-group">
-            <span class="info-label">PWD ID Expiration Date</span>
-            <span class="info-value">March 18, 2029</span>
+            <span class="info-label">Control Number</span>
+            <span class="info-value">812748721</span>
           </div>
           <div class="info-group">
-            <span class="info-label">ID Status</span>
-            <span class="info-value"><span class="badge badge-active"><span class="dot"></span> Active</span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="icon-box bg-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
-          <h3>Renewal</h3>
-        </div>
-        <div class="info-list">
-          <div class="info-group">
-            <span class="info-label">Last Renewal Date</span>
-            <span class="info-value">New Registration</span>
+            <span class="info-label">Date Issued</span>
+            <span class="info-value">May 18, 2022</span>
           </div>
           <div class="info-group">
-            <span class="info-label">Next Renewal Due</span>
-            <span class="info-value">January 10, 2029</span>
-          </div>
-          <div class="info-group">
-            <span class="info-label">Renewal Status</span>
-            <span class="info-value">Active</span>
-          </div>
-          <div class="info-group">
-            <span class="info-label">Remarks</span>
-            <span class="info-value"><a href="#" class="link">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></span>
+            <span class="info-label">Expiration Date</span>
+            <span class="info-value">May 18, 2026</span>
           </div>
         </div>
       </div>
 
-      <div class="card">
+
+      <div class="card card-contact">
         <div class="card-header">
-          <div class="icon-box bg-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
-          <h3>Other</h3>
+          <div class="icon-box bg-purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg></div>
+          <h3>Contact and Address</h3>
         </div>
-        <div class="info-list">
-          <div class="info-group">
-            <span class="info-label">Date Registered</span>
-            <span class="info-value">March 18, 2026</span>
+        <div class="contact-grid">
+          <div class="info-list">
+            <div class="info-group">
+              <span class="info-label">Mobile Number</span>
+              <span class="info-value">09171234567</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">House No. / Street</span>
+              <span class="info-value">123 Mabini Street</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Email/Facebook Account</span>
+              <span class="info-value">template123@gmail.com</span>
+            </div>
           </div>
-          <div class="info-group">
-            <span class="info-label">Registered By</span>
-            <span class="info-value">Ana Lopez</span>
+          <div class="info-list">
+            <div class="info-group">
+              <span class="info-label">Emergency Contact Name</span>
+              <span class="info-value">Maria Santos</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Emergency Contact Number</span>
+              <span class="info-value">09187654321</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Relationship</span>
+              <span class="info-value">Mother</span>
+            </div>
           </div>
-          <div class="info-group">
-            <span class="info-label">Last Updated By</span>
-            <span class="info-value">March 18, 2026</span>
-          </div>
-          <div class="info-group">
-            <span class="info-label">Remarks</span>
-            <span class="info-value"><a href="#" class="link">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></span>
+          <div class="info-list">
+            <div class="info-group">
+              <span class="info-label">Father Name</span>
+              <span class="info-value">N/A</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Mother Number</span>
+              <span class="info-value">N/A</span>
+            </div>
+            <div class="info-group">
+              <span class="info-label">Spouse Name</span>
+              <span class="info-value">N/A</span>
+            </div>
           </div>
         </div>
       </div>

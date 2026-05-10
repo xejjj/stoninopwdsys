@@ -302,18 +302,22 @@ body {
 /* ── DETAILS GRID ── */
 .details-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr); /* Changed to 3 columns to match your top row */
+  gap: 24px;
 }
 
 .card {
   background: var(--card-bg);
   border-radius: var(--radius-card);
-  padding: 24px;
+  padding: 32px; /* Fixed the overly large 128px padding */
   box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
 }
 
-.card-contact { grid-column: span 3; }
+.card-contact { 
+  grid-column: 1 / -1; 
+}
 
 .card-header {
   display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
