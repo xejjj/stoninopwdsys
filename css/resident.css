@@ -267,6 +267,7 @@
   .badge-physical     { background: #FFDCDC; color: #A41515; }
   .badge-speech    { background: #FFE9D7; color: #D13E0D; }
   .badge-psycho    { background: #E6FBE6; color: #15A44E; }
+  .badge-others    { background: #F0F0F0; color: #666; }
 
   .status {
     display: inline-block;

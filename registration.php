@@ -194,12 +194,13 @@
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"> Auditory</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"> Speech</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial"> Psychosocial</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others"> Others</label>
             </div>
           </div>
           <div class="field span-all">
             <label>Remarks</label>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..."></textarea>
-          </div>
+        </div>
         </div>
       </div>
 

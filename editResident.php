@@ -225,6 +225,7 @@ function isChecked($val, $arr) {
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"  <?= isChecked("Auditory",  $saved_disabilities) ?>> Auditory</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"    <?= isChecked("Speech",    $saved_disabilities) ?>> Speech</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial" <?= isChecked("Psychosocial", $saved_disabilities) ?>> Psychosocial</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others" <?= isChecked("Others", $saved_disabilities) ?>> Others</label>
             </div>
           </div>
           <div class="field span-all">

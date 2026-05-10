@@ -149,12 +149,14 @@
           <div class="checkbox-grid">
             <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive"> Cognitive</label>
             <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"> Visual</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Motor"> Motor</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical"> Physical</label>
             <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"> Auditory</label>
             <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"> Speech</label>
             <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial"> Psychosocial</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others"> Others</label>
           </div>
         </div>
+      
       </div>
     </div>
 

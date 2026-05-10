@@ -109,6 +109,7 @@
         <option value="Auditory"     <?= $filter_disab === "Auditory"     ? "selected" : "" ?>>Auditory</option>
         <option value="Speech"       <?= $filter_disab === "Speech"       ? "selected" : "" ?>>Speech</option>
         <option value="Psychosocial" <?= $filter_disab === "Psychosocial" ? "selected" : "" ?>>Psychosocial</option>
+        <option value="Others" <?= $filter_disab === "Others" ? "selected" : "" ?>>Others</option>
       </select>
       <select name="category" id="sel-category" style="display:none" onchange="document.getElementById('filterForm').submit()">
         <option value="">All Categories</option>
@@ -262,6 +263,7 @@ const filterOptions = {
     {value:'Auditory',     label:'Auditory'},
     {value:'Speech',       label:'Speech'},
     {value:'Psychosocial', label:'Psychosocial'},
+    {value:'Others', label:'Others'},
   ],
   'sel-category': [
     {value:'', label:'All Categories'},
