@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +31,14 @@
             <p class="subtitle">Enter your credentials to access the<br>dashboard.</p>
 
             <!-- FORM (no PHP logic yet) -->
-            <form action="dashboard.php" method="GET">
+            <?php if (isset($_SESSION["login_error"])): ?>
+            <div class="error-msg">
+                <?= htmlspecialchars($_SESSION["login_error"]) ?>
+            </div>
+            <?php unset($_SESSION["login_error"]); ?>
+            <?php endif; ?>
+
+            <form action="sqlLogin.php" method="POST">
                 <div class="input-group">
                     <label for="username">Username</label>
                     <div class="input-wrapper">
