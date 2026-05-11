@@ -124,7 +124,7 @@ if (!$stmt) {
     exit();
 }
 
-mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssssi",
+mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssssi",
     $first_name,
     $middle_name,
     $last_name,
