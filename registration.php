@@ -33,7 +33,7 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
+      <a class="nav-item active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src="assets/users.png" width="20">
         Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
@@ -41,7 +41,7 @@
       <div class="nav-sub open" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
         <a class="nav-sub-item active" href="registration.php">New Registration</a>
-        <a class="nav-sub-item" href="#">Review Submissions</a>
+        <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
     </div>
 
     <div class="nav-group">
-      <a class="nav-item" href="#" onclick="toggleMenu(event,'system-sub')">
+      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src="assets/settingicon.png" width="20">
         System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
@@ -169,7 +169,7 @@
           </div>
           <div class="field">
             <label>Email/Facebook Account</label>
-            <input type="text" name="account_name">
+            <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com>
           </div>
           <div class="field span-2">
             <label>House No. and Street</label>
@@ -195,7 +195,7 @@
           </div>
           <div class="field span-all">
             <label>Remarks</label>
-            <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..."></textarea>
+            <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize: none;"></textarea>
           </div>
         </div>
       </div>
@@ -229,15 +229,15 @@
         <div class="form-grid cols-3">
           <div class="field">
             <label>Father Name</label>
-            <input type="text" name="father_name">
+            <input type="text" name="father_name" placeholder="Full Name">
           </div>
           <div class="field">
             <label>Mother Name</label>
-            <input type="text" name="mother_name">
+            <input type="text" name="mother_name" placeholder="Full Name">
           </div>
           <div class="field">
             <label>Spouse Name</label>
-            <input type="text" name="spouse_name">
+            <input type="text" name="spouse_name" placeholder="Full Name">
           </div>
         </div>
       </div>
@@ -248,11 +248,11 @@
         <div class="form-grid cols-4">
           <div class="field">
             <label>PWD ID Number</label>
-            <input type="text" name="pwd_id">
+            <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
             <label>Control Number</label>
-            <input type="text" name="control_id">
+            <input type="text" name="control_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
             <label>Date Issued</label>

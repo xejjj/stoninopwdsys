@@ -42,7 +42,7 @@
       <div class="nav-sub" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
         <a class="nav-sub-item" href="registration.php">New Registration</a>
-        <a class="nav-sub-item" href="#">Review Submissions</a>
+        <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
 
@@ -180,23 +180,26 @@
         </tr>
       </thead>
       <tbody id="residentTable">
-        <?php while ($user = mysqli_fetch_assoc($residents_result)): ?>
-          <?php
-            $full_name = htmlspecialchars(
-              $user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']
-            );
-            $disability = htmlspecialchars($user['disablity_type'] ?? '—');
-            $badge      = badgeClass($user['disablity_type'] ?? '');
-            $category   = htmlspecialchars($user['resident_type'] ?? '—');
-            $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
-            $status     = htmlspecialchars($user['status'] ?? 'Pending');
-            $status_cls = "status-" . strtolower($status);
-          ?>
+        <?php 
+        $display_count = 0;
+        while ($user = mysqli_fetch_assoc($residents_result)): 
+          if ($display_count >= 5) break;
+          $display_count++;
+          
+          $full_name = htmlspecialchars(
+            $user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']
+          );
+          $disability = htmlspecialchars($user['disablity_type'] ?? '—');
+          $badge      = badgeClass($user['disablity_type'] ?? '');
+          $category   = htmlspecialchars($user['resident_type'] ?? '—');
+          $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
+          $status     = htmlspecialchars($user['status'] ?? 'Pending');
+          $status_cls = "status-" . strtolower($status);
+        ?>
           <tr>
             <td class="td-name"><?php echo $full_name; ?></td>
             <td>
               <?php
-                // Handle multiple disability types (comma-separated)
                 $types = explode(",", $disability);
                 foreach ($types as $t):
                   $t = trim($t);
@@ -210,12 +213,12 @@
             <td><span class="status <?php echo $status_cls; ?>"><?php echo $status; ?></span></td>
             <td>
               <div class="actions">
-                <button class="action-btn" title="Edit">
-                  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                </button>
-                <button class="action-btn" title="View">
-                  <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
+                <button class="action-btn" title="Edit" onclick="window.location.href='editResident.php?id=<?= $user['ID'] ?>'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="action-btn" title="View" onclick="window.location.href='viewprofile.php?id=<?= $user['ID'] ?>'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
               </div>
             </td>
           </tr>

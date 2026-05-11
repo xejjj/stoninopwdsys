@@ -38,8 +38,7 @@
 
   <form action="func/processSelfReg.php" method="POST" enctype="multipart/form-data">
 
-     <!-- success and error FOR NOW, will replace with popups later -->
-    <?php if (isset($_SESSION["reg_success"])): ?>
+     <?php if (isset($_SESSION["reg_success"])): ?>
       <div class="alert alert-success">
         ✅ <?= htmlspecialchars($_SESSION["reg_success"]) ?>
       </div>
@@ -60,15 +59,15 @@
       <div class="form-grid cols-4">
         <div class="field">
           <label>First Name <span class="req">*</span></label>
-          <input type="text" name="first_name">
+          <input type="text" name="first_name" placeholder="e.g. Juan">
         </div>
         <div class="field">
           <label>Middle Name <span class="req">*</span></label>
-          <input type="text" name="middle_name">
+          <input type="text" name="middle_name" placeholder="e.g. Dela">
         </div>
         <div class="field">
           <label>Last Name <span class="req">*</span></label>
-          <input type="text" name="last_name">
+          <input type="text" name="last_name" placeholder="e.g. Cruz">
         </div>
         <div class="field">
           <label>Civil Status <span class="req">*</span></label>
@@ -86,11 +85,11 @@
         </div>
         <div class="field">
           <label>Place of Birth <span class="req">*</span></label>
-          <input type="text" name="pob">
+          <input type="text" name="pob" placeholder="e.g. Tondo General Hospital">
         </div>
         <div class="field">
           <label>Age <span class="req">*</span></label>
-          <input type="number" name="age">
+          <input type="number" name="age" placeholder="0" min="0" max="130">
         </div>
         <div class="field">
           <label>Sex <span class="req">*</span></label>
@@ -116,27 +115,27 @@
       <div class="form-grid cols-4">
         <div class="field">
           <label>Contact Number <span class="req">*</span></label>
-          <input type="text" name="contact_number">
+          <input type="text" name="contact_number" placeholder="09XX XXX XXXX">
         </div>
         <div class="field">
           <label>Emergency Contact Name <span class="req">*</span></label>
-          <input type="text" name="emergency_name">
+          <input type="text" name="emergency_name" placeholder="Full name">
         </div>
         <div class="field">
           <label>Emergency Contact Number <span class="req">*</span></label>
-          <input type="text" name="emergency_number">
+          <input type="text" name="emergency_number" placeholder="09XX XXX XXXX">
         </div>
         <div class="field">
           <label>Relationship with Emergency Contact <span class="req">*</span></label>
-          <input type="text" name="emergency_relation">
+          <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling">
         </div>
         <div class="field">
           <label>Email/Facebook Account <span class="req">*</span></label>
-          <input type="text" name="account_name">
+          <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com">
         </div>
         <div class="field">
           <label>House No. and Street <span class="req">*</span></label>
-          <input type="text" name="address">
+          <input type="text" name="address" placeholder="e.g. 12 Sampaguita St.">
         </div>
       </div>
     </div>
@@ -165,15 +164,15 @@
       <div class="form-grid cols-3">
         <div class="field">
           <label>Parent/Guardian Name <span class="req">*</span></label>
-          <input type="text" name="guardian_name">
+          <input type="text" name="guardian_name" placeholder="Full name">
         </div>
         <div class="field">
           <label>Parent/Guardian Number <span class="req">*</span></label>
-          <input type="text" name="guardian_number">
+          <input type="text" name="guardian_number" placeholder="09XX XXX XXXX">
         </div>
         <div class="field">
           <label>Relationship with Child <span class="req">*</span></label>
-          <input type="text" name="child_relation">
+          <input type="text" name="child_relation" placeholder="e.g. Mother, Father">
         </div>
       </div>
     </div>
@@ -183,15 +182,15 @@
       <div class="form-grid cols-3">
         <div class="field">
           <label>Father Name<span class="req">*</span></label>
-          <input type="text" name="father_name">
+          <input type="text" name="father_name" placeholder="Full Name">
         </div>
         <div class="field">
           <label>Mother Name<span class="req">*</span></label>
-          <input type="text" name="mother_name">
+          <input type="text" name="mother_name" placeholder="Full Name">
         </div>
         <div class="field">
           <label>Spouse Name<span class="req">*</span></label>
-          <input type="text" name="spouse_name">
+          <input type="text" name="spouse_name" placeholder="Full Name">
         </div>
       </div>
     </div>
@@ -201,11 +200,11 @@
       <div class="form-grid cols-4">
         <div class="field">
           <label>PWD ID Number <span class="req">*</span></label>
-          <input type="text" name="pwd_id">
+          <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX">
         </div>
         <div class="field">
           <label>Control Number <span class="req">*</span></label>
-          <input type="text" name="control_id">
+          <input type="text" name="control_id" placeholder="XXXXXXXXXXXX">
         </div>
         <div class="field">
           <label>Date Issued <span class="req">*</span></label>

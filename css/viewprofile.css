@@ -20,15 +20,19 @@
   --radius-card: 20px;
 
   /* Button & Badge Colors */
-  --btn-blue-bg: #E0E7FF;
-  --btn-blue-text: #4F46E5;
-  --btn-red-bg: #FEE2E2;
-  --btn-red-text: #EF4444;
-  --badge-green-bg: #D1FAE5;
-  --badge-green-text: #059669;
-  --badge-purple-bg: #F3E8FF;
-  --badge-purple-text: #9333EA;
+  --badge-blue-bg: #DBEAFE;
+  --badge-blue-text: #2563EB;
+  --badge-orange-bg: #FFEDD5;
+  --badge-orange-text: #EA580C;
+  --badge-teal-bg: #CCFBF1;
+  --badge-teal-text: #0D9488;
+  --badge-pink-bg: #FCE7F3;
+  --badge-pink-text: #DB2777;
+  --badge-red-bg: #FEE2E2;
+  --badge-red-text: #DC2626;
 }
+
+
 
 *, *::before, *::after { 
   box-sizing: border-box; 
@@ -284,6 +288,17 @@ body {
 .badge-active { background: var(--badge-green-bg); color: var(--badge-green-text); }
 .badge-active .dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
 .badge-cognitive { background: var(--badge-purple-bg); color: var(--badge-purple-text); border: 1px solid #E9D5FF; }
+.badge-active { background: #D1FAE5; color: #059669; }
+.badge-active .dot { width: 6px; height: 6px; background: currentColor; border-radius: 50%; }
+
+.badge-group { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.badge-visual { background: #E6EAFB; color: #155DA4; }
+.badge-auditory { background: #FFF8D7; color: #C5AD11; }
+.badge-cognitive { background: #F7E6FB; color: #7E15A4; }
+.badge-physical { background: #FFDCDC; color: #A41515; }
+.badge-speech { background: #FFE9D7; color: #D13E0D; }
+.badge-psycho { background: #E6FBE6; color: #15A44E; }
+.badge-others { background: #F0F0F0; color: #666; }
 
 .classification-box {
   margin-top: -16px;

@@ -44,7 +44,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
       <div class="nav-sub" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
         <a class="nav-sub-item" href="registration.php">New Registration</a>
-        <a class="nav-sub-item" href="#">Review Submissions</a>
+        <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
     <div class="nav-group">
@@ -53,7 +53,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
       </a>
     </div>
     <div class="nav-group">
-      <a class="nav-item open active" href="#" onclick="toggleMenu(event,'system-sub')">
+      <a class="nav-item active" href="#" onclick="toggleMenu(event,'system-sub')">
         <img src="assets/settingicon.png" width="20">System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
@@ -237,7 +237,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
     </div>
     <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202;">Restore this resident?</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This will move the resident back to the active residents list.</p>
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
+    <div style="display:flex; gap:10px; justify-content:center;">
       <button onclick="document.getElementById('restoreModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
       <form action="func/processRestore.php" method="POST" style="margin:0;">
         <input type="hidden" name="archive_id" id="restoreId">
@@ -255,7 +255,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
     </div>
     <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202;">Permanently delete?</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This action cannot be undone. The resident record will be deleted forever.</p>
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
+    <div style="display:flex; gap:10px; justify-content:center;">
       <button onclick="document.getElementById('deleteModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
       <form action="func/processDeleteArchive.php" method="POST" style="margin:0;">
         <input type="hidden" name="archive_id" id="deleteId">

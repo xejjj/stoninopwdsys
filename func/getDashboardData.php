@@ -55,7 +55,16 @@ $pending_path = $total > 0 ? pieSlice(90, 90, 80, $active_deg, $active_deg + $pe
 $expired_path = $total > 0 ? pieSlice(90, 90, 80, $active_deg + $pending_deg, 360) : "";
 
 // ── Directory rows ────────────────────────────────────
-$residents_result = mysqli_query($conn, "SELECT * FROM residents ORDER BY last_name ASC");
+$recent_ids = $_SESSION['recent_views'] ?? [];
+
+if (empty($recent_ids)) {
+    $residents_result = mysqli_query($conn, "SELECT * FROM residents ORDER BY id DESC LIMIT 5");
+} else {
+    $id_list = implode(',', array_map('intval', $recent_ids));
+    
+    $query = "SELECT * FROM residents WHERE id IN ($id_list) ORDER BY FIELD(id, $id_list)";
+    $residents_result = mysqli_query($conn, $query);
+}
 
 // ── Disability badge CSS class map ────────────────────
 function badgeClass($type) {

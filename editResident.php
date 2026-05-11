@@ -67,7 +67,7 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
       <div class="nav-sub open" id="mgmt-sub">
         <a class="nav-sub-item active" href="resident.php">View Residents</a>
         <a class="nav-sub-item" href="registration.php">New Registration</a>
-        <a class="nav-sub-item" href="#">Review Submissions</a>
+        <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
     <div class="nav-group">
@@ -343,7 +343,7 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
     </div>
     <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202; text-align:center;">Archive this resident?</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px; text-align:center;">This will move the resident to the archive. You can restore them from the Archive page.</p>
-    <div style="display:flex; gap:10px; justify-content:flex-end;">
+    <div style="display:flex; gap:10px; justify-content:center;">
       <button onclick="document.getElementById('archiveModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
       <form action="func/processArchive.php" method="POST" style="margin:0;">
         <input type="hidden" name="resident_id" id="archiveId">

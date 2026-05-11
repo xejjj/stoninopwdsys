@@ -40,7 +40,7 @@
       <div class="nav-sub" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
         <a class="nav-sub-item" href="registration.php">New Registration</a>
-        <a class="nav-sub-item" href="#">Review Submissions</a>
+        <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
 
@@ -97,9 +97,9 @@
                         <p> Complete list of all registered PWDs and CWDs</p>
                     </div>
                     <div class = "card-item-actions">
-                        <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
-                        </button>
+                        <button class="btn-print" onclick="window.open('printReport.php?type=master', '_blank')"> 
+    <img src="assets/printicon.png" width="16"> Print
+</button>
                     </div>
                 </div>
 
@@ -113,9 +113,9 @@
                             
                             Options
                         </button>
-                        <button class="btn-print"> 
-                            <img src = "assets/printicon.png" width="16" > Print
-                        </button>
+                        <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
+    <img src="assets/printicon.png" width="16"> Print
+</button>
                         
                     </div>
                 </div>
@@ -130,7 +130,9 @@
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                       Options
                     </button>
-                    <button class="btn-print"> <img src="assets/printicon.png" width="16"> Print</button>
+                    <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
+    <img src="assets/printicon.png" width="16"> Print
+</button>
                   </div>
                 </div>
             </div>
