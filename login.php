@@ -40,7 +40,7 @@
             <?php unset($_SESSION["login_error"]); ?>
             <?php endif; ?>
 
-            <form action="sqlLogin.php" method="POST">
+            <form action="func/processLogin.php" method="POST">
                 <div class="input-group">
                     <label for="username">Username</label>
                     <div class="input-wrapper">

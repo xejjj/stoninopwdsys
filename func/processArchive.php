@@ -3,13 +3,13 @@ session_start();
 require_once("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: resident.php");
+    header("Location: ./resident.php");
     exit();
 }
 
 $id = intval($_POST["resident_id"] ?? 0);
 if ($id <= 0) {
-    header("Location: resident.php");
+    header("Location: ../resident.php");
     exit();
 }
 
@@ -22,7 +22,7 @@ $r = mysqli_fetch_assoc($result);
 
 if (!$r) {
     $_SESSION["edit_error"] = "Resident not found.";
-    header("Location: resident.php");
+    header("Location: ../resident.php");
     exit();
 }
 
@@ -53,7 +53,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if (!$stmt) {
     $_SESSION["edit_error"] = "Archive DB error: " . mysqli_error($conn);
-    header("Location: editResident.php?id=$id");
+    header("Location: ../editResident.php?id=$id");
     exit();
 }
 
@@ -93,7 +93,7 @@ mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
 
 if (!mysqli_stmt_execute($stmt)) {
     $_SESSION["edit_error"] = "Failed to archive: " . mysqli_stmt_error($stmt);
-    header("Location: editResident.php?id=$id");
+    header("Location: ../editResident.php?id=$id");
     exit();
 }
 
@@ -103,11 +103,11 @@ mysqli_stmt_bind_param($del, "i", $id);
 
 if (mysqli_stmt_execute($del)) {
     $_SESSION["arch_success"] = "Resident archived successfully.";
-    header("Location: resident.php");
+    header("Location: ../resident.php");
     exit();
 } else {
     $_SESSION["edit_error"] = "Archived but failed to remove from residents: " . mysqli_stmt_error($del);
-    header("Location: editResident.php?id=$id");
+    header("Location: ../editResident.php?id=$id");
     exit();
 }
 ?>

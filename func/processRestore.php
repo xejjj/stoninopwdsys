@@ -3,13 +3,13 @@ session_start();
 require_once("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 
 $id = intval($_POST["archive_id"] ?? 0);
 if ($id <= 0) {
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 
@@ -22,7 +22,7 @@ $r = mysqli_fetch_assoc($result);
 
 if (!$r) {
     $_SESSION["arch_error"] = "Archived resident not found.";
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 
@@ -53,7 +53,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if (!$stmt) {
     $_SESSION["arch_error"] = "Restore DB error: " . mysqli_error($conn);
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 
@@ -93,7 +93,7 @@ mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
 
 if (!mysqli_stmt_execute($stmt)) {
     $_SESSION["arch_error"] = "Failed to restore: " . mysqli_stmt_error($stmt);
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 
@@ -103,11 +103,11 @@ mysqli_stmt_bind_param($del, "i", $id);
 
 if (mysqli_stmt_execute($del)) {
     $_SESSION["arch_success"] = "Resident restored successfully.";
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 } else {
     $_SESSION["arch_error"] = "Restored but failed to remove from archive: " . mysqli_stmt_error($del);
-    header("Location: archive.php");
+    header("Location: ../archive.php");
     exit();
 }
 ?>

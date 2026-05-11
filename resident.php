@@ -1,4 +1,4 @@
-<?php require_once("getResidents.php"); ?>
+<?php require_once("func/getResidents.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

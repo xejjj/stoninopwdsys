@@ -82,24 +82,20 @@
 
   <div class="content">
 
-    <!-- Success / Error alerts -->
-    <?php if (isset($_SESSION["reg_success"])): ?>
-      <div class="alert alert-success">✅ <?= htmlspecialchars($_SESSION["reg_success"]) ?></div>
-      <?php unset($_SESSION["reg_success"]); ?>
-    <?php endif; ?>
+    <!-- Error alert only (success is now a modal) -->
     <?php if (isset($_SESSION["reg_error"])): ?>
       <div class="alert alert-error">⚠️ <?= htmlspecialchars($_SESSION["reg_error"]) ?></div>
       <?php unset($_SESSION["reg_error"]); ?>
     <?php endif; ?>
 
-    <form action="processRegistration.php" method="POST" enctype="multipart/form-data">
+    <form action="func/processRegistration.php" method="POST" enctype="multipart/form-data" id="regForm">
 
       <!-- Personal Information -->
       <div class="card">
         <div class="card-title">Personal Information</div>
         <div class="form-grid">
           <div class="field">
-            <label>First Name <span class="req">*</span></label>
+            <label>First Name</label>
             <input type="text" name="first_name" placeholder="e.g. Juan">
           </div>
           <div class="field">
@@ -107,11 +103,11 @@
             <input type="text" name="middle_name" placeholder="e.g. Dela">
           </div>
           <div class="field">
-            <label>Last Name <span class="req">*</span></label>
+            <label>Last Name</label>
             <input type="text" name="last_name" placeholder="e.g. Cruz">
           </div>
           <div class="field">
-            <label>Civil Status <span class="req">*</span></label>
+            <label>Civil Status</label>
             <select name="civil_status">
               <option value="">Select status</option>
               <option>Single</option>
@@ -121,19 +117,19 @@
             </select>
           </div>
           <div class="field">
-            <label>Date of Birth <span class="req">*</span></label>
+            <label>Date of Birth</label>
             <input type="date" name="dob">
           </div>
           <div class="field">
-            <label>Place of Birth <span class="req">*</span></label>
+            <label>Place of Birth</label>
             <input type="text" name="pob" placeholder="e.g. Tondo General Hospital">
           </div>
           <div class="field">
-            <label>Age <span class="req">*</span></label>
+            <label>Age</label>
             <input type="number" name="age" placeholder="0" min="0" max="130">
           </div>
           <div class="field">
-            <label>Sex <span class="req">*</span></label>
+            <label>Sex</label>
             <select name="sex">
               <option value="">Select sex</option>
               <option>Male</option>
@@ -144,8 +140,8 @@
             <label>Upload Profile</label>
             <label class="file-input-wrap">
               <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-              Choose file…
-              <input type="file" name="profile_pic" accept="image/*">
+              <span id="fileLabel">Choose file…</span>
+              <input type="file" name="profile_pic" accept="image/*" onchange="updateFileLabel(this)">
             </label>
           </div>
         </div>
@@ -156,19 +152,19 @@
         <div class="card-title">Contact and Address Information</div>
         <div class="form-grid">
           <div class="field">
-            <label>Contact Number <span class="req">*</span></label>
+            <label>Contact Number</label>
             <input type="tel" name="contact_number" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
-            <label>Emergency Contact Name <span class="req">*</span></label>
+            <label>Emergency Contact Name</label>
             <input type="text" name="emergency_name" placeholder="Full name">
           </div>
           <div class="field">
-            <label>Emergency Contact Number <span class="req">*</span></label>
+            <label>Emergency Contact Number</label>
             <input type="tel" name="emergency_number" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
-            <label>Relationship with Emergency Contact <span class="req">*</span></label>
+            <label>Relationship with Emergency Contact</label>
             <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling">
           </div>
           <div class="field">
@@ -176,7 +172,7 @@
             <input type="text" name="account_name">
           </div>
           <div class="field span-2">
-            <label>House No. and Street <span class="req">*</span></label>
+            <label>House No. and Street</label>
             <input type="text" name="address" placeholder="e.g. 12 Sampaguita St.">
           </div>
         </div>
@@ -200,7 +196,7 @@
           <div class="field span-all">
             <label>Remarks</label>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..."></textarea>
-        </div>
+          </div>
         </div>
       </div>
 
@@ -251,19 +247,19 @@
         <div class="card-title">ID Registration Details</div>
         <div class="form-grid cols-4">
           <div class="field">
-            <label>PWD ID Number <span class="req">*</span></label>
+            <label>PWD ID Number</label>
             <input type="text" name="pwd_id">
           </div>
           <div class="field">
-            <label>Control Number <span class="req">*</span></label>
+            <label>Control Number</label>
             <input type="text" name="control_id">
           </div>
           <div class="field">
-            <label>Date Issued <span class="req">*</span></label>
+            <label>Date Issued</label>
             <input type="date" name="date_issued">
           </div>
           <div class="field">
-            <label>Expiration Date <span class="req">*</span></label>
+            <label>Expiration Date</label>
             <input type="date" name="expiration_date">
           </div>
         </div>
@@ -279,6 +275,29 @@
   </div><!-- /content -->
 </div><!-- /main -->
 
+<!-- ── Success Modal ── -->
+<?php if (isset($_SESSION["reg_success"])): ?>
+<div id="successModal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+  <?php unset($_SESSION["reg_success"]); ?>
+  <div style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <!-- Checkmark icon -->
+    <div style="width:56px; height:56px; background:#EAF9EE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Resident Registered!</h2>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The registration was saved successfully. What would you like to do next?</p>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
+        View Residents
+      </button>
+      <button onclick="document.getElementById('successModal').style.display='none'; document.getElementById('regForm').reset(); document.getElementById('fileLabel').textContent='Choose file…';" style="padding:10px 22px; border-radius:10px; border:none; background:#A84040; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(168,64,64,0.3);">
+        Add Another
+      </button>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
 <script>
 function toggleMenu(event, id) {
   event.preventDefault();
@@ -287,6 +306,10 @@ function toggleMenu(event, id) {
 }
 function logout() {
   window.location.href = "login.php";
+}
+function updateFileLabel(input) {
+  const label = document.getElementById('fileLabel');
+  label.textContent = input.files.length > 0 ? input.files[0].name : 'Choose file…';
 }
 </script>
 

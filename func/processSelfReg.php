@@ -47,13 +47,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // ── Basic Validation ──────────────────────────────────
     if (empty($first_name) || empty($last_name) || empty($birthdate) || empty($sex)) {
         $_SESSION["reg_error"] = "Please fill in all required fields.";
-        header("Location: selfregistration.php");
+        header("Location: ../selfregistration.php");
         exit();
     }
 
     if (empty($disability_type)) {
         $_SESSION["reg_error"] = "Please select at least one disability type.";
-        header("Location: selfregistration.php");
+        header("Location: ../selfregistration.php");
         exit();
     }
 
@@ -73,13 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
         if (!in_array(strtolower($ext), $allowed)) {
             $_SESSION["reg_error"] = "Invalid file type. Only JPG, PNG, GIF, WEBP allowed.";
-            header("Location: selfregistration.php");
+            header("Location: ../selfregistration.php");
             exit();
         }
 
         if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
             $_SESSION["reg_error"] = "Failed to upload profile picture.";
-            header("Location: selfregistration.php");
+            header("Location: ../selfregistration.php");
             exit();
         }
 
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!$stmt) {
         $_SESSION["reg_error"] = "Database error: " . mysqli_error($conn);
-        header("Location: selfregistration.php");
+        header("Location: ../selfregistration.php");
         exit();
     }
 
@@ -151,11 +151,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (mysqli_stmt_execute($stmt)) {
         $_SESSION["reg_success"] = "Registration submitted successfully! Please wait 3-5 business days for processing.";
-        header("Location: selfregistration.php");
+        header("Location: ../selfregistration.php");
         exit();
     } else {
         $_SESSION["reg_error"] = "Failed to submit: " . mysqli_stmt_error($stmt);
-        header("Location: selfregistration.php");
+        header("Location: ../selfregistration.php");
         exit();
     }
 }

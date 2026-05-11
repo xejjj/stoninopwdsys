@@ -1,4 +1,4 @@
-<?php require_once("getDashboardData.php"); ?>
+<?php require_once("func/getDashboardData.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

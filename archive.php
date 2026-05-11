@@ -1,4 +1,4 @@
-<?php require_once("getArchived.php"); ?>
+<?php require_once("func/getArchive.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +10,15 @@
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
+<?php
+// Capture and clear session flags before output
+$show_restore_success = isset($_SESSION["arch_success"]) && $_SESSION["arch_success"] === "Resident restored successfully.";
+$show_delete_success  = isset($_SESSION["arch_success"]) && $_SESSION["arch_success"] === "Resident permanently deleted.";
+$arch_error           = $_SESSION["arch_error"] ?? "";
+if (isset($_SESSION["arch_success"])) unset($_SESSION["arch_success"]);
+if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
+?>
+
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
@@ -21,21 +29,16 @@
       <span class="brand-sub">Sto. Niño System</span>
     </div>
   </div>
-
   <nav class="sidebar-nav">
     <div class="nav-section-label">Main Menu</div>
-
     <div class="nav-group">
       <a class="nav-item" href="dashboard.php">
-        <img src="assets/overviewicon.png" width="20">
-        Overview
+        <img src="assets/overviewicon.png" width="20">Overview
       </a>
     </div>
-
     <div class="nav-group">
       <a class="nav-item open" href="#" onclick="toggleMenu(event,'mgmt-sub')">
-        <img src="assets/users.png" width="20">
-        Management
+        <img src="assets/users.png" width="20">Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="mgmt-sub">
@@ -44,18 +47,14 @@
         <a class="nav-sub-item" href="#">Review Submissions</a>
       </div>
     </div>
-
     <div class="nav-group">
       <a class="nav-item" href="reports.php">
-        <img src="assets/reporticon.png" width="20">
-        Reports
+        <img src="assets/reporticon.png" width="20">Reports
       </a>
     </div>
-
     <div class="nav-group">
       <a class="nav-item open active" href="#" onclick="toggleMenu(event,'system-sub')">
-        <img src="assets/settingicon.png" width="20">
-        System
+        <img src="assets/settingicon.png" width="20">System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub open" id="system-sub">
@@ -65,7 +64,6 @@
       </div>
     </div>
   </nav>
-
   <div class="sidebar-footer">
     <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -74,22 +72,14 @@
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
 <main class="main-content">
   <div class="content-card">
 
-    <!-- ── Flash Messages ── -->
-    <?php if (isset($_SESSION["arch_success"])): ?>
-      <div style="background:#EAF9EE;color:#38C966;border:1px solid #B2EAC4;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-weight:700;font-size:13.5px;">
-        ✅ <?= htmlspecialchars($_SESSION["arch_success"]) ?>
-      </div>
-      <?php unset($_SESSION["arch_success"]); ?>
-    <?php endif; ?>
-    <?php if (isset($_SESSION["arch_error"])): ?>
+    <!-- Error banner (only for errors, not success) -->
+    <?php if ($arch_error): ?>
       <div style="background:#FFE0E0;color:#c0392b;border:1px solid #f5c6c6;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-weight:700;font-size:13.5px;">
-        ⚠️ <?= htmlspecialchars($_SESSION["arch_error"]) ?>
+        ⚠️ <?= htmlspecialchars($arch_error) ?>
       </div>
-      <?php unset($_SESSION["arch_error"]); ?>
     <?php endif; ?>
 
     <!-- ── Header ── -->
@@ -171,7 +161,7 @@
           <?php else: ?>
             <?php while ($row = mysqli_fetch_assoc($archived_result)): ?>
               <?php
-                $full_name = htmlspecialchars($row['last_name'] . ", " . $row['first_name'] . " " . $row['middle_name']);
+                $full_name  = htmlspecialchars($row['last_name'] . ", " . $row['first_name'] . " " . $row['middle_name']);
                 $disability = $row['disablity_type'] ?? '';
                 $category   = htmlspecialchars($row['resident_type'] ?? '—');
                 $sex        = htmlspecialchars(strtoupper($row['sex'] ?? '—'));
@@ -204,7 +194,7 @@
           <?php endif; ?>
         </tbody>
       </table>
-    </div><!-- end table-wrap -->
+    </div>
 
     <!-- ── Pagination ── -->
     <div class="pagination">
@@ -231,7 +221,7 @@
       </div>
     </div>
 
-  </div><!-- end content-card -->
+  </div>
 </main>
 
 <!-- ── Filter Dropdown ── -->
@@ -239,14 +229,17 @@
   <div id="filterDropdownInner"></div>
 </div>
 
-<!-- ── Restore Modal ── -->
+<!-- ── Restore Confirm Modal ── -->
 <div id="restoreModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+  <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <div style="width:48px; height:48px; background:#EAF9EE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    </div>
     <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202;">Restore this resident?</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This will move the resident back to the active residents list.</p>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button onclick="document.getElementById('restoreModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
-      <form action="processRestore.php" method="POST" style="margin:0;">
+      <form action="func/processRestore.php" method="POST" style="margin:0;">
         <input type="hidden" name="archive_id" id="restoreId">
         <button type="submit" style="padding:8px 18px; border-radius:8px; border:none; background:#38C966; color:#fff; font-family:inherit; font-weight:700; cursor:pointer;">Yes, Restore</button>
       </form>
@@ -254,20 +247,60 @@
   </div>
 </div>
 
-<!-- ── Delete Modal ── -->
+<!-- ── Delete Confirm Modal ── -->
 <div id="deleteModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
+  <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <div style="width:48px; height:48px; background:#FFE0E0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+    </div>
     <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202;">Permanently delete?</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This action cannot be undone. The resident record will be deleted forever.</p>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button onclick="document.getElementById('deleteModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
-      <form action="processDeleteArchive.php" method="POST" style="margin:0;">
+      <form action="func/processDeleteArchive.php" method="POST" style="margin:0;">
         <input type="hidden" name="archive_id" id="deleteId">
         <button type="submit" style="padding:8px 18px; border-radius:8px; border:none; background:#A84040; color:#fff; font-family:inherit; font-weight:700; cursor:pointer;">Delete Permanently</button>
       </form>
     </div>
   </div>
 </div>
+
+<!-- ── Restore Success Modal ── -->
+<?php if ($show_restore_success): ?>
+<div id="restoreSuccessModal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <div style="width:56px; height:56px; background:#EAF9EE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Resident Restored!</h2>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The resident has been moved back to the active residents list.</p>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="document.getElementById('restoreSuccessModal').style.display='none'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
+        Stay in Archive
+      </button>
+      <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:none; background:#38C966; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;">
+        View Residents
+      </button>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<!-- ── Delete Success Modal ── -->
+<?php if ($show_delete_success): ?>
+<div id="deleteSuccessModal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <div style="width:56px; height:56px; background:#FFE0E0; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Record Deleted</h2>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The resident record has been permanently deleted.</p>
+    <button onclick="document.getElementById('deleteSuccessModal').style.display='none'" style="padding:10px 22px; border-radius:10px; border:none; background:#A84040; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer;">
+      OK
+    </button>
+  </div>
+</div>
+<?php endif; ?>
 
 <script>
 function toggleMenu(event, id) {

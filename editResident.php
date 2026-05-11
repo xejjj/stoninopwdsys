@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("db.php");
+require_once("func/db.php");
 
 // ── Get resident by ID ────────────────────────────────
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
@@ -119,7 +119,7 @@ function isChecked($val, $arr) {
       <?php unset($_SESSION["edit_error"]); ?>
     <?php endif; ?>
 
-    <form action="processEdit.php" method="POST" enctype="multipart/form-data">
+    <form action="func/processEdit.php" method="POST" enctype="multipart/form-data">
       <!-- Pass the resident ID -->
       <input type="hidden" name="resident_id" value="<?= $r['ID'] ?>">
 
@@ -337,7 +337,7 @@ function isChecked($val, $arr) {
     <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This will move the resident to the archive. You can restore them from the Archive page.</p>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button onclick="document.getElementById('archiveModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
-      <form action="Processarchive.php" method="POST" style="margin:0;">
+      <form action="func/processArchive.php" method="POST" style="margin:0;">
         <input type="hidden" name="resident_id" id="archiveId">
         <button type="submit" style="padding:8px 18px; border-radius:8px; border:none; background:#A84040; color:#fff; font-family:inherit; font-weight:700; cursor:pointer;">Yes, Archive</button>
       </form>

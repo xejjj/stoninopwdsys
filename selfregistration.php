@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <form action="sqlFormaction.php" method="POST" enctype="multipart/form-data">
+  <form action="func/processSelfReg.php" method="POST" enctype="multipart/form-data">
 
      <!-- success and error FOR NOW, will replace with popups later -->
     <?php if (isset($_SESSION["reg_success"])): ?>

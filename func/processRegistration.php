@@ -3,13 +3,7 @@ session_start();
 require_once("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: resident.php");
-    exit();
-}
-
-$id = intval($_POST["resident_id"] ?? 0);
-if ($id <= 0) {
-    header("Location: resident.php");
+    header("Location: ../registration.php");
     exit();
 }
 
@@ -37,7 +31,7 @@ $disability_type    = isset($_POST["disability_type"])
     : "";
 $disability_remarks = trim($_POST["remarks"] ?? "");
 
-// ── Resident Type ─────────────────────────────────────
+// ── Resident Type (CWD if guardian filled, else PWD) ──
 $guardian_name   = trim($_POST["guardian_name"]   ?? "");
 $guardian_number = trim($_POST["guardian_number"] ?? "");
 $guardian_rel    = trim($_POST["child_relation"]  ?? "");
@@ -54,87 +48,70 @@ $control_num       = trim($_POST["control_id"]      ?? "");
 $idissue_date      = trim($_POST["date_issued"]     ?? "");
 $idexpiration_date = trim($_POST["expiration_date"] ?? "");
 
-// ── Status ────────────────────────────────────────────
-$status = trim($_POST["status"] ?? "Active");
-
-// ── Basic Validation ──────────────────────────────────
-if (empty($first_name) || empty($last_name) || empty($birthdate) || empty($sex)) {
-    $_SESSION["edit_error"] = "Please fill in all required fields.";
-    header("Location: editResident.php?id=$id");
-    exit();
-}
-
 // ── Profile Picture Upload ────────────────────────────
-// Fetch current profile path first
-$cur = mysqli_query($conn, "SELECT profile FROM residents WHERE ID = $id");
-$cur_row = mysqli_fetch_assoc($cur);
-$profile = $cur_row["profile"] ?? "";
-
+$profile = "";
 if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
-    $upload_dir = "uploads/profiles/";
-    if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+    $upload_dir = "../uploads/profiles/";
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
 
     $ext     = strtolower(pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION));
     $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
 
     if (!in_array($ext, $allowed)) {
-        $_SESSION["edit_error"] = "Invalid file type. Only JPG, PNG, GIF, WEBP allowed.";
-        header("Location: editResident.php?id=$id");
+        $_SESSION["reg_error"] = "Invalid file type. Only JPG, PNG, GIF, WEBP allowed.";
+        header("Location: ../registration.php");
         exit();
     }
 
     $safe_name = uniqid("profile_", true) . "." . $ext;
     $target    = $upload_dir . $safe_name;
 
-    if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
-        $profile = $target; // Replace old profile path
+    if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
+        $_SESSION["reg_error"] = "Failed to upload profile picture.";
+        header("Location: ../registration.php");
+        exit();
     }
+
+    $profile = "uploads/profiles/" . $safe_name;
 }
 
-// ── UPDATE ────────────────────────────────────────────
-$sql = "UPDATE residents SET
-            first_name        = ?,
-            middle_name       = ?,
-            last_name         = ?,
-            civil_status      = ?,
-            birthdate         = ?,
-            age               = ?,
-            birthplace        = ?,
-            sex               = ?,
-            address           = ?,
-            contact_num       = ?,
-            emergency_cont    = ?,
-            emergency_cont_num= ?,
-            emergency_cont_rel= ?,
-            socials           = ?,
-            disablity_type    = ?,
-            disability_remarks= ?,
-            resident_type     = ?,
-            guardian_name     = ?,
-            guardian_cont_num = ?,
-            guardian_rel      = ?,
-            father_name       = ?,
-            mother_name       = ?,
-            spouse_name       = ?,
-            pwdid_num         = ?,
-            control_num       = ?,
-            idissue_date      = ?,
-            idexpiration_date = ?,
-            profile           = ?,
-            status            = ?
-        WHERE ID = ?";
+// ── Admin registrations are Active by default ─────────
+$status = "Active";
+
+// ── Insert into DB ────────────────────────────────────
+$sql = "INSERT INTO residents (
+            first_name, middle_name, last_name, civil_status,
+            birthdate, age, birthplace, sex,
+            address, contact_num,
+            emergency_cont, emergency_cont_num, emergency_cont_rel,
+            socials, disablity_type, disability_remarks, resident_type,
+            guardian_name, guardian_cont_num, guardian_rel,
+            father_name, mother_name, spouse_name,
+            pwdid_num, control_num, idissue_date, idexpiration_date,
+            profile, status
+        ) VALUES (
+            ?, ?, ?, ?,
+            ?, ?, ?, ?,
+            ?, ?,
+            ?, ?, ?,
+            ?, ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?,
+            ?, ?, ?, ?,
+            ?, ?
+        )";
 
 $stmt = mysqli_prepare($conn, $sql);
 
 if (!$stmt) {
-    $_SESSION["edit_error"] = "Database error: " . mysqli_error($conn);
-    header("Location: editResident.php?id=$id");
+    $_SESSION["reg_error"] = "Database error: " . mysqli_error($conn);
+    header("Location: ../registration.php");
     exit();
 }
 
-// 29 values + 1 WHERE id = 30 total
-// s s s s s i s s s s s s s s s s s s s s s s s s s s s s s i
-mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssssi",
+mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
     $first_name,         // 1  s
     $middle_name,        // 2  s
     $last_name,          // 3  s
@@ -163,17 +140,16 @@ mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssssi",
     $idissue_date,       // 26 s
     $idexpiration_date,  // 27 s
     $profile,            // 28 s
-    $status,             // 29 s
-    $id                  // 30 i ← WHERE ID
+    $status              // 29 s
 );
 
 if (mysqli_stmt_execute($stmt)) {
-    $_SESSION["edit_success"] = "Resident updated successfully!";
-    header("Location: editResident.php?id=$id");
+    $_SESSION["reg_success"] = "Resident registered successfully!";
+    header("Location: ../registration.php");
     exit();
 } else {
-    $_SESSION["edit_error"] = "Failed to update: " . mysqli_stmt_error($stmt);
-    header("Location: editResident.php?id=$id");
+    $_SESSION["reg_error"] = "Failed to save registration: " . mysqli_stmt_error($stmt);
+    header("Location: ../registration.php");
     exit();
 }
 ?>
