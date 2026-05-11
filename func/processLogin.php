@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($username) || empty($password)) {
         $_SESSION["login_error"] = "Please fill in all fields.";
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit();
     }
 
@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!$stmt) {
         $_SESSION["login_error"] = "Database error: " . mysqli_error($conn);
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit();
     }
 
@@ -41,21 +41,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["role"]     = $user["role"];
 
             if ($user["role"] === "admin") {
-                header("Location: dashboard.php");
-            } else {
+                header("Location: ../dashboard.php");
+            } 
+            
+            else {
                 $_SESSION["login_error"] = "Access denied. Admins only.";
-                header("Location: login.php");
+                header("Location: ../login.php");
             }
             exit();
-        } else {
+        } 
+        
+        else {
             $_SESSION["login_error"] = "Incorrect password.";
-            header("Location: login.php");
+            header("Location: ../login.php");
             exit();
         }
 
-    } else {
+    } 
+    
+    else {
         $_SESSION["login_error"] = "Invalid username or password.";
-        header("Location: login.php");
+        header("Location: ../login.php");
         exit();
     }
 }

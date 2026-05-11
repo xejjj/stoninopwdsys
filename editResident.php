@@ -2,7 +2,6 @@
 session_start();
 require_once("func/db.php");
 
-// ── Get resident by ID ────────────────────────────────
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
 if ($id <= 0) {
     header("Location: resident.php");
@@ -20,11 +19,17 @@ if (!$r) {
     exit();
 }
 
-// Pre-split disability types for checkbox checking
 $saved_disabilities = array_map('trim', explode(",", $r['disablity_type'] ?? ""));
 function isChecked($val, $arr) {
     return in_array($val, $arr) ? "checked" : "";
 }
+
+$show_edit_success    = isset($_SESSION["edit_success"]);
+$show_archive_success = isset($_SESSION["arch_success"]);
+$edit_error           = $_SESSION["edit_error"] ?? "";
+if ($show_edit_success)    unset($_SESSION["edit_success"]);
+if ($show_archive_success) unset($_SESSION["arch_success"]);
+if ($edit_error)           unset($_SESSION["edit_error"]);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,7 +42,6 @@ function isChecked($val, $arr) {
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
@@ -48,21 +52,16 @@ function isChecked($val, $arr) {
       <span class="brand-sub">Sto. Niño System</span>
     </div>
   </div>
-
   <nav class="sidebar-nav">
     <div class="nav-section-label">Main Menu</div>
-
     <div class="nav-group">
       <a class="nav-item" href="dashboard.php">
-        <img src="assets/overviewicon.png" width="20">
-        Overview
+        <img src="assets/overviewicon.png" width="20">Overview
       </a>
     </div>
-
     <div class="nav-group">
       <a class="nav-item open active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
-        <img src="assets/users.png" width="20">
-        Management
+        <img src="assets/users.png" width="20">Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub open" id="mgmt-sub">
@@ -71,18 +70,14 @@ function isChecked($val, $arr) {
         <a class="nav-sub-item" href="#">Review Submissions</a>
       </div>
     </div>
-
     <div class="nav-group">
       <a class="nav-item" href="reports.php">
-        <img src="assets/reporticon.png" width="20">
-        Reports
+        <img src="assets/reporticon.png" width="20">Reports
       </a>
     </div>
-
     <div class="nav-group">
       <a class="nav-item" href="#" onclick="toggleMenu(event,'system-sub')">
-        <img src="assets/settingicon.png" width="20">
-        System
+        <img src="assets/settingicon.png" width="20">System
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
       <div class="nav-sub" id="system-sub">
@@ -92,7 +87,6 @@ function isChecked($val, $arr) {
       </div>
     </div>
   </nav>
-
   <div class="sidebar-footer">
     <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -101,7 +95,6 @@ function isChecked($val, $arr) {
   </div>
 </aside>
 
-<!-- ─── MAIN ─────────────────────────────────────── -->
 <div class="main">
   <header class="topbar">
     <h1 class="topbar-title">Edit Registration</h1>
@@ -109,18 +102,11 @@ function isChecked($val, $arr) {
 
   <div class="content">
 
-    <!-- Alerts -->
-    <?php if (isset($_SESSION["edit_success"])): ?>
-      <div class="alert alert-success">✅ <?= htmlspecialchars($_SESSION["edit_success"]) ?></div>
-      <?php unset($_SESSION["edit_success"]); ?>
-    <?php endif; ?>
-    <?php if (isset($_SESSION["edit_error"])): ?>
-      <div class="alert alert-error">⚠️ <?= htmlspecialchars($_SESSION["edit_error"]) ?></div>
-      <?php unset($_SESSION["edit_error"]); ?>
+    <?php if ($edit_error): ?>
+      <div class="alert alert-error">⚠️ <?= htmlspecialchars($edit_error) ?></div>
     <?php endif; ?>
 
     <form action="func/processEdit.php" method="POST" enctype="multipart/form-data">
-      <!-- Pass the resident ID -->
       <input type="hidden" name="resident_id" value="<?= $r['ID'] ?>">
 
       <!-- Personal Information -->
@@ -128,7 +114,7 @@ function isChecked($val, $arr) {
         <div class="card-title">Personal Information</div>
         <div class="form-grid">
           <div class="field">
-            <label>First Name <span class="req">*</span></label>
+            <label>First Name</label>
             <input type="text" name="first_name" value="<?= htmlspecialchars($r['first_name']) ?>" placeholder="e.g. Juan">
           </div>
           <div class="field">
@@ -136,11 +122,11 @@ function isChecked($val, $arr) {
             <input type="text" name="middle_name" value="<?= htmlspecialchars($r['middle_name']) ?>" placeholder="e.g. Dela">
           </div>
           <div class="field">
-            <label>Last Name <span class="req">*</span></label>
+            <label>Last Name</label>
             <input type="text" name="last_name" value="<?= htmlspecialchars($r['last_name']) ?>" placeholder="e.g. Cruz">
           </div>
           <div class="field">
-            <label>Civil Status <span class="req">*</span></label>
+            <label>Civil Status</label>
             <select name="civil_status">
               <option value="">Select status</option>
               <?php foreach (["Single","Married","Widowed","Separated"] as $cs): ?>
@@ -149,19 +135,19 @@ function isChecked($val, $arr) {
             </select>
           </div>
           <div class="field">
-            <label>Date of Birth <span class="req">*</span></label>
+            <label>Date of Birth</label>
             <input type="date" name="dob" value="<?= htmlspecialchars($r['birthdate']) ?>">
           </div>
           <div class="field">
-            <label>Place of Birth <span class="req">*</span></label>
+            <label>Place of Birth</label>
             <input type="text" name="pob" value="<?= htmlspecialchars($r['birthplace']) ?>" placeholder="e.g. Tondo General Hospital">
           </div>
           <div class="field">
-            <label>Age <span class="req">*</span></label>
+            <label>Age</label>
             <input type="number" name="age" value="<?= htmlspecialchars($r['age']) ?>" min="0" max="130">
           </div>
           <div class="field">
-            <label>Sex <span class="req">*</span></label>
+            <label>Sex</label>
             <select name="sex">
               <option value="">Select sex</option>
               <option value="male"   <?= strtolower($r['sex']) === "male"   ? "selected" : "" ?>>Male</option>
@@ -175,31 +161,31 @@ function isChecked($val, $arr) {
             <?php endif; ?>
             <label class="file-input-wrap">
               <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-              Choose file…
-              <input type="file" name="profile_pic" accept="image/*">
+              <span id="fileLabel">Choose file…</span>
+              <input type="file" name="profile_pic" accept="image/*" onchange="document.getElementById('fileLabel').textContent = this.files[0]?.name || 'Choose file…'">
             </label>
           </div>
         </div>
       </div>
 
-      <!-- Contact and Address Information -->
+      <!-- Contact and Address -->
       <div class="card">
         <div class="card-title">Contact and Address Information</div>
         <div class="form-grid">
           <div class="field">
-            <label>Contact Number <span class="req">*</span></label>
+            <label>Contact Number</label>
             <input type="tel" name="contact_number" value="<?= htmlspecialchars($r['contact_num']) ?>" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
-            <label>Emergency Contact Name <span class="req">*</span></label>
+            <label>Emergency Contact Name</label>
             <input type="text" name="emergency_name" value="<?= htmlspecialchars($r['emergency_cont']) ?>" placeholder="Full name">
           </div>
           <div class="field">
-            <label>Emergency Contact Number <span class="req">*</span></label>
+            <label>Emergency Contact Number</label>
             <input type="tel" name="emergency_number" value="<?= htmlspecialchars($r['emergency_cont_num']) ?>" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
-            <label>Relationship with Emergency Contact <span class="req">*</span></label>
+            <label>Relationship with Emergency Contact</label>
             <input type="text" name="emergency_relation" value="<?= htmlspecialchars($r['emergency_cont_rel']) ?>" placeholder="e.g. Parent, Sibling">
           </div>
           <div class="field">
@@ -207,7 +193,7 @@ function isChecked($val, $arr) {
             <input type="text" name="account_name" value="<?= htmlspecialchars($r['socials']) ?>">
           </div>
           <div class="field span-2">
-            <label>House No. and Street <span class="req">*</span></label>
+            <label>House No. and Street</label>
             <input type="text" name="address" value="<?= htmlspecialchars($r['address']) ?>" placeholder="e.g. 12 Sampaguita St.">
           </div>
         </div>
@@ -219,13 +205,13 @@ function isChecked($val, $arr) {
         <div class="form-grid cols-2">
           <div class="field span-all">
             <div class="checkbox-grid">
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive" <?= isChecked("Cognitive", $saved_disabilities) ?>> Cognitive</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"    <?= isChecked("Visual",    $saved_disabilities) ?>> Visual</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive"    <?= isChecked("Cognitive",    $saved_disabilities) ?>> Cognitive</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"       <?= isChecked("Visual",       $saved_disabilities) ?>> Visual</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical"     <?= isChecked("Physical",     $saved_disabilities) ?>> Physical</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"  <?= isChecked("Auditory",  $saved_disabilities) ?>> Auditory</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"    <?= isChecked("Speech",    $saved_disabilities) ?>> Speech</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"     <?= isChecked("Auditory",     $saved_disabilities) ?>> Auditory</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"       <?= isChecked("Speech",       $saved_disabilities) ?>> Speech</label>
               <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial" <?= isChecked("Psychosocial", $saved_disabilities) ?>> Psychosocial</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others" <?= isChecked("Others", $saved_disabilities) ?>> Others</label>
+              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others"       <?= isChecked("Others",       $saved_disabilities) ?>> Others</label>
             </div>
           </div>
           <div class="field span-all">
@@ -235,7 +221,7 @@ function isChecked($val, $arr) {
         </div>
       </div>
 
-      <!-- For CWD Only -->
+      <!-- CWD Only -->
       <div class="card">
         <div class="card-title">For CWD Only</div>
         <div class="cwd-note">
@@ -277,24 +263,24 @@ function isChecked($val, $arr) {
         </div>
       </div>
 
-      <!-- ID Registration Details -->
+      <!-- ID Registration -->
       <div class="card">
         <div class="card-title">ID Registration Details</div>
         <div class="form-grid cols-4">
           <div class="field">
-            <label>PWD ID Number <span class="req">*</span></label>
+            <label>PWD ID Number</label>
             <input type="text" name="pwd_id" value="<?= htmlspecialchars($r['pwdid_num']) ?>">
           </div>
           <div class="field">
-            <label>Control Number <span class="req">*</span></label>
+            <label>Control Number</label>
             <input type="text" name="control_id" value="<?= htmlspecialchars($r['control_num']) ?>">
           </div>
           <div class="field">
-            <label>Date Issued <span class="req">*</span></label>
+            <label>Date Issued</label>
             <input type="date" name="date_issued" value="<?= htmlspecialchars($r['idissue_date']) ?>">
           </div>
           <div class="field">
-            <label>Expiration Date <span class="req">*</span></label>
+            <label>Expiration Date</label>
             <input type="date" name="expiration_date" value="<?= htmlspecialchars($r['idexpiration_date']) ?>">
           </div>
         </div>
@@ -305,7 +291,7 @@ function isChecked($val, $arr) {
         <div class="card-title">Registration Status</div>
         <div class="form-grid cols-3">
           <div class="field">
-            <label>Status <span class="req">*</span></label>
+            <label>Status</label>
             <select name="status">
               <?php foreach (["Active","Pending","Expired"] as $st): ?>
                 <option <?= ($r['status'] ?? "") === $st ? "selected" : "" ?>><?= $st ?></option>
@@ -317,9 +303,7 @@ function isChecked($val, $arr) {
 
       <!-- Actions -->
       <div class="form-footer">
-        <button class="btn btn-archive" type="button" onclick="confirmArchive(<?= $r['ID'] ?>)">
-          Archive
-        </button>
+        <button class="btn btn-archive" type="button" onclick="confirmArchive(<?= $r['ID'] ?>)">Archive</button>
         <div style="display:flex;gap:10px;">
           <button class="btn btn-cancel" type="button" onclick="window.location.href='resident.php'">Cancel</button>
           <button class="btn btn-save" type="submit">Save Changes</button>
@@ -327,14 +311,38 @@ function isChecked($val, $arr) {
       </div>
 
     </form>
-  </div><!-- /content -->
-</div><!-- /main -->
+  </div>
+</div>
 
-<!-- Archive confirmation modal -->
+<!-- ── Edit Success Modal ── -->
+<?php if ($show_edit_success): ?>
+<div id="editSuccessModal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
+    <div style="width:56px; height:56px; background:#EAF9EE; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Changes Saved!</h2>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The resident's information has been updated successfully.</p>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
+        View Residents
+      </button>
+      <button onclick="document.getElementById('editSuccessModal').style.display='none'" style="padding:10px 22px; border-radius:10px; border:none; background:#A84040; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(168,64,64,0.3);">
+        Continue Editing
+      </button>
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+<!-- ── Archive Confirm Modal ── -->
 <div id="archiveModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
   <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
-    <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202;">Archive this resident?</h2>
-    <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px;">This will move the resident to the archive. You can restore them from the Archive page.</p>
+    <div style="width:48px; height:48px; background:#FFF3E8; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F18831" stroke-width="2.5"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+    </div>
+    <h2 style="font-size:18px; font-weight:800; margin-bottom:10px; color:#1c0202; text-align:center;">Archive this resident?</h2>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.6); margin-bottom:24px; text-align:center;">This will move the resident to the archive. You can restore them from the Archive page.</p>
     <div style="display:flex; gap:10px; justify-content:flex-end;">
       <button onclick="document.getElementById('archiveModal').style.display='none'" style="padding:8px 18px; border-radius:8px; border:1px solid rgba(0,0,0,0.1); background:none; font-family:inherit; font-weight:700; cursor:pointer;">Cancel</button>
       <form action="func/processArchive.php" method="POST" style="margin:0;">
