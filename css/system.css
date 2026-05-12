@@ -381,3 +381,203 @@
 
 .actions button:hover { color: var(--primary); }
 
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.2s ease;
+}
+
+/* SHOW MODAL */
+
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* MODAL BOX */
+
+.modal-box {
+    width: 420px;
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.18);
+
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    animation: modalPop 0.2s ease;
+}
+
+.modal-box h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #412f2f;
+}
+
+.modal-box p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* BUTTONS */
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.btn-cancel,
+.btn-confirm {
+
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.btn-cancel {
+    background: #f1f1f1;
+    color: #444;
+}
+
+.btn-cancel:hover {
+    background: #e5e5e5;
+}
+
+.btn-confirm {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: var(--primary-dk);
+}
+
+/* ANIMATION */
+
+@keyframes modalPop {
+
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* POPUP */
+
+.popup-success,
+.popup-error {
+
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,0.4);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 999;
+
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* SHOW */
+
+.show-popup {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* BOX */
+
+.popup-box {
+
+    width: 380px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 28px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+
+    animation: popupAnim .2s ease;
+}
+
+.popup-box h2 {
+
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.popup-box p {
+
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+/* BUTTON */
+
+.popup-box button {
+
+    border: none;
+
+    background: var(--primary);
+
+    color: white;
+
+    padding: 12px 28px;
+
+    border-radius: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.popup-box button:hover {
+
+    background: var(--primary-dk);
+}
+
+/* ANIMATION */
+
+@keyframes popupAnim {
+
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

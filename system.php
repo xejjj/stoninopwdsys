@@ -1,3 +1,4 @@
+<?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,12 +97,34 @@
                         <h2> Export Data </h2> 
                         <p> Download database as excel file</p>
                     </div>
-                    <div class = "card-item-actions">
-                        <button class="btn-print"> 
-                            <img src = "assets/exporticon.png" width="16" > Export
-                        </button>
-                    </div>
-                </div>
+                
+                <div class="card-item-actions">
+
+                  <div class="dropdown">
+
+            <button class="btn-print"
+                    onclick="toggleExportDropdown(event)">
+                <img src="assets/exporticon.png" width="16">
+                Export
+            </button>
+
+            <div class="dropdown-menu"
+                 id="exportDropdown">
+
+                <a href="func/processExportExcel.php">
+                    Export as Excel
+                </a>
+
+                <a href="func/processExportPDF.php">
+                    Export as PDF
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
 
                 <div class = "card-item">
                     <div class = "card-item-text">
@@ -109,10 +132,11 @@
                         <p> Create a snapshot of the database</p>
                     </div>
                     <div class = "card-item-actions">
-                        <button class="btn-print"> 
-                            <img src = "assets/exporticon.png" width="16" > Export
-                        </button>
-                        
+                        <a href="func/processBackupData.php" >
+                            <button class="btn-print"> 
+                                <img src = "assets/exporticon.png" width="16" > Export
+                            </button>
+                        </a>
                     </div>
                 </div>
 
@@ -122,14 +146,123 @@
                         <p> Restore database from a backup file</p>
                     </div>
                     <div class="card-item-actions">
-                    <button class="btn-print"> 
-                        <img src="assets/exporticon.png" width="16"> 
-                        Export
-                        
-                </div>
+
+    <form action="func/processRestoreData.php"
+      method="POST"
+      enctype="multipart/form-data"
+      id="restoreForm">
+
+    <input type="file"
+           name="backup_file"
+           id="backup_file"
+           accept=".sql"
+           style="display:none;"
+           required>
+
+    <button type="button"
+            class="btn-print"
+            onclick="document.getElementById('backup_file').click();">
+        <img src="assets/exporticon.png" width="16">
+        Restore
+    </button>
+
+    <button type="submit"
+            name="restore"
+            id="realRestoreSubmit"
+            style="display:none;">
+    </button>
+
+</form>
+
+</div>
             </div>
         </div>
   </div>
+  
+  <div class="modal-overlay" id="restoreModal">
+
+    <div class="modal-box">
+
+        <h2>Confirm Restoration</h2>
+
+        <p>
+            Restoring a backup may overwrite current database data.
+            Are you sure you want to continue?
+        </p>
+
+        <div class="modal-actions">
+
+            <button class="btn-cancel"
+                    onclick="closeRestoreModal()">
+
+                Cancel
+
+            </button>
+
+            <button class="btn-confirm"
+                    onclick="submitRestoreForm()">
+
+                Confirm Restore
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php if (isset($_SESSION['success'])) : ?>
+
+<div class="popup-success show-popup">
+
+    <div class="popup-box">
+
+        <h2>Success</h2>
+
+        <p>
+            <?php
+                echo $_SESSION['success'];
+                unset($_SESSION['success']);
+            ?>
+        </p>
+
+        <button onclick="closePopup()">
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+<?php endif; ?>
+
+
+<?php if (isset($_SESSION['error'])) : ?>
+
+<div class="popup-error show-popup">
+
+    <div class="popup-box">
+
+        <h2>Error</h2>
+
+        <p>
+            <?php
+                echo $_SESSION['error'];
+                unset($_SESSION['error']);
+            ?>
+        </p>
+
+        <button onclick="closePopup()">
+            OK
+        </button>
+
+    </div>
+
+</div>
+
+<?php endif; ?>
+
 </main>
 
 
@@ -150,12 +283,66 @@ function toDashboard() {
   window.location.href = "dashboard.php";
 }
 
-// Toggles the visibility of the dropdown
-function toggleDropdown(event) {
-    // Prevent the click from immediately bubbling up to the window object
-    event.stopPropagation(); 
-    document.getElementById("optionsMenu").classList.toggle("show");
+const backupInput = document.getElementById("backup_file");
+
+backupInput.addEventListener("change", function () {
+
+    if (this.files.length > 0) {
+
+        document.getElementById("restoreModal")
+                .classList.add("show-modal");
+    }
+});
+
+function closeRestoreModal() {
+
+    document.getElementById("restoreModal")
+            .classList.remove("show-modal");
+
+    backupInput.value = "";
 }
+
+function submitRestoreForm() {
+
+    document.getElementById("restoreForm").submit();
+}
+
+function closePopup() {
+
+    document.querySelectorAll(
+        ".popup-success, .popup-error"
+    ).forEach(el => {
+
+        el.classList.remove("show-popup");
+    });
+}
+
+function toggleExportDropdown(event) {
+
+    event.stopPropagation();
+
+    document.getElementById("exportDropdown")
+            .classList.toggle("show");
+}
+
+/* CLOSE DROPDOWN WHEN CLICKING OUTSIDE */
+
+window.addEventListener("click", function() {
+
+    const dropdown =
+        document.getElementById("exportDropdown");
+
+    if (dropdown.classList.contains("show")) {
+
+        dropdown.classList.remove("show");
+    }
+});
+
+function submitRestoreForm() {
+    document.getElementById("realRestoreSubmit").click();
+}
+
+
 </script>
 </body>
 </html>
