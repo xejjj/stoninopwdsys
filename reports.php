@@ -97,7 +97,7 @@
                         <p> Complete list of all registered PWDs and CWDs</p>
                     </div>
                     <div class = "card-item-actions">
-                        <button class="btn-print" onclick="window.open('printReport.php?type=master', '_blank')"> 
+                        <button class="btn-print" onclick="window.open('func/processPrintReports.php?type=master', '_blank')"> 
     <img src="assets/printicon.png" width="16"> Print
 </button>
                     </div>
@@ -110,9 +110,16 @@
                     </div>
                     <div class = "card-item-actions">
                     
-                        <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
-    <img src="assets/printicon.png" width="16"> Print
-</button>
+                        <div class="dropdown">
+    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'pwdCwdMenu')">
+        <img src="assets/printicon.png" width="16"> Print
+    </button>
+
+    <div class="dropdown-menu" id="pwdCwdMenu">
+        <a href="func/processPrintReports.php?type=pwdcwd&category=PWD" target="_blank">Print PWD Summary</a>
+        <a href="func/processPrintReports.php?type=pwdcwd&category=CWD" target="_blank">Print CWD Summary</a>
+    </div>
+</div>
                         
                     </div>
                 </div>
@@ -124,9 +131,17 @@
                     </div>
                     <div class="card-item-actions">
                       
-                    <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
-    <img src="assets/printicon.png" width="16"> Print
-</button>
+                    <div class="dropdown">
+    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'disabilityMenu')">
+        <img src="assets/printicon.png" width="16"> Print
+    </button>
+
+    <div class="dropdown-menu" id="disabilityMenu">
+        <a href="func/processPrintReports.php?type=disability&category=PWD" target="_blank">Print PWD Classification</a>
+        <a href="func/processPrintReports.php?type=disability&category=CWD" target="_blank">Print CWD Classification</a>
+        <a href="func/processPrintReports.php?type=disability&category=ALL" target="_blank">Print All Classification</a>
+    </div>
+</div>
                   </div>
                 </div>
             </div>
@@ -137,40 +152,36 @@
 
 <script>
 function toggleMenu(event, id) {
-  event.preventDefault();
+    event.preventDefault();
 
-  const trigger = event.currentTarget;
-  const submenu = document.getElementById(id);
+    const trigger = event.currentTarget;
+    const submenu = document.getElementById(id);
 
-  // Toggle open class on parent
-  trigger.classList.toggle("open");
-
-  // Toggle submenu
-  submenu.classList.toggle("open");
+    trigger.classList.toggle("open");
+    submenu.classList.toggle("open");
 }
+
 function toDashboard() {
-  window.location.href = "dashboard.php";
+    window.location.href = "dashboard.php";
 }
 
-// Toggles the visibility of the dropdown
-function toggleDropdown(event) {
-    // Prevent the click from immediately bubbling up to the window object
-    event.stopPropagation(); 
-    document.getElementById("optionsMenu").classList.toggle("show");
-}
+function toggleReportDropdown(event, menuId) {
+    event.stopPropagation();
 
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-    if (!event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-toggle')) {
-        var dropdowns = document.getElementsByClassName("dropdown-menu");
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+        if (menu.id !== menuId) {
+            menu.classList.remove("show");
         }
-    }
+    });
+
+    document.getElementById(menuId).classList.toggle("show");
 }
+
+window.addEventListener("click", function () {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => {
+        menu.classList.remove("show");
+    });
+});
 </script>
 </body>
 </html>

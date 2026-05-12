@@ -1,5 +1,6 @@
 <?php require_once("func/getDashboardData.php");
 require_once("func/processDailyBackup.php");
+require_once("func/db.php");
 ?>
 
 <!DOCTYPE html>

@@ -297,40 +297,6 @@
     cursor: pointer;
 }
 
-/* New Dropdown specific styles */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-menu {
-    display: none; /* Hidden by default */
-    position: absolute;
-    top: 100%; /* Position right below the button */
-    right: 0; /* Align to the right edge of the button */
-    margin-top: 8px;
-    background-color: #ffffff;
-    min-width: 200px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.08); /* Soft drop shadow */
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    z-index: 100; /* Ensures it stays on top of other content */
-    overflow: hidden;
-}
-
-.dropdown-menu a {
-    color: #333333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}
-
-.dropdown-menu a:hover {
-    background-color: #f7f3f3; /* Matches the subtle red/grey tone of your UI */
-    color: #9e2a2b; /* A dark red hover state to match your theme */
-}
 
 /* Class added via JavaScript to toggle visibility */
 .show {
@@ -376,4 +342,41 @@
 }
 
 .actions button:hover { color: var(--primary); }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background: #fff;
+    min-width: 220px;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 12px 16px;
+    font-size: 14px;
+    text-decoration: none;
+    color: #333;
+}
+
+.dropdown-menu a:hover {
+    background: #f7f3f3;
+    color: #9e2a2b;
+}
+
+.show {
+    display: block;
+}
 
