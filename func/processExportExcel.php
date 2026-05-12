@@ -61,22 +61,22 @@ while ($row = mysqli_fetch_assoc($result)) {
     <td>{$row['birthplace']}</td>
     <td>{$row['sex']}</td>
     <td>{$row['address']}</td>
-    <td>{$row['contact_num']}</td>
+    <td style='mso-number-format:\"\\@\";'>{$row['contact_num']}</td>
     <td>{$row['emergency_cont']}</td>
-    <td>{$row['emergency_cont_num']}</td>
+    <td style='mso-number-format:\"\\@\";'>{$row['emergency_cont_num']}</td>
     <td>{$row['emergency_cont_rel']}</td>
     <td>{$row['socials']}</td>
     <td>{$row['disablity_type']}</td>
     <td>{$row['disability_remarks']}</td>
     <td>{$row['resident_type']}</td>
     <td>{$row['guardian_name']}</td>
-    <td>{$row['guardian_cont_num']}</td>
+    <td style='mso-number-format:\"\\@\";'>{$row['guardian_cont_num']}</td>
     <td>{$row['guardian_rel']}</td>
     <td>{$row['father_name']}</td>
     <td>{$row['mother_name']}</td>
     <td>{$row['spouse_name']}</td>
-    <td>{$row['pwdid_num']}</td>
-    <td>{$row['control_num']}</td>
+    <td style='mso-number-format:\"\\@\";'>{$row['pwdid_num']}</td>
+    <td style='mso-number-format:\"\\@\";'>{$row['control_num']}</td>
     <td>{$row['idissue_date']}</td>
     <td>{$row['idexpiration_date']}</td>
     <td>{$row['status']}</td>

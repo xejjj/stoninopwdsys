@@ -109,10 +109,7 @@
                         <p> Aggregated statistics by age</p>
                     </div>
                     <div class = "card-item-actions">
-                      <button class="btn-options">
-                            
-                            Options
-                        </button>
+                    
                         <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
     <img src="assets/printicon.png" width="16"> Print
 </button>
@@ -126,10 +123,7 @@
                         <p> Distribution of PWDs and CWDs across different disability types</p>
                     </div>
                     <div class="card-item-actions">
-                      <button class="btn-options">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-                      Options
-                    </button>
+                      
                     <button class="btn-print" onclick="window.open('printReport.php?type=classification', '_blank')"> 
     <img src="assets/printicon.png" width="16"> Print
 </button>

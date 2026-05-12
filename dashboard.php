@@ -1,4 +1,6 @@
-<?php require_once("func/getDashboardData.php"); ?>
+<?php require_once("func/getDashboardData.php");
+require_once("func/processDailyBackup.php");
+?>
 
 <!DOCTYPE html>
 <html lang="en">
