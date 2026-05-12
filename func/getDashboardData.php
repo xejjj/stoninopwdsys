@@ -57,14 +57,31 @@ $expired_path = $total > 0 ? pieSlice(90, 90, 80, $active_deg + $pending_deg, 36
 // ── Directory rows ────────────────────────────────────
 $recent_ids = $_SESSION['recent_views'] ?? [];
 
-if (empty($recent_ids)) {
-    $residents_result = mysqli_query($conn, "SELECT * FROM residents ORDER BY id DESC LIMIT 5");
+// Status Priority: Pending (1), Expired (2), Active (3)
+$status_order = "'Pending', 'Expired', 'Active'";
+
+if (!empty($recent_ids)) {
+    // We reverse the array so the most recently pushed ID has the highest index
+    $reversed_recents = array_reverse($recent_ids);
+    $id_list = implode(',', array_map('intval', $reversed_recents));
+
+    // 1. Sort by Status Priority
+    // 2. Sort by Recency (FIELD returns the position in the list; higher position = more recent)
+    // 3. Sort by ID (fallback for residents never opened)
+    $query = "SELECT * FROM residents 
+              ORDER BY 
+                FIELD(status, $status_order) ASC, 
+                FIELD(id, $id_list) DESC, 
+                id DESC";
 } else {
-    $id_list = implode(',', array_map('intval', $recent_ids));
-    
-    $query = "SELECT * FROM residents WHERE id IN ($id_list) ORDER BY FIELD(id, $id_list)";
-    $residents_result = mysqli_query($conn, $query);
+    // Fallback if no residents have been opened yet
+    $query = "SELECT * FROM residents 
+              ORDER BY 
+                FIELD(status, $status_order) ASC, 
+                id DESC";
 }
+
+$residents_result = mysqli_query($conn, $query);
 
 // ── Disability badge CSS class map ────────────────────
 function badgeClass($type) {

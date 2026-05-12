@@ -185,7 +185,7 @@ require_once("func/processDailyBackup.php");
         <?php 
         $display_count = 0;
         while ($user = mysqli_fetch_assoc($residents_result)): 
-          if ($display_count >= 5) break;
+          if ($display_count == 5) break;
           $display_count++;
           
           $full_name = htmlspecialchars(
