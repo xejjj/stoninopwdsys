@@ -23,8 +23,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $address            = trim($_POST["address"]);
 
     // ── Disability ────────────────────────────────────────
-    $disability_type = isset($_POST["disability_type"])
-        ? implode(", ", $_POST["disability_type"])
+    $disablity_type = isset($_POST["disablity_type"])
+        ? implode(", ", $_POST["disablity_type"])
         : "";
 
     // ── Resident Type ─────────────────────────────────────
@@ -47,12 +47,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // ── Basic Validation ──────────────────────────────────
     if (empty($first_name) || empty($last_name) || empty($birthdate) || empty($sex)) {
         $_SESSION["reg_error"] = "Please fill in all required fields.";
+        $_SESSION['form_data'] = $_POST; // Save input data
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    if (empty($disability_type)) {
+    if (empty($disablity_type)) {
         $_SESSION["reg_error"] = "Please select at least one disability type.";
+        $_SESSION['form_data'] = $_POST; // Save input data
         header("Location: ../selfregistration.php");
         exit();
     }
@@ -60,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // ── Profile Picture Upload ────────────────────────────
     $profile = "";
     if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
-        $upload_dir = "uploads/profiles/";
+        $upload_dir = "../uploads/profiles/"; // Adjusted path if processSelfReg is inside /func
 
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0755, true);
@@ -73,12 +75,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
         if (!in_array(strtolower($ext), $allowed)) {
             $_SESSION["reg_error"] = "Invalid file type. Only JPG, PNG, GIF, WEBP allowed.";
+            $_SESSION['form_data'] = $_POST; // Save input data
             header("Location: ../selfregistration.php");
             exit();
         }
 
         if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
             $_SESSION["reg_error"] = "Failed to upload profile picture.";
+            $_SESSION['form_data'] = $_POST; // Save input data
             header("Location: ../selfregistration.php");
             exit();
         }
@@ -113,12 +117,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!$stmt) {
         $_SESSION["reg_error"] = "Database error: " . mysqli_error($conn);
+        $_SESSION['form_data'] = $_POST; // Save input data
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    //         1234567890123456789012345678
-    //         sssssis = age is i, rest s = 27 total
+    //        1234567890123456789012345678
+    //        sssssis = age is i, rest s = 27 total
     mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssss",
         $first_name,         // 1  s
         $middle_name,        // 2  s
@@ -134,7 +139,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $emergency_cont_num, // 12 s
         $emergency_cont_rel, // 13 s
         $socials,            // 14 s
-        $disability_type,    // 15 s
+        $disablity_type,     // 15 s
         $resident_type,      // 16 s
         $guardian_name,      // 17 s
         $guardian_number,    // 18 s
@@ -155,6 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     } else {
         $_SESSION["reg_error"] = "Failed to submit: " . mysqli_stmt_error($stmt);
+        $_SESSION['form_data'] = $_POST; // Save input data
         header("Location: ../selfregistration.php");
         exit();
     }

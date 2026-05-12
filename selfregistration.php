@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php 
+session_start(); 
+
+// Fetch saved form data and clear it from session
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +34,7 @@
 
   <div class="info-box">
     <div class="info-icon">
-      <img src = "assets/exclamark.png" width="75" style="margin-top: 10px;">
+      <img src="assets/exclamark.png" width="75" style="margin-top: 10px;">
     </div>
     <div class="info-content">
       <div class="info-title">Important Information</div>
@@ -52,51 +58,49 @@
     <?php unset($_SESSION["reg_error"]); ?>
     <?php endif; ?>
 
-
-
     <div class="card">
       <div class="card-title">Personal Information</div>
       <div class="form-grid cols-4">
         <div class="field">
           <label>First Name <span class="req">*</span></label>
-          <input type="text" name="first_name" placeholder="e.g. Juan">
+          <input type="text" name="first_name" placeholder="e.g. Juan" value="<?= htmlspecialchars($form_data['first_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Middle Name <span class="req">*</span></label>
-          <input type="text" name="middle_name" placeholder="e.g. Dela">
+          <input type="text" name="middle_name" placeholder="e.g. Dela" value="<?= htmlspecialchars($form_data['middle_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Last Name <span class="req">*</span></label>
-          <input type="text" name="last_name" placeholder="e.g. Cruz">
+          <input type="text" name="last_name" placeholder="e.g. Cruz" value="<?= htmlspecialchars($form_data['last_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Civil Status <span class="req">*</span></label>
           <select name="civil_status">
             <option value=""></option>
-            <option>Single</option>
-            <option>Married</option>
-            <option>Widowed</option>
-            <option>Separated</option>
+            <option <?= (isset($form_data['civil_status']) && $form_data['civil_status'] == 'Single') ? 'selected' : '' ?>>Single</option>
+            <option <?= (isset($form_data['civil_status']) && $form_data['civil_status'] == 'Married') ? 'selected' : '' ?>>Married</option>
+            <option <?= (isset($form_data['civil_status']) && $form_data['civil_status'] == 'Widowed') ? 'selected' : '' ?>>Widowed</option>
+            <option <?= (isset($form_data['civil_status']) && $form_data['civil_status'] == 'Separated') ? 'selected' : '' ?>>Separated</option>
           </select>
         </div>
         <div class="field">
           <label>Date of Birth <span class="req">*</span></label>
-          <input type="date" name="dob">
+          <input type="date" name="dob" value="<?= htmlspecialchars($form_data['dob'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Place of Birth <span class="req">*</span></label>
-          <input type="text" name="pob" placeholder="e.g. Tondo General Hospital">
+          <input type="text" name="pob" placeholder="e.g. Tondo General Hospital" value="<?= htmlspecialchars($form_data['pob'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Age <span class="req">*</span></label>
-          <input type="number" name="age" placeholder="0" min="0" max="130">
+          <input type="number" name="age" placeholder="0" min="0" max="130" value="<?= htmlspecialchars($form_data['age'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Sex <span class="req">*</span></label>
           <select name="sex">
             <option value=""></option>
-            <option>Male</option>
-            <option>Female</option>
+            <option <?= (isset($form_data['sex']) && strtolower($form_data['sex']) == 'male') ? 'selected' : '' ?>>Male</option>
+            <option <?= (isset($form_data['sex']) && strtolower($form_data['sex']) == 'female') ? 'selected' : '' ?>>Female</option>
           </select>
         </div>
         <div class="field">
@@ -115,27 +119,27 @@
       <div class="form-grid cols-4">
         <div class="field">
           <label>Contact Number <span class="req">*</span></label>
-          <input type="text" name="contact_number" placeholder="09XX XXX XXXX">
+          <input type="text" name="contact_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Emergency Contact Name <span class="req">*</span></label>
-          <input type="text" name="emergency_name" placeholder="Full name">
+          <input type="text" name="emergency_name" placeholder="Full name" value="<?= htmlspecialchars($form_data['emergency_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Emergency Contact Number <span class="req">*</span></label>
-          <input type="text" name="emergency_number" placeholder="09XX XXX XXXX">
+          <input type="text" name="emergency_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Relationship with Emergency Contact <span class="req">*</span></label>
-          <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling">
+          <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling" value="<?= htmlspecialchars($form_data['emergency_relation'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Email/Facebook Account <span class="req">*</span></label>
-          <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com">
+          <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com" value="<?= htmlspecialchars($form_data['account_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>House No. and Street <span class="req">*</span></label>
-          <input type="text" name="address" placeholder="e.g. 12 Sampaguita St.">
+          <input type="text" name="address" placeholder="e.g. 12 Sampaguita St." value="<?= htmlspecialchars($form_data['address'] ?? '') ?>">
         </div>
       </div>
     </div>
@@ -146,16 +150,16 @@
         <div class="field span-all">
           <label>Disability Types <span class="req">*</span></label>
           <div class="checkbox-grid">
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive"> Cognitive</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"> Visual</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical"> Physical</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"> Auditory</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"> Speech</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial"> Psychosocial</label>
-            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others"> Others</label>
+            <?php $disabilities = $form_data['disablity_type'] ?? []; ?>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Cognitive" <?= in_array('Cognitive', $disabilities) ? 'checked' : '' ?>> Cognitive</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Visual" <?= in_array('Visual', $disabilities) ? 'checked' : '' ?>> Visual</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Physical" <?= in_array('Physical', $disabilities) ? 'checked' : '' ?>> Physical</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Auditory" <?= in_array('Auditory', $disabilities) ? 'checked' : '' ?>> Auditory</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Speech" <?= in_array('Speech', $disabilities) ? 'checked' : '' ?>> Speech</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Psychosocial" <?= in_array('Psychosocial', $disabilities) ? 'checked' : '' ?>> Psychosocial</label>
+            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Others" <?= in_array('Others', $disabilities) ? 'checked' : '' ?>> Others</label>
           </div>
         </div>
-      
       </div>
     </div>
 
@@ -164,15 +168,15 @@
       <div class="form-grid cols-3">
         <div class="field">
           <label>Parent/Guardian Name <span class="req">*</span></label>
-          <input type="text" name="guardian_name" placeholder="Full name">
+          <input type="text" name="guardian_name" placeholder="Full name" value="<?= htmlspecialchars($form_data['guardian_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Parent/Guardian Number <span class="req">*</span></label>
-          <input type="text" name="guardian_number" placeholder="09XX XXX XXXX">
+          <input type="text" name="guardian_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Relationship with Child <span class="req">*</span></label>
-          <input type="text" name="child_relation" placeholder="e.g. Mother, Father">
+          <input type="text" name="child_relation" placeholder="e.g. Mother, Father" value="<?= htmlspecialchars($form_data['child_relation'] ?? '') ?>">
         </div>
       </div>
     </div>
@@ -182,15 +186,15 @@
       <div class="form-grid cols-3">
         <div class="field">
           <label>Father Name<span class="req">*</span></label>
-          <input type="text" name="father_name" placeholder="Full Name">
+          <input type="text" name="father_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['father_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Mother Name<span class="req">*</span></label>
-          <input type="text" name="mother_name" placeholder="Full Name">
+          <input type="text" name="mother_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['mother_name'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Spouse Name<span class="req">*</span></label>
-          <input type="text" name="spouse_name" placeholder="Full Name">
+          <input type="text" name="spouse_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['spouse_name'] ?? '') ?>">
         </div>
       </div>
     </div>
@@ -200,25 +204,25 @@
       <div class="form-grid cols-4">
         <div class="field">
           <label>PWD ID Number <span class="req">*</span></label>
-          <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX">
+          <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX" value="<?= htmlspecialchars($form_data['pwd_id'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Control Number <span class="req">*</span></label>
-          <input type="text" name="control_id" placeholder="XXXXXXXXXXXX">
+          <input type="text" name="control_id" placeholder="XXXXXXXXXXXX" value="<?= htmlspecialchars($form_data['control_id'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Date Issued <span class="req">*</span></label>
-          <input type="date" name="date_issued">
+          <input type="date" name="date_issued" value="<?= htmlspecialchars($form_data['date_issued'] ?? '') ?>">
         </div>
         <div class="field">
           <label>Expiration Date <span class="req">*</span></label>
-          <input type="date" name="expiration_date">
+          <input type="date" name="expiration_date" value="<?= htmlspecialchars($form_data['expiration_date'] ?? '') ?>">
         </div>
       </div>
     </div>
 
     <div class="submit-wrapper">
-      <button class="btn btn-save btn-large" type="submit" href = "dashboard.php">Submit Registration</button>
+      <button class="btn btn-save btn-large" type="submit">Submit Registration</button>
     </div>
 
     <div class="footer-note">

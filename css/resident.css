@@ -217,8 +217,6 @@
   }
   .search-bar input::placeholder { color: #999; font-weight: 500; }
 
-  /* FIX: table-wrap grows to fill remaining space,
-     pushing pagination to the bottom */
   .table-wrap {
     flex: 1;
   }

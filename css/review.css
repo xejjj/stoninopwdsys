@@ -26,6 +26,10 @@
   --blue: #2563EB;
   --blue-light: #DBEAFE;
   --green: #16A34A;
+  --purple: #8B5CF6;
+  --purple-light: #EDE9FE;
+  --yellow: #CA8A04;
+  --yellow-light: #FEF08A;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -118,7 +122,7 @@ body {
 }
 
 .back-btn svg { width: 22px; height: 22px; }
-.page-title { font-size: 40px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
+.page-title { font-size: 40px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; }
 
 /* Stats Row */
 .stats-row {
@@ -195,7 +199,9 @@ body {
 
 .filter-btn,
 .rejectedfilter-btn,
-.allfilter-btn {
+.allfilter-btn,
+.filter-btn-review,
+.filter-btn-correction {
   background: none;
   border: none;
   cursor: pointer;
@@ -210,13 +216,25 @@ body {
 
 .filter-btn:hover,
 .rejectedfilter-btn:hover,
-.allfilter-btn:hover {
+.allfilter-btn:hover,
+.filter-btn-review:hover,
+.filter-btn-correction:hover {
   color: var(--text-main);
 }
 
 .filter-btn.active {
   background: var(--orange-light);
   color: var(--orange);
+}
+
+.filter-btn-review.active {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+.filter-btn-correction.active {
+  background: var(--yellow-light);
+  color: var(--yellow);
 }
 
 .rejectedfilter-btn.active {
@@ -271,38 +289,42 @@ body {
 
 .sub-status-row { display: flex; align-items: center; gap: 14px; }
 .badge { 
-  font-size: 13px; /* Increased from 11px */
+  font-size: 13px;
   font-weight: 700; 
-  padding: 4px 12px; /* Increased padding */
+  padding: 4px 12px;
   border-radius: 12px; 
 }
 .badge-pending { background: var(--orange-light); color: var(--orange); }
-.time-ago { font-size: 14px; color: var(--text-muted); } /* Increased from 12px */
+.badge-under-review { background: var(--purple-light); color: var(--purple); }
+.badge-needs-correction { background: var(--yellow-light); color: var(--yellow); }
+.time-ago { font-size: 14px; color: var(--text-muted); } 
 
-.sub-actions { display: flex; gap: 16px; } /* Increased gap */
+.sub-actions { display: flex; gap: 16px; }
 
 .btn {
   display: flex; align-items: center; gap: 10px;
-  padding: 12px 24px; /* Increased from 8px 16px */
-  border-radius: 10px; /* Slightly rounder edges */
+  padding: 12px 24px;
+  border-radius: 10px; 
   border: none;
   font-family: inherit; 
-  font-size: 16px; /* Increased from 14px */
+  font-size: 16px; 
   font-weight: 600;
   cursor: pointer; color: #fff;
   transition: opacity 0.2s;
 }
 .btn:hover { opacity: 0.9; }
-.btn svg { width: 20px; height: 20px; } /* Increased from 16px */
+.btn svg { width: 20px; height: 20px; } 
 
 .btn-approve { background: var(--green); }
 .btn-reject { background: var(--red); }
+.btn-review { background: var(--purple); }
+.btn-correction { background: var(--yellow); }
 
 /* Submission Details Grid */
 .sub-details {
   display: flex;
   flex-direction: column;
-  gap: 24px; /* Increased gap */
+  gap: 24px; 
 }
 
 .detail-row {
