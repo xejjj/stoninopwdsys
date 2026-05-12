@@ -169,7 +169,7 @@
           </div>
           <div class="field">
             <label>Email/Facebook Account</label>
-            <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com>
+            <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com">
           </div>
           <div class="field span-2">
             <label>House No. and Street</label>
@@ -197,27 +197,31 @@
             <label>Remarks</label>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize: none;"></textarea>
           </div>
+          <div class="field span-all">
+  <label>Medical Certificate</label>
+  <label class="file-input-wrap">
+    <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+    <span id="medCertLabel">Upload medical certificate…</span>
+    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
+  </label>
+</div>
         </div>
       </div>
 
-      <!-- For CWD Only -->
+
       <div class="card">
-        <div class="card-title">For CWD Only</div>
-        <div class="cwd-note">
-          <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Fill this section only for Children with Disabilities (CWD)
-        </div>
+        <div class="card-title">Guardian Information</div>
         <div class="form-grid cols-3">
           <div class="field">
-            <label>Parent/Guardian Name</label>
+            <label>Guardian Name</label>
             <input type="text" name="guardian_name" placeholder="Full name">
           </div>
           <div class="field">
-            <label>Parent/Guardian Number</label>
+            <label>Guardian Number</label>
             <input type="tel" name="guardian_number" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
-            <label>Relationship with Child</label>
+            <label>Relationship</label>
             <input type="text" name="child_relation" placeholder="e.g. Mother, Father">
           </div>
         </div>

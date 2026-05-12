@@ -36,7 +36,7 @@ $sql = "INSERT INTO archive (
             guardian_name, guardian_cont_num, guardian_rel,
             father_name, mother_name, spouse_name,
             pwdid_num, control_num, idissue_date, idexpiration_date,
-            profile, status
+            profile, med_cert, status
         ) VALUES (
             ?, ?, ?, ?,
             ?, ?, ?, ?,
@@ -46,7 +46,7 @@ $sql = "INSERT INTO archive (
             ?, ?, ?,
             ?, ?, ?,
             ?, ?, ?, ?,
-            ?, ?
+            ?, ?, ?
         )";
 
 $stmt = mysqli_prepare($conn, $sql);
@@ -59,7 +59,7 @@ if (!$stmt) {
 
 $age = intval($r['age']);
 
-mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
+mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssss",
     $r['first_name'],
     $r['middle_name'],
     $r['last_name'],
@@ -88,6 +88,7 @@ mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
     $r['idissue_date'],
     $r['idexpiration_date'],
     $r['profile'],
+    $r['med_cert'],
     $r['status']
 );
 

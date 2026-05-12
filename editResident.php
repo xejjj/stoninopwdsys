@@ -218,6 +218,40 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
             <label>Remarks</label>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..."><?= htmlspecialchars($r['disability_remarks'] ?? "") ?></textarea>
           </div>
+          <div class="field span-all">
+  <label>Medical Certificate</label>
+
+  <?php if (!empty($r['med_cert'])): ?>
+    <a href="<?= htmlspecialchars($r['med_cert']) ?>"
+       target="_blank"
+       style="
+         display:inline-block;
+         margin-bottom:10px;
+         color:#A84040;
+         font-weight:700;
+         text-decoration:none;
+       ">
+       View Current Medical Certificate
+    </a>
+  <?php endif; ?>
+
+  <label class="file-input-wrap">
+    <svg viewBox="0 0 24 24">
+      <polyline points="16 16 12 12 8 16"/>
+      <line x1="12" y1="12" x2="12" y2="21"/>
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+    </svg>
+
+    <span id="medCertLabel">Upload new medical certificate…</span>
+
+    <input
+      type="file"
+      name="med_cert"
+      accept=".pdf,.jpg,.jpeg,.png"
+      onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload new medical certificate…'"
+    >
+  </label>
+</div>
         </div>
       </div>
 

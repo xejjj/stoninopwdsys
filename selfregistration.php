@@ -14,6 +14,31 @@ unset($_SESSION['form_data']);
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/selfregistration.css" />
 </head>
+<script>
+function previewProfile(input) {
+  const label = document.getElementById("profileFileLabel");
+  const preview = document.getElementById("profilePreview");
+
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+
+    label.textContent = file.name;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      preview.src = e.target.result;
+      preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+  } else {
+    label.textContent = "Choose profile picture…";
+    preview.src = "";
+    preview.style.display = "none";
+  }
+}
+</script>
 <body>
 
 <div class="top-nav">
@@ -104,13 +129,28 @@ unset($_SESSION['form_data']);
           </select>
         </div>
         <div class="field">
-          <label>Upload Profile <span class="req">*</span></label>
-          <label class="file-input-wrap">
-            <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-            <span class="file-placeholder"></span>
-            <input type="file" name="profile_pic" accept="image/*">
-          </label>
-        </div>
+  <label>Upload Profile <span class="req">*</span></label>
+
+  <img id="profilePreview"
+       src=""
+       alt="Profile Preview"
+       style="display:none;width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:8px;">
+
+  <label class="file-input-wrap">
+    <svg viewBox="0 0 24 24">
+      <polyline points="16 16 12 12 8 16"/>
+      <line x1="12" y1="12" x2="12" y2="21"/>
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+    </svg>
+
+    <span id="profileFileLabel">Choose profile picture…</span>
+
+    <input type="file"
+           name="profile_pic"
+           accept="image/*"
+           onchange="previewProfile(this)">
+  </label>
+</div>
       </div>
     </div>
 
@@ -160,7 +200,20 @@ unset($_SESSION['form_data']);
             <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Others" <?= in_array('Others', $disabilities) ? 'checked' : '' ?>> Others</label>
           </div>
         </div>
+        <div class="field span-all">
+            <label>Remarks</label>
+            <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize: none;"></textarea>
+          </div>
+          <div class="field span-all">
+  <label>Medical Certificate</label>
+  <label class="file-input-wrap">
+    <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+    <span id="medCertLabel">Upload medical certificate…</span>
+    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
+  </label>
+</div>
       </div>
+      
     </div>
 
     <div class="card">

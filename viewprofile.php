@@ -10,20 +10,27 @@ if (!isset($_GET['id'])) {
 }
 
 $current_resident_id = intval($_GET['id']);
+$source = $_GET['source'] ?? 'residents';
 
-// 2. Update the Recent Views Session for the Dashboard
-if (!isset($_SESSION['recent_views'])) {
-    $_SESSION['recent_views'] = [];
-}
-$pos = array_search($current_resident_id, $_SESSION['recent_views']);
-if ($pos !== false) {
-    unset($_SESSION['recent_views'][$pos]);
-}
-array_unshift($_SESSION['recent_views'], $current_resident_id);
-$_SESSION['recent_views'] = array_slice($_SESSION['recent_views'], 0, 5);
+$table = ($source === 'archive') ? 'archive' : 'residents';
 
-// 3. Fetch the specific resident's data
-$sql = "SELECT * FROM residents WHERE id = ?";
+// Only save recent views for active residents
+if ($table === 'residents') {
+    if (!isset($_SESSION['recent_views'])) {
+        $_SESSION['recent_views'] = [];
+    }
+
+    $pos = array_search($current_resident_id, $_SESSION['recent_views']);
+
+    if ($pos !== false) {
+        unset($_SESSION['recent_views'][$pos]);
+    }
+
+    array_unshift($_SESSION['recent_views'], $current_resident_id);
+    $_SESSION['recent_views'] = array_slice($_SESSION['recent_views'], 0, 5);
+}
+
+$sql = "SELECT * FROM $table WHERE ID = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $current_resident_id);
 mysqli_stmt_execute($stmt);
@@ -33,14 +40,13 @@ $resident = mysqli_fetch_assoc($result);
 if (!$resident) {
     die("Resident not found in the database.");
 }
-
 // 4. Formatting and Calculations
 $full_name = htmlspecialchars(trim($resident['first_name'] . ' ' . $resident['middle_name'] . ' ' . $resident['last_name']));
 $status = htmlspecialchars($resident['status'] ?? 'Pending');
 $status_cls = "badge-" . strtolower($status);
 
 // Calculate Age from Date of Birth
-$dob_string = $resident['dob'] ?? null;
+$dob_string = $resident['birthdate'] ?? null;
 $age_text = 'N/A';
 $dob_formatted = 'N/A';
 if ($dob_string) {
@@ -153,6 +159,7 @@ function badgeClass($type) {
         Back
       </button>
       <div class="actions-right">
+      <?php if ($table === 'residents'): ?>
         <button class="btn btn-edit" onclick="window.location.href='editResident.php?id=<?php echo $current_resident_id; ?>'">
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -164,6 +171,7 @@ function badgeClass($type) {
   <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
   Archive
 </button>
+<?php endif; ?>
       </div>
     </div>
 
@@ -171,7 +179,13 @@ function badgeClass($type) {
       <div class="banner"></div>
       <div class="profile-content">
         <div class="profile-left">
-          <img src="https://ui-avatars.com/api/?name=<?php echo urlencode($full_name); ?>&background=1c0202&color=fff&size=200" alt="Profile" class="avatar">
+          <?php
+$profile_img = !empty($resident['profile'])
+    ? htmlspecialchars($resident['profile'])
+    : "https://ui-avatars.com/api/?name=" . urlencode($full_name) . "&background=1c0202&color=fff&size=200";
+?>
+
+<img src="<?= $profile_img ?>" alt="Profile" class="avatar">
           <div class="profile-info">
             <div class="profile-name-row">
               <h1 class="profile-name"><?php echo $full_name; ?></h1>
@@ -235,9 +249,17 @@ function badgeClass($type) {
             <span class="info-value"><?php echo htmlspecialchars($resident['disability_remarks'] ?: 'N/A'); ?></span>
           </div>
           <div class="info-group">
-            <span class="info-label">Medical Certificate</span>
-            <span class="info-value"><a href="#" class="link">View <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></a></span>
-          </div>
+  <span class="info-label">Medical Certificate</span>
+  <span class="info-value">
+    <?php if (!empty($resident['med_cert'])): ?>
+      <a href="<?= htmlspecialchars($resident['med_cert']) ?>" class="link" target="_blank">
+        View Medical Certificate
+      </a>
+    <?php else: ?>
+      N/A
+    <?php endif; ?>
+  </span>
+</div>
         </div>
       </div>
 
@@ -291,15 +313,15 @@ function badgeClass($type) {
           <div class="info-list">
             <div class="info-group">
               <span class="info-label">Emergency Contact Name</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_contact_name'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont'] ?? 'N/A'); ?></span>
             </div>
             <div class="info-group">
               <span class="info-label">Emergency Contact Number</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_contact_number'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_num'] ?? 'N/A'); ?></span>
             </div>
             <div class="info-group">
               <span class="info-label">Relationship</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_relationship'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_rel'] ?? 'N/A'); ?></span>
             </div>
           </div>
           <div class="info-list">

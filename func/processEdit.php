@@ -58,9 +58,11 @@ $idexpiration_date = trim($_POST["expiration_date"] ?? "");
 $status = trim($_POST["status"] ?? "Active");
 
 // ── Profile Picture Upload ────────────────────────────
-$cur     = mysqli_query($conn, "SELECT profile FROM residents WHERE ID = $id");
+$cur = mysqli_query($conn, "SELECT profile, med_cert FROM residents WHERE ID = $id");
 $cur_row = mysqli_fetch_assoc($cur);
-$profile = $cur_row["profile"] ?? "";
+
+$profile  = $cur_row["profile"] ?? "";
+$med_cert = $cur_row["med_cert"] ?? "";
 
 if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
     $upload_dir = "../uploads/profiles/";
@@ -75,11 +77,43 @@ if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
         exit();
     }
 
-    $safe_name = uniqid("profile_", true) . "." . $ext;
+    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
+    $safe_name =
+    $base_name . "_profile_" . time() . "." . $ext;
     $target    = $upload_dir . $safe_name;
 
     if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
         $profile = "uploads/profiles/" . $safe_name;
+    }
+}
+
+// ── Medical Certificate Upload ─────────────────────
+if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
+
+    $upload_dir = "../uploads/medical_certificates/";
+
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    $ext = strtolower(pathinfo($_FILES["med_cert"]["name"], PATHINFO_EXTENSION));
+
+    $allowed = ["pdf", "jpg", "jpeg", "png"];
+
+    if (!in_array($ext, $allowed)) {
+        $_SESSION["edit_error"] = "Invalid medical certificate file.";
+        header("Location: ../editResident.php?id=$id");
+        exit();
+    }
+
+    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
+    $safe_name =
+    $base_name . "_medcert_" . time() . "." . $ext;
+
+    $target = $upload_dir . $safe_name;
+
+    if (move_uploaded_file($_FILES["med_cert"]["tmp_name"], $target)) {
+        $med_cert = "uploads/medical_certificates/" . $safe_name;
     }
 }
 
@@ -113,6 +147,7 @@ $sql = "UPDATE residents SET
             idissue_date      = ?,
             idexpiration_date = ?,
             profile           = ?,
+            med_cert          = ?,
             status            = ?
         WHERE ID = ?";
 
@@ -124,7 +159,7 @@ if (!$stmt) {
     exit();
 }
 
-mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssssi",
+mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssssi",
     $first_name,
     $middle_name,
     $last_name,
@@ -153,6 +188,7 @@ mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssssi",
     $idissue_date,
     $idexpiration_date,
     $profile,
+    $med_cert,
     $status,
     $id
 );

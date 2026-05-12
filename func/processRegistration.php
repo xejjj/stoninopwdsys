@@ -65,7 +65,9 @@ if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
         exit();
     }
 
-    $safe_name = uniqid("profile_", true) . "." . $ext;
+    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
+    $safe_name =
+    $base_name . "_profile_" . time() . "." . $ext;
     $target    = $upload_dir . $safe_name;
 
     if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
@@ -75,6 +77,38 @@ if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
     }
 
     $profile = "uploads/profiles/" . $safe_name;
+}
+
+$med_cert = "";
+
+if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
+    $upload_dir = "../uploads/medical_certificates/";
+
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    $ext = strtolower(pathinfo($_FILES["med_cert"]["name"], PATHINFO_EXTENSION));
+    $allowed = ["pdf", "jpg", "jpeg", "png"];
+
+    if (!in_array($ext, $allowed)) {
+        $_SESSION["reg_error"] = "Invalid medical certificate file. Only PDF, JPG, JPEG, PNG allowed.";
+        header("Location: ../registration.php");
+        exit();
+    }
+
+    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
+    $safe_name =
+    $base_name . "_medcert_" . time() . "." . $ext;
+    $target = $upload_dir . $safe_name;
+
+    if (!move_uploaded_file($_FILES["med_cert"]["tmp_name"], $target)) {
+        $_SESSION["reg_error"] = "Failed to upload medical certificate.";
+        header("Location: ../registration.php");
+        exit();
+    }
+
+    $med_cert = "uploads/medical_certificates/" . $safe_name;
 }
 
 // ── Admin registrations are Active by default ─────────
@@ -90,7 +124,7 @@ $sql = "INSERT INTO residents (
             guardian_name, guardian_cont_num, guardian_rel,
             father_name, mother_name, spouse_name,
             pwdid_num, control_num, idissue_date, idexpiration_date,
-            profile, status
+            profile, med_cert, status
         ) VALUES (
             ?, ?, ?, ?,
             ?, ?, ?, ?,
@@ -100,7 +134,7 @@ $sql = "INSERT INTO residents (
             ?, ?, ?,
             ?, ?, ?,
             ?, ?, ?, ?,
-            ?, ?
+            ?, ?, ?
         )";
 
 $stmt = mysqli_prepare($conn, $sql);
@@ -111,7 +145,7 @@ if (!$stmt) {
     exit();
 }
 
-mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
+mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssss",
     $first_name,         // 1  s
     $middle_name,        // 2  s
     $last_name,          // 3  s
@@ -140,7 +174,8 @@ mysqli_stmt_bind_param($stmt, "sssssisssssssssssssssssssssss",
     $idissue_date,       // 26 s
     $idexpiration_date,  // 27 s
     $profile,            // 28 s
-    $status              // 29 s
+    $med_cert,           // 29 s
+    $status              // 30 s
 );
 
 if (mysqli_stmt_execute($stmt)) {
