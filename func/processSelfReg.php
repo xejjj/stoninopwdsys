@@ -185,7 +185,7 @@ if (!$stmt) {
     exit();
 }
 
-$status = "Pending";
+$status = "Under Review";
 
 mysqli_stmt_bind_param(
     $stmt,

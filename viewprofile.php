@@ -314,15 +314,15 @@ $profile_img = !empty($resident['profile'])
           <div class="info-list">
             <div class="info-group">
               <span class="info-label">Emergency Contact Name</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont'] ?: 'N/A'); ?></span>
             </div>
             <div class="info-group">
               <span class="info-label">Emergency Contact Number</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_num'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_num'] ?: 'N/A'); ?></span>
             </div>
             <div class="info-group">
               <span class="info-label">Relationship</span>
-              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_rel'] ?? 'N/A'); ?></span>
+              <span class="info-value"><?php echo htmlspecialchars($resident['emergency_cont_rel'] ?: 'N/A'); ?></span>
             </div>
           </div>
           <div class="info-list">

@@ -87,8 +87,8 @@
     <div class="stats-row">
       <div class="stat-card">
         <div class="stat-info">
-          <div class="stat-label">PENDING REVIEW</div>
-          <div class="stat-val text-orange"><?php echo $pending_count; ?></div>
+          <div class="stat-label">UNDER REVIEW</div>
+          <div class="stat-val text-orange"><?php echo $under_review_count; ?></div>
         </div>
         <div class="stat-icon bg-orange-light text-orange">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 16 14"></polyline></svg>
@@ -123,7 +123,6 @@
       </svg>
       <span class="filter-label">Filter:</span>
       
-      <button class="filter-btn <?= (strtolower($filter) === 'pending') ? 'active' : '' ?>" onclick="window.location.href='review.php?filter=Pending'">Pending</button>
       <button class="filter-btn-review <?= (strtolower($filter) === 'under review') ? 'active' : '' ?>" onclick="window.location.href='review.php?filter=Under%20Review'">Under Review</button>
       <button class="filter-btn-correction <?= (strtolower($filter) === 'needs correction') ? 'active' : '' ?>" onclick="window.location.href='review.php?filter=Needs%20Correction'">Needs Correction</button>
       <button class="rejectedfilter-btn <?= (strtolower($filter) === 'rejected') ? 'active' : '' ?>" onclick="window.location.href='review.php?filter=Rejected'">Rejected</button>
@@ -134,7 +133,8 @@
     if (mysqli_num_rows($submissions) > 0):
         while ($resident = mysqli_fetch_assoc($submissions)): 
             $full_name = htmlspecialchars(trim(($resident['first_name'] ?? '') . ' ' . ($resident['middle_name'] ?? '') . ' ' . ($resident['last_name'] ?? '')));
-            $status = htmlspecialchars($resident['status'] ?: 'Pending');
+            // Defaulting fallback status to Under Review now
+            $status = htmlspecialchars($resident['status'] ?: 'Under Review');
             $status_cls = "badge-" . str_replace(' ', '-', strtolower($status)); 
             
             $dob_string = $resident['birthdate'] ?? null;
@@ -168,14 +168,15 @@
               Delete
             </button>
           <?php elseif ($filter === 'Needs Correction'): ?>
-           <button class="btn btn-approve" onclick="window.location.href='func/updateStatus.php?id=<?php echo $resident['ID']; ?>&status=Active'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
-              Approve
-            </button>
-            <button class="btn btn-reject" onclick="if(confirm('Move this resident to the Rejected tab?')) window.location.href='func/updateStatus.php?id=<?php echo $resident['ID']; ?>&status=Rejected'">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
-              Reject
-            </button>
+          <button class="btn btn-approve" onclick="window.location.href='func/updateStatus.php?id=<?php echo $resident['ID']; ?>&status=Active'">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
+            Approve
+          </button>
+          <!-- Triggers the new Hard Reject Modal instead of browser confirm -->
+          <button class="btn btn-reject" onclick="openHardRejectModal(<?php echo $resident['ID']; ?>)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h3a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-3"></path></svg>
+            Reject
+          </button>
           <?php else: ?>
             <button class="btn btn-approve" onclick="window.location.href='func/updateStatus.php?id=<?php echo $resident['ID']; ?>&status=Active'">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg>
