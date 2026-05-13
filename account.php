@@ -1,5 +1,8 @@
 <?php
 session_start();
+require_once("func/db.php");
+
+$users_query = mysqli_query($conn, "SELECT * FROM admincreds ORDER BY id DESC");
 
 if (!isset($_SESSION["admin_id"])) {
     header("Location: login.php");
@@ -18,12 +21,9 @@ if ($role !== "admin") {
     exit();
 }
 ?>
-<?php
-session_start();
-require_once("func/db.php");
 
-$users_query = mysqli_query($conn, "SELECT * FROM admincreds ORDER BY id DESC");
-?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

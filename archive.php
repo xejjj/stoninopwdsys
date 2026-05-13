@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once("func/getArchive.php");
 
 if (!isset($_SESSION["admin_id"])) {
     header("Location: login.php");
@@ -18,7 +18,6 @@ if ($role !== "admin") {
     exit();
 }
 ?>
-<?php require_once("func/getArchive.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
