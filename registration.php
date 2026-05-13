@@ -315,7 +315,7 @@ function toggleMenu(event, id) {
   document.getElementById(id).classList.toggle("open");
 }
 function logout() {
-  window.location.href = "logout.php";
+  window.location.href = "func/logout.php";
 }
 function updateFileLabel(input) {
   const label = document.getElementById('fileLabel');

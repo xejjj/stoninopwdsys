@@ -287,8 +287,8 @@
   }
 
   function logout() {
-    window.location.href = "login.php"; 
-  }
+  window.location.href = "func/logout.php";
+}
 </script>
 
 </body>

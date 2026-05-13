@@ -289,7 +289,7 @@ if ($role !== "admin") {
 
 <script>
     function logout() {
-  window.location.href = "logout.php";
+  window.location.href = "func/logout.php";
 }
 function toggleMenu(event, id) {
   event.preventDefault();

@@ -357,7 +357,7 @@ $profile_img = !empty($resident['profile'])
   }
 
   function logout() {
-  window.location.href = "logout.php";
+  window.location.href = "func/logout.php";
 }
 
   function confirmArchive(id) {

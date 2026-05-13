@@ -250,7 +250,9 @@ function toggleMenu(event, id) {
   document.getElementById(id).classList.toggle("open");
 }
 function toDashboard() { window.location.href = "dashboard.php"; }
-function logout()      { window.location.href = "login.php"; }
+function logout() {
+  window.location.href = "func/logout.php";
+}
 
 let searchTimer;
 function debounceSearch() {

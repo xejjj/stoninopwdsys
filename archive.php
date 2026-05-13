@@ -331,7 +331,7 @@ function toggleMenu(event, id) {
 }
 function toDashboard() { window.location.href = "dashboard.php"; }
 function logout() {
-  window.location.href = "logout.php";
+  window.location.href = "func/logout.php";
 }
 
 let searchTimer;

@@ -330,7 +330,7 @@ function toDashboard() {
 }
 
 function logout() {
-  window.location.href = "logout.php";
+  window.location.href = "func/logout.php";
 }
 
 function openAddModal() {
