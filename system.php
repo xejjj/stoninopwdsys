@@ -1,3 +1,23 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$role = $_SESSION["role"] ?? "";
+
+/* BLOCK ENCODERS */
+if ($role !== "admin") {
+
+    $_SESSION["error"] =
+        "You cannot access this module.";
+
+    header("Location: dashboard.php");
+    exit();
+}
+?>
 <?php session_start();?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,7 +88,7 @@
   </nav>
 
   <div class="sidebar-footer">
-    <button class="logout-btn" href="login.php">
+    <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Logout
     </button>
@@ -268,6 +288,9 @@
 
 
 <script>
+    function logout() {
+  window.location.href = "logout.php";
+}
 function toggleMenu(event, id) {
   event.preventDefault();
 

@@ -1,5 +1,25 @@
 <?php
 session_start();
+
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$role = $_SESSION["role"] ?? "";
+
+/* BLOCK ENCODERS */
+if ($role !== "admin") {
+
+    $_SESSION["error"] =
+        "You cannot access this module.";
+
+    header("Location: dashboard.php");
+    exit();
+}
+?>
+<?php
+session_start();
 require_once("func/db.php");
 
 $users_query = mysqli_query($conn, "SELECT * FROM admincreds ORDER BY id DESC");
@@ -310,7 +330,7 @@ function toDashboard() {
 }
 
 function logout() {
-  window.location.href = "login.php";
+  window.location.href = "logout.php";
 }
 
 function openAddModal() {

@@ -51,23 +51,28 @@
       </a>
     </div>
 
-    <div class="nav-group">
-      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
-        <img src = "assets/settingicon.png" width="20" >
-        System
-        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
-      </a>
-      <div class="nav-sub" id="system-sub">
-        <a class="nav-sub-item" href="system.php">System Tools</a>
-        <a class="nav-sub-item" href="account.php">Accounts</a>
-        <a class="nav-sub-item" href="archive.php">Archive</a>
-        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
-      </div>
-    </div>
+    <?php 
+    $isAdmin = ($_SESSION["role"] ?? "") === "admin";
+    $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
+    if ($isAdmin): ?>
+<div class="nav-group">
+  <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+    <img src="assets/settingicon.png" width="20">
+    System
+    <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
+  </a>
+  <div class="nav-sub" id="system-sub">
+    <a class="nav-sub-item" href="system.php">System Tools</a>
+    <a class="nav-sub-item" href="account.php">Accounts</a>
+    <a class="nav-sub-item" href="archive.php">Archive</a>
+    <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
+  </div>
+</div>
+<?php endif; ?>
   </nav>
 
   <div class="sidebar-footer">
-    <button class="logout-btn" href="login.php">
+    <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Logout
     </button>
@@ -183,6 +188,10 @@ window.addEventListener("click", function () {
         menu.classList.remove("show");
     });
 });
+
+function logout() {
+  window.location.href = "func/logout.php";
+}
 </script>
 </body>
 </html>

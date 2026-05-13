@@ -51,19 +51,24 @@
       </a>
     </div>
 
-    <div class="nav-group">
-      <a class="nav-item" href="#" onclick="toggleMenu(event,'system-sub')">
-        <img src="assets/settingicon.png" width="20" alt="System">
-        System
-        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
-      </a>
-      <div class="nav-sub" id="system-sub">
-        <a class="nav-sub-item" href="system.php">System Tools</a>
-        <a class="nav-sub-item" href="account.php">Accounts</a>
-        <a class="nav-sub-item" href="archive.php">Archive</a>
-        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
-      </div>
-    </div>
+    <?php 
+    $isAdmin = ($_SESSION["role"] ?? "") === "admin";
+    $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
+    if ($isAdmin): ?>
+<div class="nav-group">
+  <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+    <img src="assets/settingicon.png" width="20">
+    System
+    <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
+  </a>
+  <div class="nav-sub" id="system-sub">
+    <a class="nav-sub-item" href="system.php">System Tools</a>
+    <a class="nav-sub-item" href="account.php">Accounts</a>
+    <a class="nav-sub-item" href="archive.php">Archive</a>
+    <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
+  </div>
+</div>
+<?php endif; ?>
   </nav>
 
   <div class="sidebar-footer">
