@@ -97,7 +97,7 @@
         <?php if (!empty($filter_disab)):  ?><input type="hidden" name="disability" value="<?= htmlspecialchars($filter_disab) ?>"><?php endif; ?>
         <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" name="search" placeholder="Search name" value="<?= htmlspecialchars($search) ?>" oninput="debounceSearch()">
+          <input type="text" name="search" placeholder="Search name" value="<?= htmlspecialchars($search) ?>">
         </div>
       </form>
     </div>

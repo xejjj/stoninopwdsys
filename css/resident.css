@@ -354,3 +354,13 @@
   }
   .filter-option:hover    { background: #f5f0f0; color: var(--primary); }
   .filter-option.selected { color: var(--primary); font-weight: 800; }
+
+  .badge-under-review {
+  background-color: #FFF3E8; /* Light orange background */
+  color: #F18831;            /* Dark orange text */
+  /* Add these below if your other badges have them, otherwise just the colors are fine! */
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 12px;
+}
