@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("func/db.php"); // Load DB connection, NOT the dashboard data
+require_once("func/helpers.php"); // Load our new helper functions
 
 // 1. Check if an ID was passed in the URL (e.g., viewresident.php?id=5)
 if (!isset($_GET['id'])) {
@@ -40,40 +41,15 @@ $resident = mysqli_fetch_assoc($result);
 if (!$resident) {
     die("Resident not found in the database.");
 }
-// 4. Formatting and Calculations
+
+// Formatting and Calculations
 $full_name = htmlspecialchars(trim($resident['first_name'] . ' ' . $resident['middle_name'] . ' ' . $resident['last_name']));
 $status = htmlspecialchars($resident['status'] ?? 'Pending');
 $status_cls = "badge-" . strtolower($status);
 
-// Calculate Age from Date of Birth
-$dob_string = $resident['birthdate'] ?? null;
-$age_text = 'N/A';
-$dob_formatted = 'N/A';
-if ($dob_string) {
-    try {
-        $dob = new DateTime($dob_string);
-        $now = new DateTime();
-        $age = $now->diff($dob)->y;
-        $dob_formatted = $dob->format('F j, Y');
-        $age_text = "$dob_formatted ($age years old)";
-    } catch (Exception $e) {
-        $age_text = "Invalid Date";
-    }
-}
+// Use the new helper function to calculate age or return N/A
+$age_text = getFormattedAge($resident['birthdate'] ?? null);
 
-// Helper to color-code disability badges
-function badgeClass($type) {
-    $map = [
-        "cognitive"    => "badge-cognitive",
-        "visual"       => "badge-visual",
-        "physical"     => "badge-physical",
-        "auditory"     => "badge-auditory",
-        "speech"       => "badge-speech",
-        "psychosocial" => "badge-psycho",
-    ];
-    $key = strtolower(trim(explode(",", $type)[0]));
-    return $map[$key] ?? "badge-physical";
-}
 ?>
 
 <!DOCTYPE html>
