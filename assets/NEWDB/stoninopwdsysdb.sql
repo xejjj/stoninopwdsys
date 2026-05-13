@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2026 at 07:13 PM
+-- Generation Time: May 13, 2026 at 08:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,7 +40,8 @@ CREATE TABLE `admincreds` (
 --
 
 INSERT INTO `admincreds` (`ID`, `full_name`, `username`, `password`, `role`) VALUES
-(1, '', 'test', 'test', 'admin');
+(1, 'Test Creds', 'test', 'test', 'admin'),
+(10, 'Test Creds 2', 'teste', '$2y$10$1JBWrkD/KcxO2L7NOTBjX.Z2M6r2ML2Vb4z0M57AB77KFysxs6Uz.', 'encoder');
 
 -- --------------------------------------------------------
 
@@ -78,7 +79,8 @@ CREATE TABLE `archive` (
   `idissue_date` date NOT NULL,
   `idexpiration_date` date NOT NULL,
   `profile` varchar(255) NOT NULL,
-  `status` enum('Active','Pending','Expired') DEFAULT 'Pending'
+  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Pending',
+  `med_cert` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -98,6 +100,19 @@ CREATE TABLE `audit_logs` (
   `description` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`id`, `admin_id`, `admin_name`, `role`, `action`, `module`, `record_id`, `description`, `created_at`) VALUES
+(5, 1, '', 'admin', 'LOGIN', 'Authentication', 1, ' logged in', '2026-05-13 18:04:19'),
+(6, 1, '', 'admin', 'ARCHIVE', 'Residents', 150, 'Archived resident: RYAN CARLO SESE', '2026-05-13 18:06:52'),
+(7, 1, '', 'admin', 'UPDATE', 'Accounts', 1, 'Updated account:  (test) to Test Creds (test), role: admin', '2026-05-13 18:07:08'),
+(8, 1, '', 'admin', 'CREATE', 'Accounts', 10, 'Added account: Test Creds 2 (teste) as encoder', '2026-05-13 18:07:17'),
+(9, 1, '', 'admin', 'DELETE', 'Archive', 38, 'Permanently deleted archived resident: RYAN CARLO SESE', '2026-05-13 18:07:38'),
+(10, 1, '', 'admin', 'RESTORE', 'System', NULL, 'Restored database backup', '2026-05-13 18:07:51'),
+(11, 1, '', 'admin', 'RESTORE', 'System', NULL, 'Restored database backup', '2026-05-13 18:08:24');
 
 -- --------------------------------------------------------
 
@@ -176,7 +191,7 @@ CREATE TABLE `residents` (
   `idissue_date` date NOT NULL,
   `idexpiration_date` date NOT NULL,
   `profile` varchar(255) NOT NULL,
-  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Pending',
+  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Under Review',
   `med_cert` varchar(255) DEFAULT NULL,
   `correction_remarks` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -327,8 +342,7 @@ INSERT INTO `residents` (`ID`, `first_name`, `middle_name`, `last_name`, `civil_
 (144, 'JOSEFINA', 'GENEROSO', 'VELASCO', '', '1973-01-10', 53, '', 'female', '84 UNION CIVICA ST.', '09067191129', '', '', '', '', 'Physical', '', 'PWD', 'VELASCO, MENCHITA', '', '', '', '', '', '12400000802728', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
 (145, 'MARCO', 'S', 'VILLACORTA', '', '2006-12-12', 19, '', 'male', '114 UNION CIVICA ST', '', '', '', '', '', 'Physical', '', 'PWD', 'SY, MARINA', '', '', '', '', '', '337-404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
 (146, 'SOJIRO', 'DE GUZMAN', 'VILLENA', '', '2012-09-18', 13, '', 'male', '82 BAGONG BUHAY ST.', '09537803625', '', '', '', '', 'Cognitive', 'LEARNING', 'CWD', 'VILLENA, CRISELDA', '', '', '', '', '', '12400001320024', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(147, 'EIJAY', 'C', 'DIVINA', '', '0000-00-00', 0, '', 'male', '93 LIBERATION ST.', '0917874819', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-060', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(150, 'RYAN CARLO', 'DE JESUS', 'SESE', 'Single', '2026-05-01', 0, 'Tondo General Hospital', 'male', '793 M. NAVAL ST.', '09260247956', 'RYAN CARLO J SESE', '09265712873', 'PARENT', 'ryansese238@yahoo.com', 'Cognitive, Visual, Physical, Auditory, Speech, Psychosocial, Others', 'hav teh diarraheA!!', 'PWD', 'CARLO SESE', '124112523563234', 'PARENT', 'ROSMAR SESE', 'CORAZON SESE', '', '132523462346454', '445456', '2026-04-30', '2026-05-28', '', 'Active', '', 'sdbrfv');
+(147, 'EIJAY', 'C', 'DIVINA', '', '0000-00-00', 0, '', 'male', '93 LIBERATION ST.', '0917874819', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-060', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -373,19 +387,19 @@ ALTER TABLE `residents`
 -- AUTO_INCREMENT for table `admincreds`
 --
 ALTER TABLE `admincreds`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `archive`
 --
 ALTER TABLE `archive`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `rejected`
