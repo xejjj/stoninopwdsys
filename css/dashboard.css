@@ -213,7 +213,6 @@
     margin-bottom: 18px;
   }
 
-
   .chart-card {
     background: var(--card-bg);
     border-radius: var(--radius-card);
@@ -227,7 +226,7 @@
     margin-bottom: 16px;
   }
 
-  /* Bar chart */
+  /* Bar chart — original design */
   .bar-chart { display: flex; flex-direction: column; gap: 14px; }
   .bar-row { display: flex; align-items: center; gap: 10px; }
   .bar-track {
@@ -244,7 +243,14 @@
   }
   .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
-  /* Pie chart */
+  /* ── Legend stat — count | pct inside parentheses ── */
+  .legend-stat {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  /* Pie chart — original design */
   .pie-wrap {
     display: flex; align-items: center; justify-content: left; gap: 18px;
   }
@@ -324,7 +330,7 @@
   .badge-visual    { background: #E6EAFB; color: #155DA4; }
   .badge-auditory  { background: #FFF8D7; color: #C5AD11; }
   .badge-cognitive { background: #F7E6FB; color: #7E15A4; }
-  .badge-physical     { background: #FFDCDC; color: #A41515; }
+  .badge-physical  { background: #FFDCDC; color: #A41515; }
   .badge-speech    { background: #FFE9D7; color: #D13E0D; }
   .badge-psycho    { background: #E6FBE6; color: #15A44E; }
 

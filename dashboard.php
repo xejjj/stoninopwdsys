@@ -123,9 +123,21 @@ require_once("func/db.php");
           </div>
         </div>
         <div class="bar-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:#C97B78;"></div> Minors (0–17)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#A84040;"></div> Adults (18–59)</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#4A1010;"></div> Seniors (60+)</div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#C97B78;"></div>
+            Minors (0–17)
+            <span class="legend-stat">(<?php echo $minors_count; ?> | <?php echo $total > 0 ? round(($minors_count / $total) * 100) : 0; ?>%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#A84040;"></div>
+            Adults (18–59)
+            <span class="legend-stat">(<?php echo $adults_count; ?> | <?php echo $total > 0 ? round(($adults_count / $total) * 100) : 0; ?>%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#4A1010;"></div>
+            Seniors (60+)
+            <span class="legend-stat">(<?php echo $seniors_count; ?> | <?php echo $total > 0 ? round(($seniors_count / $total) * 100) : 0; ?>%)</span>
+          </div>
         </div>
       </div>
 
@@ -153,9 +165,21 @@ require_once("func/db.php");
           <?php endif; ?>
         </svg>
         <div class="pie-legend">
-          <div class="pie-legend-item"><div class="pie-dot" style="background:#D4736F;"></div> Active</div>
-          <div class="pie-legend-item"><div class="pie-dot" style="background:#A84040;"></div> Pending</div>
-          <div class="pie-legend-item"><div class="pie-dot" style="background:#5C1010;"></div> Expired</div>
+          <div class="pie-legend-item">
+            <div class="pie-dot" style="background:#D4736F;"></div>
+            Active
+            <span class="legend-stat">(<?php echo $active_count; ?> | <?php echo $total > 0 ? round(($active_count / $total) * 100) : 0; ?>%)</span>
+          </div>
+          <div class="pie-legend-item">
+            <div class="pie-dot" style="background:#A84040;"></div>
+            Pending
+            <span class="legend-stat">(<?php echo $pending_count; ?> | <?php echo $total > 0 ? round(($pending_count / $total) * 100) : 0; ?>%)</span>
+          </div>
+          <div class="pie-legend-item">
+            <div class="pie-dot" style="background:#5C1010;"></div>
+            Expired
+            <span class="legend-stat">(<?php echo $expired_count; ?> | <?php echo $total > 0 ? round(($expired_count / $total) * 100) : 0; ?>%)</span>
+          </div>
         </div>
       </div>
     </div>
