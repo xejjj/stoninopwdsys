@@ -402,3 +402,152 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+
+.user-meta {
+  font-size: 13px;
+  color: var(--text-gray);
+  margin-top: 3px;
+}
+
+.back-chevron {
+  cursor: pointer;
+}
+
+.table-head-light {
+  background-color: #f9f9f9;
+}
+
+/* Account Modal Cleanup */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.modal-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.modal-icon.add {
+  background: #EAF9EE;
+  color: #38C966;
+}
+
+.modal-icon.edit {
+  background: #E6F0FA;
+  color: #2D72D2;
+}
+
+.modal-icon.delete {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #1c0202;
+  text-align: center;
+}
+
+.modal-description {
+  font-size: 13.5px;
+  color: rgba(28,2,2,0.6);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modal-group {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.modal-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(28,2,2,0.6);
+  margin-bottom: 6px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: #f9f9f9;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.modal-note {
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.modal-actions form {
+  margin: 0;
+}
+
+.modal-btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.modal-btn.cancel {
+  border: 1px solid rgba(0,0,0,0.1);
+  background: none;
+  color: rgba(28,2,2,0.6);
+}
+
+.modal-btn.add {
+  background: #38C966;
+  color: #fff;
+}
+
+.modal-btn.edit {
+  background: #2D72D2;
+  color: #fff;
+}
+
+.modal-btn.delete {
+  background: #DC2626;
+  color: #fff;
+}

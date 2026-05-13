@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../resident.php");
@@ -194,6 +195,14 @@ mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssssi",
 );
 
 if (mysqli_stmt_execute($stmt)) {
+    auditLog(
+        $conn,
+        "UPDATE",
+        "Residents",
+        $id,
+        "Updated resident profile: $first_name $last_name"
+    );
+
     $_SESSION["edit_success"] = true;
     header("Location: ../editResident.php?id=$id");
     exit();

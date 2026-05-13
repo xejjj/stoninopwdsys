@@ -1,17 +1,17 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 $tables = [
     "admincreds",
     "residents",
     "archive",
-    "rejected"
+    "rejected",
+    "audit_logs"
 ];
 
 $backupName = "backup_" . date("Y-m-d_H-i-s") . ".sql";
-
-/* backups folder is outside func folder */
 $backupFolder = "../backups/";
 
 if (!is_dir($backupFolder)) {
@@ -19,11 +19,9 @@ if (!is_dir($backupFolder)) {
 }
 
 $backupPath = $backupFolder . $backupName;
-
 $sqlScript = "";
 
 foreach ($tables as $table) {
-
     $createTable = mysqli_query($conn, "SHOW CREATE TABLE `$table`");
 
     if (!$createTable) {
@@ -40,7 +38,6 @@ foreach ($tables as $table) {
     $rows = mysqli_query($conn, "SELECT * FROM `$table`");
 
     while ($row = mysqli_fetch_assoc($rows)) {
-
         $columns = array_keys($row);
 
         $values = array_map(function($value) use ($conn) {
@@ -67,8 +64,15 @@ if (file_put_contents($backupPath, $sqlScript) === false) {
     exit;
 }
 
-$_SESSION['success'] = "Database backup created successfully!";
+auditLog(
+    $conn,
+    "BACKUP",
+    "System",
+    null,
+    "Created database backup: $backupName"
+);
 
+$_SESSION['success'] = "Database backup created successfully!";
 header("Location: ../system.php");
 exit;
 ?>

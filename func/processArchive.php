@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ./resident.php");
@@ -103,6 +104,14 @@ $del = mysqli_prepare($conn, "DELETE FROM residents WHERE ID = ?");
 mysqli_stmt_bind_param($del, "i", $id);
 
 if (mysqli_stmt_execute($del)) {
+    auditLog(
+        $conn,
+        "ARCHIVE",
+        "Residents",
+        $id,
+        "Archived resident: " . $r["first_name"] . " " . $r["last_name"]
+    );
+
     $_SESSION["arch_success"] = "Resident archived successfully.";
     header("Location: ../resident.php");
     exit();

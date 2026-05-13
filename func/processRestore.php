@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../archive.php");
@@ -102,6 +103,26 @@ $del = mysqli_prepare($conn, "DELETE FROM archive WHERE ID = ?");
 mysqli_stmt_bind_param($del, "i", $id);
 
 if (mysqli_stmt_execute($del)) {
+    auditLog(
+        $conn,
+        "RESTORE",
+        "Archive",
+        $id,
+        "Restored resident from archive: " . $r["first_name"] . " " . $r["last_name"]
+    );
+
+    $_SESSION["arch_success"] = "Resident restored successfully.";
+    header("Location: ../archive.php");
+    exit();
+}if (mysqli_stmt_execute($del)) {
+    auditLog(
+        $conn,
+        "RESTORE",
+        "Archive",
+        $id,
+        "Restored resident from archive: " . $r["first_name"] . " " . $r["last_name"]
+    );
+
     $_SESSION["arch_success"] = "Resident restored successfully.";
     header("Location: ../archive.php");
     exit();

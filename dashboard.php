@@ -66,6 +66,7 @@ require_once("func/db.php");
         <a class="nav-sub-item" href="system.php">System Tools</a>
         <a class="nav-sub-item" href="account.php">Accounts</a>
         <a class="nav-sub-item" href="archive.php">Archive</a>
+        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
       </div>
     </div>
   </nav>

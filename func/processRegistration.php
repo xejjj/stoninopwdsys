@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../registration.php");
@@ -179,6 +180,16 @@ mysqli_stmt_bind_param($stmt, "sssssissssssssssssssssssssssss",
 );
 
 if (mysqli_stmt_execute($stmt)) {
+    $new_id = mysqli_insert_id($conn);
+
+    auditLog(
+        $conn,
+        "CREATE",
+        "Residents",
+        $new_id,
+        "Registered new resident: $first_name $last_name"
+    );
+
     $_SESSION["reg_success"] = "Resident registered successfully!";
     header("Location: ../registration.php");
     exit();
@@ -187,4 +198,7 @@ if (mysqli_stmt_execute($stmt)) {
     header("Location: ../registration.php");
     exit();
 }
+
+
 ?>
+

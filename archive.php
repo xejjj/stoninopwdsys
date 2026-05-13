@@ -61,6 +61,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
         <a class="nav-sub-item" href="system.php">System Tools</a>
         <a class="nav-sub-item" href="account.php">Accounts</a>
         <a class="nav-sub-item active" href="archive.php">Archive</a>
+        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
       </div>
     </div>
   </nav>

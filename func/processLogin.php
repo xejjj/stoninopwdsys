@@ -1,10 +1,11 @@
 <?php
 session_start();
 require_once("db.php");
+require_once("audit.php");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = trim($_POST["username"]);
-    $password = trim($_POST["password"]);
+    $username = trim($_POST["username"] ?? "");
+    $password = trim($_POST["password"] ?? "");
 
     if (empty($username) || empty($password)) {
         $_SESSION["login_error"] = "Please fill in all fields.";
@@ -12,7 +13,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    $sql  = "SELECT id, username, password, role FROM admincreds WHERE username = ?";
+    $sql = "SELECT id, full_name, username, password, role 
+            FROM admincreds 
+            WHERE username = ?";
+
     $stmt = mysqli_prepare($conn, $sql);
 
     if (!$stmt) {
@@ -36,33 +40,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             : ($password === $storedPassword);
 
         if ($passwordMatch) {
-            $_SESSION["user_id"]  = $user["id"];
+            $_SESSION["admin_id"] = $user["id"];
+            $_SESSION["admin_name"] = $user["full_name"];
             $_SESSION["username"] = $user["username"];
-            $_SESSION["role"]     = $user["role"];
+            $_SESSION["role"] = $user["role"];
 
-            if ($user["role"] === "admin") {
-                header("Location: ../dashboard.php");
-            } 
-            
-            else {
-                $_SESSION["login_error"] = "Access denied. Admins only.";
-                header("Location: ../login.php");
-            }
+            auditLog(
+                $conn,
+                "LOGIN",
+                "Authentication",
+                $_SESSION["admin_id"],
+                $_SESSION["admin_name"] . " logged in"
+            );
+
+            header("Location: ../dashboard.php");
             exit();
-        } 
-        
-        else {
+        } else {
             $_SESSION["login_error"] = "Incorrect password.";
             header("Location: ../login.php");
             exit();
         }
-
-    } 
-    
-    else {
+    } else {
         $_SESSION["login_error"] = "Invalid username or password.";
         header("Location: ../login.php");
         exit();
     }
 }
+
+header("Location: ../login.php");
+exit();
 ?>
