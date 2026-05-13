@@ -1,3 +1,23 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$role = $_SESSION["role"] ?? "";
+
+/* BLOCK ENCODERS */
+if ($role !== "admin") {
+
+    $_SESSION["error"] =
+        "You cannot access this module.";
+
+    header("Location: dashboard.php");
+    exit();
+}
+?>
 <?php require_once("func/getAuditLogs.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,7 +191,7 @@ function toggleMenu(event, id) {
 }
 
 function logout() {
-  window.location.href = "login.php";
+  window.location.href = "logout.php";
 }
 </script>
 

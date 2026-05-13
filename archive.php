@@ -1,3 +1,23 @@
+<?php
+session_start();
+
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$role = $_SESSION["role"] ?? "";
+
+/* BLOCK ENCODERS */
+if ($role !== "admin") {
+
+    $_SESSION["error"] =
+        "You cannot access this module.";
+
+    header("Location: dashboard.php");
+    exit();
+}
+?>
 <?php require_once("func/getArchive.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -310,7 +330,9 @@ function toggleMenu(event, id) {
   document.getElementById(id).classList.toggle("open");
 }
 function toDashboard() { window.location.href = "dashboard.php"; }
-function logout()      { window.location.href = "login.php"; }
+function logout() {
+  window.location.href = "logout.php";
+}
 
 let searchTimer;
 function debounceSearch() {
