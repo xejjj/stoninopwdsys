@@ -245,10 +245,12 @@
 
   /* ── Legend stat — count | pct inside parentheses ── */
   .legend-stat {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text);
-  }
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-left: auto;
+  white-space: nowrap;
+}
 
   /* Pie chart — original design */
   .pie-wrap {
@@ -256,11 +258,21 @@
   }
   .pie-wrap svg { flex-shrink: 0; }
 
-  .pie-legend { display: flex; flex-direction: column; gap: 10px; }
+  .pie-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 210px;
+}
   .pie-legend-item {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 20px; font-weight: 600; color: var(--text);
-  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
   .pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
   /* ── DIRECTORY CARD ── */
@@ -343,9 +355,29 @@
     border: 1px solid rgba(0,0,0,0.08);
     white-space: nowrap;
   }
-  .status-active  { background: #E8FFEC; color: #1aaa45; }
-  .status-pending { background: #FBECE6; color: #E08D20; }
-  .status-expired { background: #FFE0E0; color: #c0392b; }
+  .status-active {
+  background: #FBF0F0;
+  color: #A84040;
+  border-color: #E8CACA;
+}
+
+.status-under-review {
+  background: #F8E7E7;
+  color: #D4736F;
+  border-color: #EEC7C4;
+}
+
+.status-needs-correction {
+  background: #FFF3E8;
+  color: #B85A1F;
+  border-color: #F2B8A0;
+}
+
+.status-expired {
+  background: #F3DADA;
+  color: #5C1010;
+  border-color: #D8A8A8;
+}
 
   /* Action icons */
   .actions { display: flex; align-items: center; gap: 6px; }
@@ -362,3 +394,102 @@
   /* Pie slice helper */
   .pie-slice { transition: opacity .2s; }
   .pie-slice:hover { opacity: .85; cursor: pointer; }
+
+  .top-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.notification-wrap {
+  position: relative;
+}
+
+.notification-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  font-size: 20px;
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #d92d20;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 999px;
+}
+
+.notification-panel {
+  display: none;
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 340px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+  z-index: 999;
+  overflow: hidden;
+}
+
+.notification-panel.show {
+  display: block;
+}
+
+.notification-header {
+  padding: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  justify-content: space-between;
+  color: var(--text);
+}
+
+.notification-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.notification-item p {
+  margin: 5px 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.notification-item a {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.notification-item.danger {
+  background: #fff1f1;
+}
+
+.notification-item.warning {
+  background: #fff8e6;
+}
+
+.notification-item.info {
+  background: #eef4ff;
+}
+
+.notification-item.backup {
+  background: #f3f0ff;
+}
+
+.notification-empty {
+  padding: 18px;
+  color: var(--text-muted);
+  font-size: 14px;
+}

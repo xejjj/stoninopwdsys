@@ -1,6 +1,7 @@
 <?php require_once("func/getDashboardData.php");
 require_once("func/processDailyBackup.php");
 require_once("func/db.php");
+require_once("func/getNotifications.php");
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +87,67 @@ require_once("func/db.php");
 
 <!-- ── MAIN ── -->
 <div class="main">
+  <div class="top-actions">
+  <div class="notification-wrap">
+    <button class="notification-btn" onclick="toggleNotifications(event)">
+      🔔
+
+      <?php if ($notification_count > 0): ?>
+        <span class="notification-badge">
+          <?= $notification_count ?>
+        </span>
+      <?php endif; ?>
+    </button>
+
+    <div class="notification-panel" id="notificationPanel">
+
+      <div class="notification-header">
+        <strong>Notifications</strong>
+        <span><?= $notification_count ?> alert(s)</span>
+      </div>
+
+      <?php if ($expired_ids_count > 0): ?>
+        <div class="notification-item danger">
+          <strong><?= $expired_ids_count ?> expired ID(s)</strong>
+          <p>Some resident IDs are already expired.</p>
+          <a href="resident.php">View Residents</a>
+        </div>
+      <?php endif; ?>
+
+      <?php if ($review_count > 0): ?>
+        <div class="notification-item info">
+          <strong><?= $review_count ?> new registration(s)</strong>
+          <p>Pending submissions need review.</p>
+          <a href="review.php">Open Review Page</a>
+        </div>
+      <?php endif; ?>
+
+      <?php if ($missing_medcert_count > 0): ?>
+        <div class="notification-item warning">
+          <strong><?= $missing_medcert_count ?> missing medical certificate(s)</strong>
+          <p>Some residents have no uploaded medical certificate.</p>
+          <a href="resident.php">Check Residents</a>
+        </div>
+      <?php endif; ?>
+
+      <?php if ($backupReminder): ?>
+        <div class="notification-item backup">
+          <strong>Backup Reminder</strong>
+          <p>No recent backup detected in the last 24 hours.</p>
+          <a href="system.php">Open System Tools</a>
+        </div>
+      <?php endif; ?>
+
+      <?php if ($notification_count == 0): ?>
+        <div class="notification-empty">
+          No notifications available.
+        </div>
+      <?php endif; ?>
+
+    </div>
+  </div>
+</div>
+
   <h1 class="page-title">Dashboard Overview</h1>
   <p class="page-sub">Welcome to the Brgy. Sto. Niño PWD/CWD database!</p>
 
@@ -150,45 +212,102 @@ require_once("func/db.php");
     </div>
 
     <!-- Registration Status Pie Chart -->
-    <div class="chart-card">
-      <div class="chart-title">Registration Status</div>
-      <div class="pie-wrap">
-        <svg width="320" height="320" viewBox="0 0 180 180">
-          <?php if ($total > 0): ?>
-            <?php if ($active_count == $total): ?>
-              <circle cx="90" cy="90" r="80" fill="#D4736F"/>
-            <?php elseif ($pending_count == $total): ?>
-              <circle cx="90" cy="90" r="80" fill="#A84040"/>
-            <?php elseif ($expired_count == $total): ?>
-              <circle cx="90" cy="90" r="80" fill="#5C1010"/>
-            <?php else: ?>
-              <?php if ($active_count  > 0): ?><path class="pie-slice" d="<?php echo $active_path;  ?>" fill="#D4736F"/><?php endif; ?>
-              <?php if ($pending_count > 0): ?><path class="pie-slice" d="<?php echo $pending_path; ?>" fill="#A84040"/><?php endif; ?>
-              <?php if ($expired_count > 0): ?><path class="pie-slice" d="<?php echo $expired_path; ?>" fill="#5C1010"/><?php endif; ?>
-            <?php endif; ?>
-          <?php else: ?>
-            <circle cx="90" cy="90" r="80" fill="#eee"/>
-          <?php endif; ?>
-        </svg>
-        <div class="pie-legend">
-          <div class="pie-legend-item">
-            <div class="pie-dot" style="background:#D4736F;"></div>
-            Active
-            <span class="legend-stat">(<?php echo $active_count; ?> | <?php echo $total > 0 ? round(($active_count / $total) * 100) : 0; ?>%)</span>
-          </div>
-          <div class="pie-legend-item">
-            <div class="pie-dot" style="background:#A84040;"></div>
-            Pending
-            <span class="legend-stat">(<?php echo $pending_count; ?> | <?php echo $total > 0 ? round(($pending_count / $total) * 100) : 0; ?>%)</span>
-          </div>
-          <div class="pie-legend-item">
-            <div class="pie-dot" style="background:#5C1010;"></div>
-            Expired
-            <span class="legend-stat">(<?php echo $expired_count; ?> | <?php echo $total > 0 ? round(($expired_count / $total) * 100) : 0; ?>%)</span>
-          </div>
-        </div>
+    <!-- Registration Status Pie Chart -->
+<div class="chart-card">
+  <div class="chart-title">Registration Status</div>
+
+  <div class="pie-wrap">
+
+    <svg width="320" height="320" viewBox="0 0 180 180">
+
+      <?php if ($status_total > 0): ?>
+
+        <?php if ($active_count > 0): ?>
+          <path class="pie-slice" d="<?= $active_path ?>" fill="#A84040"/>
+        <?php endif; ?>
+
+        <?php if ($under_review_count > 0): ?>
+          <path class="pie-slice" d="<?= $under_review_path ?>" fill="#D4736F"/>
+        <?php endif; ?>
+
+        <?php if ($needs_correction_count > 0): ?>
+          <path class="pie-slice" d="<?= $needs_correction_path ?>" fill="#F2B8A0"/>
+        <?php endif; ?>
+
+        <?php if ($expired_count > 0): ?>
+          <path class="pie-slice" d="<?= $expired_path ?>" fill="#5C1010"/>
+        <?php endif; ?>
+
+      <?php else: ?>
+
+        <circle cx="90"
+                cy="90"
+                r="80"
+                fill="#eee"/>
+
+      <?php endif; ?>
+
+    </svg>
+
+    <div class="pie-legend">
+
+      <div class="pie-legend-item">
+        <div class="pie-dot" style="background:#A84040;"></div>
+
+        Active
+
+        <span class="legend-stat">
+          (<?= $active_count ?>
+          |
+          <?= $status_total > 0 ? round(($active_count / $status_total) * 100) : 0 ?>%)
+        </span>
       </div>
+
+
+
+      <div class="pie-legend-item">
+        <div class="pie-dot" style="background:#D4736F;"></div>
+
+        Under Review
+
+        <span class="legend-stat">
+          (<?= $under_review_count ?>
+          |
+          <?= $status_total > 0 ? round(($under_review_count / $status_total) * 100) : 0 ?>%)
+        </span>
+      </div>
+
+
+
+      <div class="pie-legend-item">
+        <div class="pie-dot" style="background:#F2B8A0;"></div>
+
+        Needs Correction
+
+        <span class="legend-stat">
+          (<?= $needs_correction_count ?>
+          |
+          <?= $status_total > 0 ? round(($needs_correction_count / $status_total) * 100) : 0 ?>%)
+        </span>
+      </div>
+
+
+
+      <div class="pie-legend-item">
+        <div class="pie-dot" style="background:#5C1010;"></div>
+
+        Expired
+
+        <span class="legend-stat">
+          (<?= $expired_count ?>
+          |
+          <?= $status_total > 0 ? round(($expired_count / $status_total) * 100) : 0 ?>%)
+        </span>
+      </div>
+
     </div>
+  </div>
+</div>
   </div>
 
   <!-- Directory Table -->
@@ -277,6 +396,23 @@ function filterTable() {
     row.style.display = name.includes(search) ? "" : "none";
   });
 }
+
+function toggleNotifications(event) {
+  event.stopPropagation();
+
+  document
+    .getElementById("notificationPanel")
+    .classList
+    .toggle("show");
+}
+
+window.addEventListener("click", function () {
+  const panel = document.getElementById("notificationPanel");
+
+  if (panel && panel.classList.contains("show")) {
+    panel.classList.remove("show");
+  }
+});
 </script>
 </body>
 </html>

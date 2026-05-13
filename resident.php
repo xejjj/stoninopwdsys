@@ -97,7 +97,13 @@
         <?php if (!empty($filter_disab)):  ?><input type="hidden" name="disability" value="<?= htmlspecialchars($filter_disab) ?>"><?php endif; ?>
         <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" name="search" placeholder="Search name" value="<?= htmlspecialchars($search) ?>" oninput="debounceSearch()">
+          <input type="text"
+            id="searchInput"
+            name="search"
+            placeholder="Search name"
+            Value="<?= htmlspecialchars($search) ?>"
+            autocomplete="off"
+            oninput="filterTable()">  
         </div>
       </form>
     </div>
@@ -130,7 +136,9 @@
       <select name="status" id="sel-status" style="display:none" onchange="document.getElementById('filterForm').submit()">
         <option value="">All Statuses</option>
         <option value="Active"  <?= $filter_status === "Active"  ? "selected" : "" ?>>Active</option>
-        <option value="Pending" <?= $filter_status === "Pending" ? "selected" : "" ?>>Pending</option>
+        <option value="Under Review" <?= $filter_status === "Under Review" ? "selected" : "" ?>>Under Review</option>
+        <option value="Needs Correction" <?= $filter_status === "Needs Correction" ? "selected" : "" ?>>Needs Correction</option>
+        <option value="Rejected" <?= $filter_status === "Rejected" ? "selected" : "" ?>>Rejected</option>
         <option value="Expired" <?= $filter_status === "Expired" ? "selected" : "" ?>>Expired</option>
       </select>
     </form>
@@ -165,7 +173,7 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="residentTable">
           <?php if (mysqli_num_rows($residents_result) === 0): ?>
             <tr>
               <td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:600;">
@@ -180,7 +188,7 @@
                 $category   = htmlspecialchars($user['resident_type'] ?? '—');
                 $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
                 $status     = htmlspecialchars($user['status'] ?? 'Pending');
-                $status_cls = "status-" . strtolower($status);
+                $status_cls ="status-" .strtolower(str_replace(" ", "-", $status));
                 $types_arr  = array_filter(array_map('trim', explode(",", $disability)));
               ?>
               <tr>
@@ -254,12 +262,29 @@ function logout() {
   window.location.href = "func/logout.php";
 }
 
-let searchTimer;
-function debounceSearch() {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    document.getElementById("searchForm").submit();
-  }, 400);
+function filterTable() {
+
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase();
+
+  document
+    .querySelectorAll("#residentTable tr")
+    .forEach(row => {
+
+      const name =
+        row
+          .querySelector("td:first-child")
+          ?.textContent
+          .toLowerCase() ?? "";
+
+      row.style.display =
+        name.includes(search)
+        ? ""
+        : "none";
+    });
 }
 
 const filterOptions = {
@@ -286,8 +311,11 @@ const filterOptions = {
   'sel-status': [
     {value:'', label:'All Statuses'},
     {value:'Active',  label:'Active'},
-    {value:'Pending', label:'Pending'},
+    {value:'Under Review', label:'Under Review'},
+    {value:'Needs Correction', label:'Needs Correction'},
+    {value:'Rejected', label:'Rejected'},
     {value:'Expired', label:'Expired'},
+
   ],
 };
 

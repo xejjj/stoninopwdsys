@@ -2,97 +2,124 @@
 session_start();
 require_once("db.php");
 
-// ── Total count ───────────────────────────────────────
-$total_result = mysqli_query($conn, "SELECT COUNT(*) as total FROM residents");
-$total_row    = mysqli_fetch_assoc($total_result);
-$total        = $total_row["total"];
+/* TOTAL = ONLY ACTIVE RESIDENTS */
+$total_result = mysqli_query($conn, "
+    SELECT COUNT(*) AS total 
+    FROM residents 
+    WHERE status = 'Active'
+");
+$total_row = mysqli_fetch_assoc($total_result);
+$total = $total_row["total"] ?? 0;
 
-// ── Age brackets ──────────────────────────────────────
-$minors_result  = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE age BETWEEN 0 AND 17");
-$minors_count   = mysqli_fetch_assoc($minors_result)["cnt"];
+/* AGE BRACKETS = ONLY ACTIVE RESIDENTS */
+$minors_result = mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents 
+    WHERE status = 'Active' AND age BETWEEN 0 AND 17
+");
+$minors_count = mysqli_fetch_assoc($minors_result)["cnt"] ?? 0;
 
-$adults_result  = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE age BETWEEN 18 AND 59");
-$adults_count   = mysqli_fetch_assoc($adults_result)["cnt"];
+$adults_result = mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents 
+    WHERE status = 'Active' AND age BETWEEN 18 AND 59
+");
+$adults_count = mysqli_fetch_assoc($adults_result)["cnt"] ?? 0;
 
-$seniors_result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE age >= 60");
-$seniors_count  = mysqli_fetch_assoc($seniors_result)["cnt"];
+$seniors_result = mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents 
+    WHERE status = 'Active' AND age >= 60
+");
+$seniors_count = mysqli_fetch_assoc($seniors_result)["cnt"] ?? 0;
 
-// ── Bar widths (% of total) ───────────────────────────
-$minors_pct  = $total > 0 ? max(4, round(($minors_count  / $total) * 100)) : 0;
-$adults_pct  = $total > 0 ? max(4, round(($adults_count  / $total) * 100)) : 0;
+$minors_pct  = $total > 0 ? max(4, round(($minors_count / $total) * 100)) : 0;
+$adults_pct  = $total > 0 ? max(4, round(($adults_count / $total) * 100)) : 0;
 $seniors_pct = $total > 0 ? max(4, round(($seniors_count / $total) * 100)) : 0;
 
-// ── Registration Status (Active / Pending / Expired) ──
-// Assumes you have a `status` column — adjust values to match your DB enum
-$active_result  = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE status = 'Active'");
-$active_count   = mysqli_fetch_assoc($active_result)["cnt"];
+/* STATUS COUNTS */
+$active_count = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents WHERE status = 'Active'
+"))["cnt"] ?? 0;
 
-$pending_result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE status = 'Pending'");
-$pending_count  = mysqli_fetch_assoc($pending_result)["cnt"];
+$under_review_count = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents WHERE status = 'Under Review'
+"))["cnt"] ?? 0;
 
-$expired_result = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM residents WHERE status = 'Expired'");
-$expired_count  = mysqli_fetch_assoc($expired_result)["cnt"];
+$needs_correction_count = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents WHERE status = 'Needs Correction'
+"))["cnt"] ?? 0;
 
-// ── Pie chart SVG arc helper ──────────────────────────
+$expired_count = mysqli_fetch_assoc(mysqli_query($conn, "
+    SELECT COUNT(*) AS cnt FROM residents WHERE status = 'Expired'
+"))["cnt"] ?? 0;
+
+/* PIE CHART USES ALL NON-REJECTED RESIDENTS */
+$status_total = $active_count + $under_review_count + $needs_correction_count + $expired_count;
+
 function pieSlice($cx, $cy, $r, $startDeg, $endDeg) {
     $start = deg2rad($startDeg - 90);
-    $end   = deg2rad($endDeg   - 90);
+    $end   = deg2rad($endDeg - 90);
     $large = ($endDeg - $startDeg) > 180 ? 1 : 0;
+
     $x1 = round($cx + $r * cos($start), 2);
     $y1 = round($cy + $r * sin($start), 2);
-    $x2 = round($cx + $r * cos($end),   2);
-    $y2 = round($cy + $r * sin($end),   2);
+    $x2 = round($cx + $r * cos($end), 2);
+    $y2 = round($cy + $r * sin($end), 2);
+
     return "M{$cx},{$cy} L{$x1},{$y1} A{$r},{$r} 0 {$large},1 {$x2},{$y2} Z";
 }
 
-// Calculate pie degrees for 3 slices
-$active_deg  = $total > 0 ? ($active_count  / $total) * 360 : 0;
-$pending_deg = $total > 0 ? ($pending_count / $total) * 360 : 0;
-$expired_deg = $total > 0 ? ($expired_count / $total) * 360 : 0;
+$active_deg = $status_total > 0 ? ($active_count / $status_total) * 360 : 0;
+$under_review_deg = $status_total > 0 ? ($under_review_count / $status_total) * 360 : 0;
+$needs_correction_deg = $status_total > 0 ? ($needs_correction_count / $status_total) * 360 : 0;
+$expired_deg = $status_total > 0 ? ($expired_count / $status_total) * 360 : 0;
 
-$active_path  = $total > 0 ? pieSlice(90, 90, 80, 0, $active_deg) : "";
-$pending_path = $total > 0 ? pieSlice(90, 90, 80, $active_deg, $active_deg + $pending_deg) : "";
-$expired_path = $total > 0 ? pieSlice(90, 90, 80, $active_deg + $pending_deg, 360) : "";
+$active_path = $status_total > 0 ? pieSlice(90, 90, 80, 0, $active_deg) : "";
 
-// ── Directory rows ────────────────────────────────────
+$under_review_path = $status_total > 0
+    ? pieSlice(90, 90, 80, $active_deg, $active_deg + $under_review_deg)
+    : "";
+
+$needs_correction_path = $status_total > 0
+    ? pieSlice(90, 90, 80, $active_deg + $under_review_deg, $active_deg + $under_review_deg + $needs_correction_deg)
+    : "";
+
+$expired_path = $status_total > 0
+    ? pieSlice(90, 90, 80, $active_deg + $under_review_deg + $needs_correction_deg, 360)
+    : "";
+
+/* DIRECTORY ROWS */
 $recent_ids = $_SESSION['recent_views'] ?? [];
 
-// Status Priority: Pending (1), Expired (2), Active (3)
-$status_order = "'Pending', 'Expired', 'Active'";
+$status_order = "'Under Review', 'Needs Correction', 'Expired', 'Active'";
 
 if (!empty($recent_ids)) {
-    // We reverse the array so the most recently pushed ID has the highest index
     $reversed_recents = array_reverse($recent_ids);
     $id_list = implode(',', array_map('intval', $reversed_recents));
 
-    // 1. Sort by Status Priority
-    // 2. Sort by Recency (FIELD returns the position in the list; higher position = more recent)
-    // 3. Sort by ID (fallback for residents never opened)
     $query = "SELECT * FROM residents 
               ORDER BY 
-                FIELD(status, $status_order) ASC, 
-                FIELD(id, $id_list) DESC, 
-                id DESC";
+                FIELD(status, $status_order) ASC,
+                FIELD(ID, $id_list) DESC,
+                ID DESC";
 } else {
-    // Fallback if no residents have been opened yet
     $query = "SELECT * FROM residents 
               ORDER BY 
-                FIELD(status, $status_order) ASC, 
-                id DESC";
+                FIELD(status, $status_order) ASC,
+                ID DESC";
 }
 
 $residents_result = mysqli_query($conn, $query);
 
-// ── Disability badge CSS class map ────────────────────
 function badgeClass($type) {
     $map = [
         "cognitive"    => "badge-cognitive",
         "visual"       => "badge-visual",
-        "physical"        => "badge-physical",
+        "physical"     => "badge-physical",
         "auditory"     => "badge-auditory",
         "speech"       => "badge-speech",
         "psychosocial" => "badge-psycho",
+        "others"       => "badge-others",
     ];
+
     $key = strtolower(trim(explode(",", $type)[0]));
     return $map[$key] ?? "badge-physical";
 }

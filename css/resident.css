@@ -280,6 +280,26 @@
   .status-active  { background: #EAF9EE; color: #38C966; border-color: #B2EAC4; }
   .status-pending { background: #FFF3E8; color: #F18831; border-color: #FCD5B5; }
   .status-expired { background: #FFE0E0; color: #c0392b; border-color: #f5c6c6; }
+  .status-under-review {
+  background: #EEF4FF;
+  color: #2563EB;
+  border-color: #BFDBFE;
+  width: 110px;
+}
+
+.status-needs-correction {
+  background: #FFF7E6;
+  color: #D97706;
+  border-color: #FCD34D;
+  width: 135px;
+}
+
+.status-rejected {
+  background: #FEECEC;
+  color: #DC2626;
+  border-color: #FCA5A5;
+  width: 90px;
+}
 
   .actions { display: flex; gap: 12px; }
   .actions button {
