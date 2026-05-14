@@ -579,3 +579,9 @@
   color: var(--text-muted);
   font-size: 14px;
 }
+
+.status-under-review {
+  background: #FFF1E8;
+  color: #E57A39;
+  border-color: #F0BE9B;
+}

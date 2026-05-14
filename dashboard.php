@@ -428,7 +428,7 @@ require_once("func/getNotifications.php");
             $category   = htmlspecialchars($user['resident_type'] ?? '—');
             $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
             $status     = htmlspecialchars($user['status'] ?? 'Pending');
-            $status_cls = "status-" . strtolower($status);
+            $status_cls = "status-" . str_replace(' ', '-', strtolower($status));
           ?>
             <tr>
               <td class="td-name"><?php echo $full_name; ?></td>
