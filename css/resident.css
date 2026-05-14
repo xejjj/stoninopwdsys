@@ -267,19 +267,56 @@
   .badge-psycho    { background: #E6FBE6; color: #15A44E; }
   .badge-others    { background: #F0F0F0; color: #666; }
 
-  .status {
-    display: inline-block;
-    padding: 4px 0;
-    border-radius: 12px;
-    font-size: 10.5px;
-    font-weight: 700;
-    text-align: center;
-    border: 1px solid transparent;
-    width: 65px;
-  }
-  .status-active  { background: #EAF9EE; color: #38C966; border-color: #B2EAC4; }
-  .status-pending { background: #FFF3E8; color: #F18831; border-color: #FCD5B5; }
-  .status-expired { background: #FFE0E0; color: #c0392b; border-color: #f5c6c6; }
+ /* =========================
+   STATUS BADGES
+========================= */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 5px 16px;
+
+  border-radius: 999px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  border: 1.5px solid transparent;
+}
+
+.status-active {
+  background: #DFF5E3;
+  color: #32C24D;
+  border-color: #32C24D;
+}
+
+.status-under-review {
+  background: #FFF1E8;
+  color: #E57A39;
+  border-color: #F0BE9B;
+}
+
+.status-needs-correction {
+  background: #FFF4E8;
+  color: #D17A2B;
+  border-color: #E7BC8D;
+}
+
+.status-expired {
+  background: #FFDCDC;
+  color: #E02424;
+  border-color: #FF4D4D;
+}
+
+.status-rejected {
+  background: #F9E2E2;
+  color: #B42323;
+  border-color: #D96B6B;
+}
 
   .actions { display: flex; gap: 12px; }
   .actions button {
@@ -355,12 +392,34 @@
   .filter-option:hover    { background: #f5f0f0; color: var(--primary); }
   .filter-option.selected { color: var(--primary); font-weight: 800; }
 
-  .badge-under-review {
-  background-color: #FFF3E8; /* Light orange background */
-  color: #F18831;            /* Dark orange text */
-  /* Add these below if your other badges have them, otherwise just the colors are fine! */
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-  font-size: 12px;
+  .expiry-warning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  margin-right: 8px;
+
+  border-radius: 50%;
+
+  background-color: #FFD54A;
+
+  color: #7A4D00;
+
+  border: 1.5px solid #E6B800;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  line-height: 1;
+
+  flex-shrink: 0;
+
+  vertical-align: middle;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+
+  cursor: help;
 }

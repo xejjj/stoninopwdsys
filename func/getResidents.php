@@ -60,7 +60,28 @@ $total_rows   = mysqli_fetch_assoc($count_result)["total"];
 $total_pages  = max(1, ceil($total_rows / $per_page));
 
 // ── Fetch rows ────────────────────────────────────────
-$data_sql  = "SELECT * FROM residents $where ORDER BY last_name ASC LIMIT ? OFFSET ?";
+$data_sql = "
+SELECT * FROM residents
+$where
+
+ORDER BY
+
+CASE
+    WHEN idexpiration_date IS NOT NULL
+    AND idexpiration_date != ''
+    AND DATE(idexpiration_date)
+        BETWEEN CURDATE()
+        AND DATE_ADD(CURDATE(), INTERVAL 1 MONTH)
+    AND status != 'Expired'
+    THEN 0
+    ELSE 1
+END ASC,
+
+last_name ASC
+
+LIMIT ? OFFSET ?
+";
+
 $data_params = array_merge($params, [$per_page, $offset]);
 $data_types  = $types . "ii";
 

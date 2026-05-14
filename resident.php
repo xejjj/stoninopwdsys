@@ -130,7 +130,9 @@
       <select name="status" id="sel-status" style="display:none" onchange="document.getElementById('filterForm').submit()">
         <option value="">All Statuses</option>
         <option value="Active"  <?= $filter_status === "Active"  ? "selected" : "" ?>>Active</option>
-        <option value="Pending" <?= $filter_status === "Pending" ? "selected" : "" ?>>Pending</option>
+        <option value="Under Review" <?= $filter_status === "Under Review" ? "selected" : "" ?>>Under Review</option>
+        <option value="Needs Correction" <?= $filter_status === "Needs Correction" ? "selected" : "" ?>>Needs Correction</option>
+        <option value="Rejected" <?= $filter_status === "Rejected" ? "selected" : "" ?>>Rejected</option>
         <option value="Expired" <?= $filter_status === "Expired" ? "selected" : "" ?>>Expired</option>
       </select>
     </form>
@@ -165,7 +167,7 @@
             <th></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="residentTable">
           <?php if (mysqli_num_rows($residents_result) === 0): ?>
             <tr>
               <td colspan="6" style="text-align:center; padding:40px; color:var(--text-muted); font-weight:600;">
@@ -180,11 +182,74 @@
                 $category   = htmlspecialchars($user['resident_type'] ?? '—');
                 $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
                 $status     = htmlspecialchars($user['status'] ?? 'Pending');
-                $status_cls = "status-" . strtolower($status);
+                $status_cls ="status-" .strtolower(str_replace(" ", "-", $status));
+                $is_expiring_soon = false;
+
+if (!empty($user['idexpiration_date']) && $status !== 'Expired') {
+    $today = date('Y-m-d');
+    $one_month = date('Y-m-d', strtotime('+1 month'));
+
+    $exp_date = date('Y-m-d', strtotime($user['idexpiration_date']));
+
+    if ($exp_date >= $today && $exp_date <= $one_month) {
+        $is_expiring_soon = true;
+    }
+}$is_expiring_soon = false;
+
+if (!empty($user['idexpiration_date']) && $status !== 'Expired') {
+    $today = date('Y-m-d');
+    $one_month = date('Y-m-d', strtotime('+1 month'));
+
+    $exp_date = date('Y-m-d', strtotime($user['idexpiration_date']));
+
+    if ($exp_date >= $today && $exp_date <= $one_month) {
+        $is_expiring_soon = true;
+    }
+}
                 $types_arr  = array_filter(array_map('trim', explode(",", $disability)));
               ?>
               <tr>
-                <td class="fw-bold"><?= $full_name ?></td>
+                <td class="fw-bold">
+
+  <?php
+    $is_expiring_soon = false;
+
+    if (
+      !empty($user['idexpiration_date']) &&
+      $status !== 'Expired'
+    ) {
+
+      $today = date('Y-m-d');
+
+      $one_month =
+        date('Y-m-d', strtotime('+1 month'));
+
+      $exp_date =
+        date(
+          'Y-m-d',
+          strtotime($user['idexpiration_date'])
+        );
+
+      if (
+        $exp_date >= $today &&
+        $exp_date <= $one_month
+      ) {
+        $is_expiring_soon = true;
+      }
+    }
+  ?>
+
+  <?php if ($is_expiring_soon): ?>
+    <span
+      class="expiry-warning"
+      title="ID Expiring Soon (<?= htmlspecialchars($user['idexpiration_date']) ?>)">
+      !
+    </span>
+  <?php endif; ?>
+
+  <?= $full_name ?>
+
+</td>
                 <td>
                   <div class="badge-group">
                     <?php foreach ($types_arr as $t): ?>
@@ -320,8 +385,11 @@ const filterOptions = {
   'sel-status': [
     {value:'', label:'All Statuses'},
     {value:'Active',  label:'Active'},
-    {value:'Pending', label:'Pending'},
+    {value:'Under Review', label:'Under Review'},
+    {value:'Needs Correction', label:'Needs Correction'},
+    {value:'Rejected', label:'Rejected'},
     {value:'Expired', label:'Expired'},
+
   ],
 };
 

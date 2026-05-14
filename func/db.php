@@ -91,4 +91,13 @@ mysqli_query(
      OR age >= 18"
 );
 
+mysqli_query(
+    $conn,
+    "UPDATE residents
+     SET status = 'Expired'
+     WHERE idexpiration_date IS NOT NULL
+     AND idexpiration_date != ''
+     AND DATE(idexpiration_date) < CURDATE()
+     AND status != 'Expired'"
+);
 ?>
