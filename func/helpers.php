@@ -1,10 +1,6 @@
 <?php
 // func/helpers.php
 
-/**
- * Calculates age and formats the date of birth string.
- * Returns "N/A" if the date is 0000-00-00 or empty.
- */
 function getFormattedAge($dob_string) {
     if (empty($dob_string) || $dob_string === '0000-00-00') {
         return 'N/A';
@@ -22,9 +18,7 @@ function getFormattedAge($dob_string) {
     }
 }
 
-/**
- * Helper to color-code disability badges
- */
+
 function badgeClass($type) {
     $map = [
         "cognitive"    => "badge-cognitive",

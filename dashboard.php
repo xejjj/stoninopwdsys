@@ -220,7 +220,6 @@ require_once("func/getNotifications.php");
     </div>
 
     <!-- Registration Status Pie Chart -->
-    <!-- Registration Status Pie Chart -->
 <div class="chart-card">
   <div class="chart-title">Registration Status</div>
 
@@ -272,55 +271,33 @@ require_once("func/getNotifications.php");
 
       <div class="pie-legend-item">
         <div class="pie-dot" style="background:#A84040;"></div>
-
         Active
-
         <span class="legend-stat">
-          (<?= $active_count ?>
-          |
-          <?= $status_total > 0 ? round(($active_count / $status_total) * 100) : 0 ?>%)
+          (<?= $active_count ?> | <?= $status_total > 0 ? round(($active_count / $status_total) * 100) : 0 ?>%)
         </span>
       </div>
-
-
 
       <div class="pie-legend-item">
         <div class="pie-dot" style="background:#D4736F;"></div>
-
         Under Review
-
         <span class="legend-stat">
-          (<?= $under_review_count ?>
-          |
-          <?= $status_total > 0 ? round(($under_review_count / $status_total) * 100) : 0 ?>%)
+          (<?= $under_review_count ?> | <?= $status_total > 0 ? round(($under_review_count / $status_total) * 100) : 0 ?>%)
         </span>
       </div>
-
-
 
       <div class="pie-legend-item">
         <div class="pie-dot" style="background:#F2B8A0;"></div>
-
         Needs Correction
-
         <span class="legend-stat">
-          (<?= $needs_correction_count ?>
-          |
-          <?= $status_total > 0 ? round(($needs_correction_count / $status_total) * 100) : 0 ?>%)
+          (<?= $needs_correction_count ?> | <?= $status_total > 0 ? round(($needs_correction_count / $status_total) * 100) : 0 ?>%)
         </span>
       </div>
 
-
-
       <div class="pie-legend-item">
         <div class="pie-dot" style="background:#5C1010;"></div>
-
         Expired
-
         <span class="legend-stat">
-          (<?= $expired_count ?>
-          |
-          <?= $status_total > 0 ? round(($expired_count / $status_total) * 100) : 0 ?>%)
+          (<?= $expired_count ?> | <?= $status_total > 0 ? round(($expired_count / $status_total) * 100) : 0 ?>%)
         </span>
       </div>
 
@@ -333,10 +310,12 @@ require_once("func/getNotifications.php");
   <div class="dir-card">
     <div class="dir-header">
       <div class="dir-title">Directory</div>
-      <div class="search-wrap">
-        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Search name" oninput="filterTable()">
-      </div>
+      <form id="searchForm" onsubmit="event.preventDefault();" style="margin: 0;">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="liveSearchInput" name="search" placeholder="Search entire directory" value="<?= htmlspecialchars($search ?? '') ?>" autocomplete="off">
+        </div>
+      </form>
     </div>
 
     <table>
@@ -353,47 +332,56 @@ require_once("func/getNotifications.php");
       <tbody id="residentTable">
         <?php 
         $display_count = 0;
-        while ($user = mysqli_fetch_assoc($residents_result)): 
-          if ($display_count == 5) break;
-          $display_count++;
-          
-          $full_name = htmlspecialchars(
-            $user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']
-          );
-          $disability = htmlspecialchars($user['disablity_type'] ?? '—');
-          $badge      = badgeClass($user['disablity_type'] ?? '');
-          $category   = htmlspecialchars($user['resident_type'] ?? '—');
-          $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
-          $status     = htmlspecialchars($user['status'] ?? 'Pending');
-          $status_cls = "status-" . strtolower($status);
-        ?>
+        // Show up to 20 results if searching, otherwise show 5 recent
+        $limit = !empty($search) ? 20 : 5; 
+
+        if (mysqli_num_rows($residents_result) === 0): ?>
           <tr>
-            <td class="td-name"><?php echo $full_name; ?></td>
-            <td>
-              <?php
-                $types = explode(",", $disability);
-                foreach ($types as $t):
-                  $t = trim($t);
-                  if ($t):
-              ?>
-                <span class="badge <?php echo badgeClass($t); ?>"><?php echo htmlspecialchars($t); ?></span>
-              <?php endif; endforeach; ?>
-            </td>
-            <td><?php echo $category; ?></td>
-            <td><?php echo $sex; ?></td>
-            <td><span class="status <?php echo $status_cls; ?>"><?php echo $status; ?></span></td>
-            <td>
-              <div class="actions">
-                <button class="action-btn" title="Edit" onclick="window.location.href='editResident.php?id=<?= $user['ID'] ?>'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                  </button>
-                  <button class="action-btn" title="View" onclick="window.location.href='viewprofile.php?id=<?= $user['ID'] ?>'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                  </button>
-              </div>
-            </td>
+            <td colspan="6" style="text-align:center; padding:30px; color:#888;">No residents found matching your search.</td>
           </tr>
-        <?php endwhile; ?>
+        <?php else:
+          while ($user = mysqli_fetch_assoc($residents_result)): 
+            if ($display_count == $limit) break;
+            $display_count++;
+            
+            $full_name = htmlspecialchars(
+              $user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']
+            );
+            $disability = htmlspecialchars($user['disablity_type'] ?? '—');
+            $badge      = badgeClass($user['disablity_type'] ?? '');
+            $category   = htmlspecialchars($user['resident_type'] ?? '—');
+            $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
+            $status     = htmlspecialchars($user['status'] ?? 'Pending');
+            $status_cls = "status-" . strtolower($status);
+          ?>
+            <tr>
+              <td class="td-name"><?php echo $full_name; ?></td>
+              <td>
+                <?php
+                  $types = explode(",", $disability);
+                  foreach ($types as $t):
+                    $t = trim($t);
+                    if ($t):
+                ?>
+                  <span class="badge <?php echo badgeClass($t); ?>"><?php echo htmlspecialchars($t); ?></span>
+                <?php endif; endforeach; ?>
+              </td>
+              <td><?php echo $category; ?></td>
+              <td><?php echo $sex; ?></td>
+              <td><span class="status <?php echo $status_cls; ?>"><?php echo $status; ?></span></td>
+              <td>
+                <div class="actions">
+                  <button class="action-btn" title="Edit" onclick="window.location.href='editResident.php?id=<?= $user['ID'] ?>'">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                    <button class="action-btn" title="View" onclick="window.location.href='viewprofile.php?id=<?= $user['ID'] ?>'">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+        <?php endif; ?>
       </tbody>
     </table>
   </div>
@@ -408,26 +396,39 @@ function toggleMenu(event, id) {
 function logout() {
   window.location.href = "func/logout.php";
 }
-function filterTable() {
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  document.querySelectorAll("#residentTable tr").forEach(row => {
-    const name = row.querySelector(".td-name")?.textContent.toLowerCase() ?? "";
-    row.style.display = name.includes(search) ? "" : "none";
-  });
-}
 
+// ── LIVE SEARCH LOGIC ──
+const searchInput = document.getElementById("liveSearchInput");
+let searchTimer;
+
+searchInput.addEventListener("input", function() {
+  clearTimeout(searchTimer);
+  
+  searchTimer = setTimeout(() => {
+    // We send a request back to dashboard.php with the search parameter
+    const url = "dashboard.php?search=" + encodeURIComponent(searchInput.value);
+
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        
+        // Swap out just the table body
+        document.getElementById("residentTable").innerHTML = doc.getElementById("residentTable").innerHTML;
+      })
+      .catch(err => console.error("Search fetch error:", err));
+  }, 300);
+});
+
+// ── NOTIFICATIONS LOGIC ──
 function toggleNotifications(event) {
   event.stopPropagation();
-
-  document
-    .getElementById("notificationPanel")
-    .classList
-    .toggle("show");
+  document.getElementById("notificationPanel").classList.toggle("show");
 }
 
 window.addEventListener("click", function () {
   const panel = document.getElementById("notificationPanel");
-
   if (panel && panel.classList.contains("show")) {
     panel.classList.remove("show");
   }

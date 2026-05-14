@@ -88,26 +88,45 @@ $expired_path = $status_total > 0
 
 /* DIRECTORY ROWS */
 $recent_ids = $_SESSION['recent_views'] ?? [];
-
 $status_order = "'Under Review', 'Needs Correction', 'Expired', 'Active'";
 
-if (!empty($recent_ids)) {
-    $reversed_recents = array_reverse($recent_ids);
-    $id_list = implode(',', array_map('intval', $reversed_recents));
+// Check if user is actively searching
+$search = trim($_GET["search"] ?? "");
 
+if (!empty($search)) {
+    // Search Mode: Query the entire database
+    $search_param = "%" . $search . "%";
+    
     $query = "SELECT * FROM residents 
-              ORDER BY 
-                FIELD(status, $status_order) ASC,
-                FIELD(ID, $id_list) DESC,
-                ID DESC";
+              WHERE CONCAT(first_name,' ',middle_name,' ',last_name) LIKE ? 
+                 OR CONCAT(last_name,', ',first_name,' ',middle_name) LIKE ?
+              ORDER BY FIELD(status, $status_order) ASC, ID DESC";
+              
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "ss", $search_param, $search_param);
+    mysqli_stmt_execute($stmt);
+    $residents_result = mysqli_stmt_get_result($stmt);
+    
 } else {
-    $query = "SELECT * FROM residents 
-              ORDER BY 
-                FIELD(status, $status_order) ASC,
-                ID DESC";
-}
+    // Default Mode: Show Recent Views (or top rows if none)
+    if (!empty($recent_ids)) {
+        $reversed_recents = array_reverse($recent_ids);
+        $id_list = implode(',', array_map('intval', $reversed_recents));
 
-$residents_result = mysqli_query($conn, $query);
+        $query = "SELECT * FROM residents 
+                  ORDER BY 
+                    FIELD(status, $status_order) ASC,
+                    FIELD(ID, $id_list) DESC,
+                    ID DESC";
+    } else {
+        $query = "SELECT * FROM residents 
+                  ORDER BY 
+                    FIELD(status, $status_order) ASC,
+                    ID DESC";
+    }
+
+    $residents_result = mysqli_query($conn, $query);
+}
 
 function badgeClass($type) {
     $map = [

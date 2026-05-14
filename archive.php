@@ -114,7 +114,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
         <?php if (!empty($filter_disab)): ?><input type="hidden" name="disability" value="<?= htmlspecialchars($filter_disab) ?>"><?php endif; ?>
         <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" name="search" placeholder="Search name" value="<?= htmlspecialchars($search) ?>" oninput="debounceSearch()">
+          <input type="text" name="search" id="liveSearchInput" placeholder="Search name" value="<?= htmlspecialchars($search) ?>" autocomplete="off">
         </div>
       </form>
     </div>
@@ -333,11 +333,48 @@ function logout() {
   window.location.href = "func/logout.php";
 }
 
+// ── LIVE SEARCH LOGIC ──
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("liveSearchInput");
 let searchTimer;
-function debounceSearch() {
+
+// Prevent full page reload if user presses Enter
+searchForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+});
+
+// Trigger search on every letter typed
+searchInput.addEventListener("input", function() {
   clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => document.getElementById("searchForm").submit(), 400);
-}
+  
+  // Wait 300ms after typing stops
+  searchTimer = setTimeout(() => {
+    // Automatically grab the search text AND any active hidden filters
+    const formData = new FormData(searchForm);
+    const params = new URLSearchParams(formData);
+    params.set("page", 1); // Reset to page 1 on a new search
+
+    const url = "archive.php?" + params.toString();
+
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        // Parse the downloaded page content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        // Seamlessly swap only the table and the pagination
+        document.querySelector(".table-wrap").innerHTML = doc.querySelector(".table-wrap").innerHTML;
+        document.querySelector(".pagination").innerHTML = doc.querySelector(".pagination").innerHTML;
+
+        // Update the browser's address bar silently
+        window.history.pushState({path: url}, "", url);
+      })
+      .catch(err => console.error("Search fetch error:", err));
+  }, 300);
+});
+
+// ── END LIVE SEARCH LOGIC ──
 
 function confirmRestore(id) {
   document.getElementById("restoreId").value = id;
