@@ -70,13 +70,20 @@ function actionBadge($action) {
     $action = strtoupper($action);
 
     return match ($action) {
-        "CREATE"  => "badge-create",
-        "UPDATE"  => "badge-update",
-        "ARCHIVE" => "badge-archive",
-        "RESTORE" => "badge-restore",
-        "DELETE"  => "badge-delete",
-        "LOGIN"   => "badge-login",
-        default   => "badge-default",
-    };
+
+    "CREATE"  => "badge-create",
+    "UPDATE"  => "badge-update",
+
+    "APPROVE" => "badge-restore",
+    "REJECT"  => "badge-delete",
+
+    "ARCHIVE" => "badge-archive",
+    "RESTORE" => "badge-restore",
+    "DELETE"  => "badge-delete",
+
+    "LOGIN"   => "badge-login",
+
+    default   => "badge-default",
+};
 }
 ?>

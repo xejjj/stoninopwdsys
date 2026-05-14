@@ -1,14 +1,76 @@
-t<?php
+<?php
 session_start();
 require_once("func/db.php");
 
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;
+
 if ($id <= 0) {
     header("Location: resident.php");
     exit();
 }
 
-$stmt = mysqli_prepare($conn, "SELECT * FROM residents WHERE ID = ?");
+$sql = "
+SELECT
+    residents.*,
+
+    resident_contacts.contact_num,
+    resident_contacts.socials,
+
+    resident_emergency_contacts.name AS emergency_name,
+    resident_emergency_contacts.contact_num AS emergency_number,
+    resident_emergency_contacts.relationship AS emergency_relation,
+
+    GROUP_CONCAT(
+        DISTINCT resident_disabilities.disability_type
+        SEPARATOR ', '
+    ) AS disability_type,
+
+    MAX(resident_disabilities.notes) AS disability_remarks,
+
+    MAX(CASE WHEN resident_family_members.relationship = 'Father'
+    THEN resident_family_members.name END) AS father_name,
+
+MAX(CASE WHEN resident_family_members.relationship = 'Mother'
+    THEN resident_family_members.name END) AS mother_name,
+
+MAX(CASE WHEN resident_family_members.relationship = 'Spouse'
+    THEN resident_family_members.name END) AS spouse_name,
+
+MAX(CASE
+    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+    THEN resident_family_members.name
+END) AS guardian_name,
+
+MAX(CASE
+    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+    THEN resident_family_members.relationship
+END) AS guardian_rel,
+
+MAX(CASE
+    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+    THEN resident_family_members.contact_num
+END) AS guardian_number
+
+FROM residents
+
+LEFT JOIN resident_contacts
+ON residents.ID = resident_contacts.resident_id
+
+LEFT JOIN resident_emergency_contacts
+ON residents.ID = resident_emergency_contacts.resident_id
+
+LEFT JOIN resident_disabilities
+ON residents.ID = resident_disabilities.resident_id
+
+LEFT JOIN resident_family_members
+ON residents.ID = resident_family_members.resident_id
+
+WHERE residents.ID = ?
+
+GROUP BY residents.ID
+";
+
+$stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
@@ -19,7 +81,11 @@ if (!$r) {
     exit();
 }
 
-$saved_disabilities = array_map('trim', explode(",", $r['disablity_type'] ?? ""));
+$saved_disabilities = array_map(
+    'trim',
+    explode(",", $r['disability_type'] ?? "")
+);
+
 function isChecked($val, $arr) {
     return in_array($val, $arr) ? "checked" : "";
 }
@@ -27,9 +93,18 @@ function isChecked($val, $arr) {
 $show_edit_success    = isset($_SESSION["edit_success"]);
 $show_archive_success = isset($_SESSION["arch_success"]);
 $edit_error           = $_SESSION["edit_error"] ?? "";
-if ($show_edit_success)    unset($_SESSION["edit_success"]);
-if ($show_archive_success) unset($_SESSION["arch_success"]);
-if ($edit_error)           unset($_SESSION["edit_error"]);
+
+if ($show_edit_success) {
+    unset($_SESSION["edit_success"]);
+}
+
+if ($show_archive_success) {
+    unset($_SESSION["arch_success"]);
+}
+
+if ($edit_error) {
+    unset($_SESSION["edit_error"]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,13 +127,16 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
       <span class="brand-sub">Sto. Niño System</span>
     </div>
   </div>
+
   <nav class="sidebar-nav">
     <div class="nav-section-label">Main Menu</div>
+
     <div class="nav-group">
       <a class="nav-item" href="dashboard.php">
         <img src="assets/overviewicon.png" width="20">Overview
       </a>
     </div>
+
     <div class="nav-group">
       <a class="nav-item open active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src="assets/users.png" width="20">Management
@@ -70,30 +148,33 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
         <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
+
     <div class="nav-group">
       <a class="nav-item" href="reports.php">
         <img src="assets/reporticon.png" width="20">Reports
       </a>
     </div>
-    <?php 
+
+    <?php
     $isAdmin = ($_SESSION["role"] ?? "") === "admin";
-    $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
-    if ($isAdmin): ?>
-<div class="nav-group">
-  <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
-    <img src="assets/settingicon.png" width="20">
-    System
-    <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
-  </a>
-  <div class="nav-sub" id="system-sub">
-    <a class="nav-sub-item" href="system.php">System Tools</a>
-    <a class="nav-sub-item" href="account.php">Accounts</a>
-    <a class="nav-sub-item" href="archive.php">Archive</a>
-    <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
-  </div>
-</div>
-<?php endif; ?>
+    if ($isAdmin):
+    ?>
+    <div class="nav-group">
+      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+        <img src="assets/settingicon.png" width="20">
+        System
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
+      </a>
+      <div class="nav-sub" id="system-sub">
+        <a class="nav-sub-item" href="system.php">System Tools</a>
+        <a class="nav-sub-item" href="account.php">Accounts</a>
+        <a class="nav-sub-item" href="archive.php">Archive</a>
+        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
+      </div>
+    </div>
+    <?php endif; ?>
   </nav>
+
   <div class="sidebar-footer">
     <button class="logout-btn" onclick="logout()">
       <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -114,51 +195,50 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
     <?php endif; ?>
 
     <form action="func/processEdit.php" method="POST" enctype="multipart/form-data">
-      <input type="hidden" name="resident_id" value="<?= $r['ID'] ?>">
+      <input type="hidden" name="resident_id" value="<?= htmlspecialchars($r['ID']) ?>">
 
-      <!-- Personal Information -->
       <div class="card">
         <div class="card-title">Personal Information</div>
         <div class="form-grid">
           <div class="field">
             <label>First Name</label>
-            <input type="text" name="first_name" value="<?= htmlspecialchars($r['first_name']) ?>" placeholder="e.g. Juan">
+            <input type="text" name="first_name" value="<?= htmlspecialchars($r['first_name'] ?? '') ?>" placeholder="e.g. Juan">
           </div>
           <div class="field">
             <label>Middle Name</label>
-            <input type="text" name="middle_name" value="<?= htmlspecialchars($r['middle_name']) ?>" placeholder="e.g. Dela">
+            <input type="text" name="middle_name" value="<?= htmlspecialchars($r['middle_name'] ?? '') ?>" placeholder="e.g. Dela">
           </div>
           <div class="field">
             <label>Last Name</label>
-            <input type="text" name="last_name" value="<?= htmlspecialchars($r['last_name']) ?>" placeholder="e.g. Cruz">
+            <input type="text" name="last_name" value="<?= htmlspecialchars($r['last_name'] ?? '') ?>" placeholder="e.g. Cruz">
           </div>
           <div class="field">
             <label>Civil Status</label>
             <select name="civil_status">
               <option value="">Select status</option>
-              <?php foreach (["Single","Married","Widowed","Separated"] as $cs): ?>
-                <option <?= $r['civil_status'] === $cs ? "selected" : "" ?>><?= $cs ?></option>
+              <?php foreach (["Single", "Married", "Widowed", "Separated"] as $cs): ?>
+                <option value="<?= $cs ?>" <?= ($r['civil_status'] ?? '') === $cs ? "selected" : "" ?>><?= $cs ?></option>
               <?php endforeach; ?>
             </select>
           </div>
           <div class="field">
             <label>Date of Birth</label>
-            <input type="date" name="dob" value="<?= htmlspecialchars($r['birthdate']) ?>">
+            <input type="date" name="dob" value="<?= htmlspecialchars($r['birthdate'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Place of Birth</label>
-            <input type="text" name="pob" value="<?= htmlspecialchars($r['birthplace']) ?>" placeholder="e.g. Tondo General Hospital">
+            <input type="text" name="pob" value="<?= htmlspecialchars($r['birthplace'] ?? '') ?>" placeholder="e.g. Tondo General Hospital">
           </div>
           <div class="field">
             <label>Age</label>
-            <input type="number" name="age" value="<?= htmlspecialchars($r['age']) ?>" min="0" max="130">
+            <input type="number" value="<?= !empty($r['birthdate']) ? htmlspecialchars(date_diff(date_create($r['birthdate']), date_create('today'))->y) : '' ?>" min="0" max="130" readonly>
           </div>
           <div class="field">
             <label>Sex</label>
             <select name="sex">
               <option value="">Select sex</option>
-              <option value="male"   <?= strtolower($r['sex']) === "male"   ? "selected" : "" ?>>Male</option>
-              <option value="female" <?= strtolower($r['sex']) === "female" ? "selected" : "" ?>>Female</option>
+              <option value="male" <?= strtolower($r['sex'] ?? '') === "male" ? "selected" : "" ?>>Male</option>
+              <option value="female" <?= strtolower($r['sex'] ?? '') === "female" ? "selected" : "" ?>>Female</option>
             </select>
           </div>
           <div class="field">
@@ -175,164 +255,124 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
         </div>
       </div>
 
-      <!-- Contact and Address -->
       <div class="card">
         <div class="card-title">Contact and Address Information</div>
         <div class="form-grid">
           <div class="field">
             <label>Contact Number</label>
-            <input type="tel" name="contact_number" value="<?= htmlspecialchars($r['contact_num']) ?>" placeholder="09XX XXX XXXX">
+            <input type="tel" name="contact_number" value="<?= htmlspecialchars($r['contact_number'] ?? '') ?>" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
             <label>Emergency Contact Name</label>
-            <input type="text" name="emergency_name" value="<?= htmlspecialchars($r['emergency_cont']) ?>" placeholder="Full name">
+            <input type="text" name="emergency_name" value="<?= htmlspecialchars($r['emergency_name'] ?? '') ?>" placeholder="Full name">
           </div>
           <div class="field">
             <label>Emergency Contact Number</label>
-            <input type="tel" name="emergency_number" value="<?= htmlspecialchars($r['emergency_cont_num']) ?>" placeholder="09XX XXX XXXX">
+            <input type="tel" name="emergency_number" value="<?= htmlspecialchars($r['emergency_number'] ?? '') ?>" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
             <label>Relationship with Emergency Contact</label>
-            <input type="text" name="emergency_relation" value="<?= htmlspecialchars($r['emergency_cont_rel']) ?>" placeholder="e.g. Parent, Sibling">
+            <input type="text" name="emergency_relation" value="<?= htmlspecialchars($r['emergency_relation'] ?? '') ?>" placeholder="e.g. Parent, Sibling">
           </div>
           <div class="field">
             <label>Email/Facebook Account</label>
-            <input type="text" name="account_name" value="<?= htmlspecialchars($r['socials']) ?>">
+            <input type="text" name="account_name" value="<?= htmlspecialchars($r['socials'] ?? '') ?>">
           </div>
           <div class="field span-2">
             <label>House No. and Street</label>
-            <input type="text" name="address" value="<?= htmlspecialchars($r['address']) ?>" placeholder="e.g. 12 Sampaguita St.">
+            <input type="text" name="address" value="<?= htmlspecialchars($r['address'] ?? '') ?>" placeholder="e.g. 12 Sampaguita St.">
           </div>
         </div>
       </div>
 
-      <!-- Disability Information -->
       <div class="card">
         <div class="card-title">Disability Information</div>
         <div class="form-grid cols-2">
           <div class="field span-all">
             <div class="checkbox-grid">
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive"    <?= isChecked("Cognitive",    $saved_disabilities) ?>> Cognitive</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual"       <?= isChecked("Visual",       $saved_disabilities) ?>> Visual</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical"     <?= isChecked("Physical",     $saved_disabilities) ?>> Physical</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory"     <?= isChecked("Auditory",     $saved_disabilities) ?>> Auditory</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech"       <?= isChecked("Speech",       $saved_disabilities) ?>> Speech</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial" <?= isChecked("Psychosocial", $saved_disabilities) ?>> Psychosocial</label>
-              <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others"       <?= isChecked("Others",       $saved_disabilities) ?>> Others</label>
+              <?php foreach (["Cognitive", "Visual", "Physical", "Auditory", "Speech", "Psychosocial", "Others"] as $disability): ?>
+                <label class="checkbox-label">
+                  <input type="checkbox" name="disability_type[]" value="<?= $disability ?>" <?= isChecked($disability, $saved_disabilities) ?>>
+                  <?= $disability ?>
+                </label>
+              <?php endforeach; ?>
             </div>
           </div>
           <div class="field span-all">
             <label>Remarks</label>
-            <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..."><?= htmlspecialchars($r['disability_remarks'] ?? "") ?></textarea>
+            <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize:none;"><?= htmlspecialchars($r['disability_remarks'] ?? '') ?></textarea>
           </div>
           <div class="field span-all">
-  <label>Medical Certificate</label>
+            <label>Medical Certificate</label>
 
-  <?php if (!empty($r['med_cert'])): ?>
-    <a href="<?= htmlspecialchars($r['med_cert']) ?>"
-       target="_blank"
-       style="
-         display:inline-block;
-         margin-bottom:10px;
-         color:#A84040;
-         font-weight:700;
-         text-decoration:none;
-       ">
-       View Current Medical Certificate
-    </a>
-  <?php endif; ?>
+            <?php if (!empty($r['med_cert'])): ?>
+              <a href="<?= htmlspecialchars($r['med_cert']) ?>" target="_blank" style="display:inline-block;margin-bottom:10px;color:#A84040;font-weight:700;text-decoration:none;">
+                View Current Medical Certificate
+              </a>
+            <?php endif; ?>
 
-  <label class="file-input-wrap">
-    <svg viewBox="0 0 24 24">
-      <polyline points="16 16 12 12 8 16"/>
-      <line x1="12" y1="12" x2="12" y2="21"/>
-      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
-    </svg>
-
-    <span id="medCertLabel">Upload new medical certificate…</span>
-
-    <input
-      type="file"
-      name="med_cert"
-      accept=".pdf,.jpg,.jpeg,.png"
-      onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload new medical certificate…'"
-    >
-  </label>
-</div>
+            <label class="file-input-wrap">
+              <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+              <span id="medCertLabel">Upload new medical certificate…</span>
+              <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload new medical certificate…'">
+            </label>
+          </div>
         </div>
       </div>
 
-      <!-- Family Information -->
       <div class="card">
         <div class="card-title">Family Information</div>
         <div class="form-grid cols-3">
           <div class="field">
             <label>Father Name</label>
-            <input type="text" name="father_name" value="<?= htmlspecialchars($r['father_name']) ?>">
+            <input type="text" name="father_name" value="<?= htmlspecialchars($r['father_name'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Mother Name</label>
-            <input type="text" name="mother_name" value="<?= htmlspecialchars($r['mother_name']) ?>">
+            <input type="text" name="mother_name" value="<?= htmlspecialchars($r['mother_name'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Spouse Name</label>
-            <input type="text" name="spouse_name" value="<?= htmlspecialchars($r['spouse_name']) ?>">
+            <input type="text" name="spouse_name" value="<?= htmlspecialchars($r['spouse_name'] ?? '') ?>">
           </div>
-          <div class="field span-all" style="margin-top:8px;"></div>
+          <div class="field span-all" style="margin-top:1px;"></div>
           <div class="field">
-            <label>Parent/Guardian Name</label>
-            <input type="text" name="guardian_name" value="<?= htmlspecialchars($r['guardian_name']) ?>" placeholder="Full name">
-          </div>
-          <div class="field">
-            <label>Relationship with Child</label>
-            <input type="text" name="child_relation" value="<?= htmlspecialchars($r['guardian_rel']) ?>" placeholder="e.g. Mother, Father">
+            <label>Guardian Name</label>
+            <input type="text" name="guardian_name" value="<?= htmlspecialchars($r['guardian_name'] ?? '') ?>" placeholder="Full name">
           </div>
           <div class="field">
-            <label>Parent/Guardian Number</label>
-            <input type="tel" name="guardian_number" value="<?= htmlspecialchars($r['guardian_cont_num']) ?>" placeholder="09XX XXX XXXX">
+            <label>Relationship</label>
+            <input type="text" name="child_relation" value="<?= htmlspecialchars($r['guardian_rel'] ?? '') ?>" placeholder="e.g. Mother, Father">
+          </div>
+          <div class="field">
+            <label>Guardian Number</label>
+            <input type="tel" name="guardian_number" value="" placeholder="09XX XXX XXXX">
           </div>
         </div>
       </div>
 
-      <!-- ID Registration -->
       <div class="card">
         <div class="card-title">ID Registration Details</div>
         <div class="form-grid cols-4">
           <div class="field">
             <label>PWD ID Number</label>
-            <input type="text" name="pwd_id" value="<?= htmlspecialchars($r['pwdid_num']) ?>">
+            <input type="text" name="pwd_id" value="<?= htmlspecialchars($r['pwdid_num'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Control Number</label>
-            <input type="text" name="control_id" value="<?= htmlspecialchars($r['control_num']) ?>">
+            <input type="text" name="control_id" value="<?= htmlspecialchars($r['control_num'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Date Issued</label>
-            <input type="date" name="date_issued" value="<?= htmlspecialchars($r['idissue_date']) ?>">
+            <input type="date" name="date_issued" value="<?= htmlspecialchars($r['idissue_date'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Expiration Date</label>
-            <input type="date" name="expiration_date" value="<?= htmlspecialchars($r['idexpiration_date']) ?>">
+            <input type="date" name="expiration_date" value="<?= htmlspecialchars($r['idexpiration_date'] ?? '') ?>">
           </div>
         </div>
       </div>
 
-      <!-- Status -->
-      <div class="card">
-        <div class="card-title">Registration Status</div>
-        <div class="form-grid cols-3">
-          <div class="field">
-            <label>Status</label>
-            <select name="status">
-              <?php foreach (["Active","Pending","Expired"] as $st): ?>
-                <option <?= ($r['status'] ?? "") === $st ? "selected" : "" ?>><?= $st ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Actions -->
       <div class="form-footer">
         <button class="btn btn-archive" type="button" onclick="confirmArchive(<?= $r['ID'] ?>)">Archive</button>
         <div style="display:flex;gap:10px;">
@@ -340,12 +380,10 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
           <button class="btn btn-save" type="submit">Save Changes</button>
         </div>
       </div>
-
     </form>
   </div>
 </div>
 
-<!-- ── Edit Success Modal ── -->
 <?php if ($show_edit_success): ?>
 <div id="editSuccessModal" style="display:flex; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
   <div style="background:#fff; border-radius:16px; padding:36px 32px; max-width:420px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15); text-align:center;">
@@ -355,18 +393,13 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
     <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Changes Saved!</h2>
     <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The resident's information has been updated successfully.</p>
     <div style="display:flex; gap:10px; justify-content:center;">
-      <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
-        View Residents
-      </button>
-      <button onclick="document.getElementById('editSuccessModal').style.display='none'" style="padding:10px 22px; border-radius:10px; border:none; background:#A84040; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(168,64,64,0.3);">
-        Continue Editing
-      </button>
+      <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">View Residents</button>
+      <button onclick="document.getElementById('editSuccessModal').style.display='none'" style="padding:10px 22px; border-radius:10px; border:none; background:#A84040; color:#fff; font-family:inherit; font-size:13.5px; font-weight:700; cursor:pointer; box-shadow:0 3px 10px rgba(168,64,64,0.3);">Continue Editing</button>
     </div>
   </div>
 </div>
 <?php endif; ?>
 
-<!-- ── Archive Confirm Modal ── -->
 <div id="archiveModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999; align-items:center; justify-content:center;">
   <div style="background:#fff; border-radius:16px; padding:32px; max-width:400px; width:90%; box-shadow:0 8px 32px rgba(0,0,0,0.15);">
     <div style="width:48px; height:48px; background:#FFF3E8; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
@@ -393,7 +426,6 @@ function toggleMenu(event, id) {
 function logout() {
   window.location.href = "func/logout.php";
 }
-
 function confirmArchive(id) {
   document.getElementById("archiveId").value = id;
   document.getElementById("archiveModal").style.display = "flex";

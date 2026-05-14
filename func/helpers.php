@@ -29,6 +29,6 @@ function badgeClass($type) {
         "psychosocial" => "badge-psycho",
     ];
     $key = strtolower(trim(explode(",", $type)[0]));
-    return $map[$key] ?? "badge-physical";
+    return $map[$key] ?? "badge-default";
 }
 ?>

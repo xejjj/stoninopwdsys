@@ -1,5 +1,7 @@
 <?php
+
 session_start();
+
 require_once("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -8,70 +10,51 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 /* =========================
-   PERSONAL INFORMATION
+   MAIN RESIDENT DATA
 ========================= */
+
 $first_name   = trim($_POST["first_name"] ?? "");
 $middle_name  = trim($_POST["middle_name"] ?? "");
 $last_name    = trim($_POST["last_name"] ?? "");
 $civil_status = trim($_POST["civil_status"] ?? "");
 $birthdate    = trim($_POST["dob"] ?? "");
 $birthplace   = trim($_POST["pob"] ?? "");
-$age          = intval($_POST["age"] ?? 0);
 $sex          = strtolower(trim($_POST["sex"] ?? ""));
+$address      = trim($_POST["address"] ?? "");
 
-/* =========================
-   CONTACT & ADDRESS
-========================= */
-$contact_num        = trim($_POST["contact_number"] ?? "");
-$emergency_cont     = trim($_POST["emergency_name"] ?? "");
-$emergency_cont_num = trim($_POST["emergency_number"] ?? "");
-$emergency_cont_rel = trim($_POST["emergency_relation"] ?? "");
-$socials            = trim($_POST["account_name"] ?? "");
-$address            = trim($_POST["address"] ?? "");
-
-/* =========================
-   DISABILITY INFORMATION
-========================= */
-$disablity_type = isset($_POST["disablity_type"])
-    ? implode(", ", $_POST["disablity_type"])
-    : "";
-
-$disability_remarks = trim($_POST["remarks"] ?? "");
-
-/* =========================
-   RESIDENT TYPE
-========================= */
-$guardian_name   = trim($_POST["guardian_name"] ?? "");
-$guardian_number = trim($_POST["guardian_number"] ?? "");
-$guardian_rel    = trim($_POST["child_relation"] ?? "");
-$resident_type   = !empty($guardian_name) ? "CWD" : "PWD";
-
-/* =========================
-   FAMILY INFORMATION
-========================= */
-$father_name = trim($_POST["father_name"] ?? "");
-$mother_name = trim($_POST["mother_name"] ?? "");
-$spouse_name = trim($_POST["spouse_name"] ?? "");
-
-/* =========================
-   ID REGISTRATION
-========================= */
 $pwdid_num         = trim($_POST["pwd_id"] ?? "");
 $control_num       = trim($_POST["control_id"] ?? "");
 $idissue_date      = trim($_POST["date_issued"] ?? "");
 $idexpiration_date = trim($_POST["expiration_date"] ?? "");
 
+$guardian_name   = trim($_POST["guardian_name"] ?? "");
+$guardian_number = trim($_POST["guardian_number"] ?? "");
+$guardian_rel    = trim($_POST["child_relation"] ?? "");
+
+$resident_type = !empty($guardian_name) ? "CWD" : "PWD";
+
+$application_status = "under review";
+$record_status = "active";
+
 /* =========================
    VALIDATION
 ========================= */
-if (empty($first_name) || empty($last_name) || empty($birthdate) || empty($sex)) {
+
+if (
+    empty($first_name) ||
+    empty($last_name) ||
+    empty($birthdate) ||
+    empty($sex)
+) {
     $_SESSION["reg_error"] = "Please fill in all required fields.";
     $_SESSION["form_data"] = $_POST;
     header("Location: ../selfregistration.php");
     exit();
 }
 
-if (empty($disablity_type)) {
+$disabilities = $_POST["disability_type"] ?? [];
+
+if (empty($disabilities)) {
     $_SESSION["reg_error"] = "Please select at least one disability type.";
     $_SESSION["form_data"] = $_POST;
     header("Location: ../selfregistration.php");
@@ -79,11 +62,13 @@ if (empty($disablity_type)) {
 }
 
 /* =========================
-   PROFILE PICTURE UPLOAD
+   PROFILE UPLOAD
 ========================= */
+
 $profile = "";
 
 if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
+
     $upload_dir = "../uploads/profiles/";
 
     if (!is_dir($upload_dir)) {
@@ -94,14 +79,14 @@ if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
     $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
 
     if (!in_array($ext, $allowed)) {
-        $_SESSION["reg_error"] = "Invalid profile picture. Only JPG, PNG, GIF, WEBP allowed.";
+        $_SESSION["reg_error"] = "Invalid profile picture. Only JPG, JPEG, PNG, GIF, WEBP allowed.";
         $_SESSION["form_data"] = $_POST;
         header("Location: ../selfregistration.php");
         exit();
     }
+
     $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
-    $safe_name =
-    $base_name . "_profile_" . time() . "." . $ext;
+    $safe_name = $base_name . "_profile_" . time() . "." . $ext;
     $target = $upload_dir . $safe_name;
 
     if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
@@ -117,9 +102,11 @@ if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
 /* =========================
    MEDICAL CERTIFICATE UPLOAD
 ========================= */
+
 $med_cert = "";
 
 if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
+
     $upload_dir = "../uploads/medical_certificates/";
 
     if (!is_dir($upload_dir)) {
@@ -137,8 +124,7 @@ if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
     }
 
     $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
-    $safe_name =
-    $base_name . "_medcert_" . time() . "." . $ext;
+    $safe_name = $base_name . "_medcert_" . time() . "." . $ext;
     $target = $upload_dir . $safe_name;
 
     if (!move_uploaded_file($_FILES["med_cert"]["tmp_name"], $target)) {
@@ -152,29 +138,31 @@ if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
 }
 
 /* =========================
-   INSERT INTO DATABASE
+   INSERT MAIN RESIDENT
 ========================= */
-$sql = "INSERT INTO residents (
-            first_name, middle_name, last_name, civil_status,
-            birthdate, age, birthplace, sex,
-            address, contact_num,
-            emergency_cont, emergency_cont_num, emergency_cont_rel,
-            socials, disablity_type, disability_remarks, resident_type,
-            guardian_name, guardian_cont_num, guardian_rel,
-            father_name, mother_name, spouse_name,
-            pwdid_num, control_num, idissue_date, idexpiration_date,
-            profile, med_cert, status
-        ) VALUES (
-            ?, ?, ?, ?,
-            ?, ?, ?, ?,
-            ?, ?,
-            ?, ?, ?,
-            ?, ?, ?, ?,
-            ?, ?, ?,
-            ?, ?, ?,
-            ?, ?, ?, ?,
-            ?, ?, ?
-        )";
+
+$sql = "
+INSERT INTO residents (
+    first_name,
+    middle_name,
+    last_name,
+    civil_status,
+    birthdate,
+    birthplace,
+    sex,
+    address,
+    resident_type,
+    pwdid_num,
+    control_num,
+    idissue_date,
+    idexpiration_date,
+    profile,
+    med_cert,
+    application_status,
+    record_status
+)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+";
 
 $stmt = mysqli_prepare($conn, $sql);
 
@@ -185,51 +173,185 @@ if (!$stmt) {
     exit();
 }
 
-$status = "Under Review";
-
 mysqli_stmt_bind_param(
     $stmt,
-    "sssssissssssssssssssssssssssss",
+    "sssssssssssssssss",
     $first_name,
     $middle_name,
     $last_name,
     $civil_status,
     $birthdate,
-    $age,
     $birthplace,
     $sex,
     $address,
-    $contact_num,
-    $emergency_cont,
-    $emergency_cont_num,
-    $emergency_cont_rel,
-    $socials,
-    $disablity_type,
-    $disability_remarks,
     $resident_type,
-    $guardian_name,
-    $guardian_number,
-    $guardian_rel,
-    $father_name,
-    $mother_name,
-    $spouse_name,
     $pwdid_num,
     $control_num,
     $idissue_date,
     $idexpiration_date,
     $profile,
     $med_cert,
-    $status
+    $application_status,
+    $record_status
 );
 
-if (mysqli_stmt_execute($stmt)) {
-    $_SESSION["reg_success"] = "Registration submitted successfully! Please wait 3-5 business days for processing.";
-    header("Location: ../selfregistration.php");
-    exit();
-} else {
+if (!mysqli_stmt_execute($stmt)) {
     $_SESSION["reg_error"] = "Failed to submit: " . mysqli_stmt_error($stmt);
     $_SESSION["form_data"] = $_POST;
     header("Location: ../selfregistration.php");
     exit();
 }
+
+$resident_id = mysqli_insert_id($conn);
+
+/* =========================
+   CONTACT INFO
+========================= */
+
+$contact_num = trim($_POST["contact_number"] ?? "");
+$socials = trim($_POST["account_name"] ?? "");
+
+if (!empty($contact_num) || !empty($socials)) {
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO resident_contacts (
+            resident_id,
+            contact_number,
+            socials
+        ) VALUES (?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "iss",
+        $resident_id,
+        $contact_num,
+        $socials
+    );
+
+    mysqli_stmt_execute($stmt);
+}
+
+/* =========================
+   EMERGENCY CONTACT
+========================= */
+
+$emergency_name = trim($_POST["emergency_name"] ?? "");
+$emergency_number = trim($_POST["emergency_number"] ?? "");
+$emergency_relation = trim($_POST["emergency_relation"] ?? "");
+
+if (!empty($emergency_name)) {
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO resident_emergency_contacts (
+            resident_id,
+            contact_name,
+            contact_number,
+            relationship
+        ) VALUES (?, ?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "isss",
+        $resident_id,
+        $emergency_name,
+        $emergency_number,
+        $emergency_relation
+    );
+
+    mysqli_stmt_execute($stmt);
+}
+
+/* =========================
+   DISABILITIES
+========================= */
+
+$remarks = trim($_POST["remarks"] ?? "");
+
+foreach ($disabilities as $type) {
+
+    $type = trim($type);
+
+    if (empty($type)) {
+        continue;
+    }
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO resident_disabilities (
+            resident_id,
+            disability_type,
+            remarks
+        ) VALUES (?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "iss",
+        $resident_id,
+        $type,
+        $remarks
+    );
+
+    mysqli_stmt_execute($stmt);
+}
+
+/* =========================
+   FAMILY MEMBERS
+========================= */
+
+$family_members = [
+    ["Father", trim($_POST["father_name"] ?? "")],
+    ["Mother", trim($_POST["mother_name"] ?? "")],
+    ["Spouse", trim($_POST["spouse_name"] ?? "")],
+];
+
+if (!empty($guardian_name)) {
+    $family_members[] = [
+        !empty($guardian_rel) ? $guardian_rel : "Guardian",
+        $guardian_name
+    ];
+}
+
+foreach ($family_members as $member) {
+
+    $role = $member[0];
+    $name = $member[1];
+
+    if (empty($name)) {
+        continue;
+    }
+
+    $stmt = mysqli_prepare(
+        $conn,
+        "INSERT INTO resident_family_members (
+            resident_id,
+            member_role,
+            member_name
+        ) VALUES (?, ?, ?)"
+    );
+
+    mysqli_stmt_bind_param(
+        $stmt,
+        "iss",
+        $resident_id,
+        $role,
+        $name
+    );
+
+    mysqli_stmt_execute($stmt);
+}
+
+/* =========================
+   SUCCESS
+========================= */
+
+$_SESSION["reg_success"] = "Registration submitted successfully! Please wait 3-5 business days for processing.";
+
+header("Location: ../selfregistration.php");
+exit();
+
 ?>

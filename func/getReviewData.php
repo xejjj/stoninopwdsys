@@ -1,7 +1,9 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 require_once("func/db.php");
 
 if (!isset($_SESSION["admin_id"])) {
@@ -9,63 +11,192 @@ if (!isset($_SESSION["admin_id"])) {
     exit();
 }
 
-// Changed default filter to Under Review
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'Under Review';
-$allowed_filters = ['Under Review', 'Needs Correction', 'Rejected', 'All'];
+/* =========================
+   FILTERS
+========================= */
+
+$filter =
+    $_GET['filter']
+    ?? 'Under Review';
+
+$allowed_filters = [
+    'Under Review',
+    'Needs Correction',
+    'Rejected',
+    'All'
+];
+
 if (!in_array($filter, $allowed_filters)) {
     $filter = 'Under Review';
 }
 
-$limit = 1; 
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
-if ($page < 1) $page = 1;
-$offset = ($page - 1) * $limit;
+/* =========================
+   PAGINATION
+========================= */
 
-$main_table = "residents";
+$limit = 1;
 
-if ($filter === 'Rejected') {
-    $count_sql = "SELECT COUNT(*) as total FROM rejected";
-    $data_sql = "SELECT * FROM rejected ORDER BY id DESC LIMIT $limit OFFSET $offset";
+$page =
+    isset($_GET['page']) &&
+    is_numeric($_GET['page'])
+    ? (int)$_GET['page']
+    : 1;
 
-} elseif ($filter === 'All') {
-    $count_sql = "SELECT SUM(t) as total FROM (
-                    SELECT COUNT(*) as t FROM $main_table 
-                    UNION ALL 
-                    SELECT COUNT(*) as t FROM rejected
-                  ) as combined_count";
-
-    $data_sql = "(SELECT * FROM $main_table) 
-                 UNION ALL 
-                 (SELECT * FROM rejected) 
-                 ORDER BY id DESC LIMIT $limit OFFSET $offset";
-
-} else {
-    $count_sql = "SELECT COUNT(*) as total FROM $main_table WHERE status = '$filter'";
-    $data_sql = "SELECT * FROM $main_table WHERE status = '$filter' ORDER BY id DESC LIMIT $limit OFFSET $offset";
+if ($page < 1) {
+    $page = 1;
 }
 
-$count_res = mysqli_query($conn, $count_sql);
-$total_records = mysqli_fetch_assoc($count_res)['total'] ?? 0;
-$total_pages = $total_records > 0 ? ceil($total_records / $limit) : 0;
+$offset =
+    ($page - 1) * $limit;
 
-$submissions = mysqli_query($conn, $data_sql);
+/* =========================
+   WHERE
+========================= */
+
+$where = [];
+
+$where[] =
+    "record_status != 'archived'";
+
+if ($filter === 'Under Review') {
+
+    $where[] =
+        "application_status = 'under review'";
+
+} elseif ($filter === 'Needs Correction') {
+
+    $where[] =
+        "application_status = 'needs correction'";
+
+} elseif ($filter === 'Rejected') {
+
+    $where[] =
+        "application_status = 'rejected'";
+}
+
+$where_sql =
+    "WHERE " .
+    implode(" AND ", $where);
+
+/* =========================
+   COUNT
+========================= */
+
+$count_sql = "
+SELECT COUNT(*) as total
+FROM residents
+$where_sql
+";
+
+$count_res =
+    mysqli_query($conn, $count_sql);
+
+$total_records =
+    mysqli_fetch_assoc($count_res)['total']
+    ?? 0;
+
+$total_pages =
+    $total_records > 0
+    ? ceil($total_records / $limit)
+    : 0;
+
+/* =========================
+   DATA
+========================= */
+
+$data_sql = "
+SELECT
+    residents.*,
+
+    GROUP_CONCAT(
+        resident_disabilities.disability_type
+        SEPARATOR ', '
+    ) AS disability_type
+
+FROM residents
+
+LEFT JOIN resident_disabilities
+ON residents.ID = resident_disabilities.resident_id
+
+$where_sql
+
+GROUP BY residents.ID
+
+ORDER BY residents.ID DESC
+
+LIMIT $limit OFFSET $offset
+";
+
+$submissions =
+    mysqli_query($conn, $data_sql);
 
 if (!$submissions) {
-    die("Query Failed: " . mysqli_error($conn));
+    die(
+        "Query Failed: " .
+        mysqli_error($conn)
+    );
 }
 
-// BOX 1: UNDER REVIEW (Counts Under Review and Needs Correction)
-$res_under_review = mysqli_query($conn, "SELECT COUNT(*) as total FROM $main_table WHERE status IN ('Under Review', 'Needs Correction')");
-$under_review_count = mysqli_fetch_assoc($res_under_review)['total'] ?? 0;
+/* =========================
+   STATS
+========================= */
 
-$res_rejected = mysqli_query($conn, "SELECT COUNT(*) as total FROM rejected");
-$rejected_count = mysqli_fetch_assoc($res_rejected)['total'] ?? 0;
+$res_under_review =
+    mysqli_query(
+        $conn,
+        "
+        SELECT COUNT(*) as total
+        FROM residents
+        WHERE application_status IN (
+            'under review',
+            'needs correction'
+        )
+        AND record_status != 'archived'
+        "
+    );
 
-$res_main_total = mysqli_query($conn, "SELECT COUNT(*) as total FROM $main_table");
-$main_total = mysqli_fetch_assoc($res_main_total)['total'] ?? 0;
-$total_count = $main_total + $rejected_count;
+$under_review_count =
+    mysqli_fetch_assoc(
+        $res_under_review
+    )['total'] ?? 0;
+
+$res_rejected =
+    mysqli_query(
+        $conn,
+        "
+        SELECT COUNT(*) as total
+        FROM residents
+        WHERE application_status = 'rejected'
+        AND record_status != 'archived'
+        "
+    );
+
+$rejected_count =
+    mysqli_fetch_assoc(
+        $res_rejected
+    )['total'] ?? 0;
+
+$res_total =
+    mysqli_query(
+        $conn,
+        "
+        SELECT COUNT(*) as total
+        FROM residents
+        WHERE record_status != 'archived'
+        "
+    );
+
+$total_count =
+    mysqli_fetch_assoc(
+        $res_total
+    )['total'] ?? 0;
+
+/* =========================
+   BADGE CLASS
+========================= */
 
 function badgeClass($type) {
+
     $map = [
         "cognitive"    => "badge-cognitive",
         "visual"       => "badge-visual",
@@ -74,7 +205,15 @@ function badgeClass($type) {
         "speech"       => "badge-speech",
         "psychosocial" => "badge-psycho",
     ];
-    $key = strtolower(trim(explode(",", $type)[0]));
-    return $map[$key] ?? "badge-physical";
+
+    $key =
+        strtolower(
+            trim(
+                explode(",", $type)[0]
+            )
+        );
+
+    return $map[$key]
+        ?? "badge-physical";
 }
 ?>

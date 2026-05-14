@@ -5,11 +5,11 @@ require_once("../fpdf/fpdf.php");
 $type = $_GET['type'] ?? '';
 $category = $_GET['category'] ?? 'ALL';
 
-$where = "";
+$whereCategory = "";
 
 if ($category === "PWD" || $category === "CWD") {
     $safeCategory = mysqli_real_escape_string($conn, $category);
-    $where = "WHERE resident_type = '$safeCategory'";
+    $whereCategory = "AND residents.resident_type = '$safeCategory'";
 }
 
 function getTitle($type, $category) {
@@ -17,6 +17,59 @@ function getTitle($type, $category) {
     if ($type === "pwdcwd") return $category === "ALL" ? "PWD/CWD Summary Report" : "$category Summary Report";
     if ($type === "disability") return $category === "ALL" ? "PWD/CWD Disability Classification Summary" : "$category Disability Classification Summary";
     return "Report";
+}
+
+function getAge($birthdate) {
+    if (empty($birthdate)) return "N/A";
+
+    try {
+        return date_diff(
+            date_create($birthdate),
+            date_create("today")
+        )->y;
+    } catch (Exception $e) {
+        return "N/A";
+    }
+}
+
+function getResidentReportSql($whereCategory = "") {
+    return "
+    SELECT
+        residents.*,
+
+        resident_contacts.contact_num,
+
+        GROUP_CONCAT(
+            DISTINCT resident_disabilities.disability_type
+            SEPARATOR ', '
+        ) AS disability_type,
+
+        MAX(
+            CASE
+                WHEN resident_family_members.relationship
+                NOT IN ('Father','Mother','Spouse')
+                THEN resident_family_members.name
+            END
+        ) AS guardian_name
+
+    FROM residents
+
+    LEFT JOIN resident_contacts
+    ON residents.ID = resident_contacts.resident_id
+
+    LEFT JOIN resident_disabilities
+    ON residents.ID = resident_disabilities.resident_id
+
+    LEFT JOIN resident_family_members
+    ON residents.ID = resident_family_members.resident_id
+
+    WHERE residents.record_status != 'archived'
+    $whereCategory
+
+    GROUP BY residents.ID
+
+    ORDER BY residents.resident_type, residents.last_name, residents.first_name
+    ";
 }
 
 $pdf = new FPDF('L', 'mm', 'A4');
@@ -39,13 +92,7 @@ $pdf->Ln(3);
 
 if ($type === "master" || $type === "pwdcwd") {
 
-    $sql = "
-        SELECT *
-        FROM residents
-        $where
-        ORDER BY resident_type, last_name, first_name
-    ";
-
+    $sql = getResidentReportSql($whereCategory);
     $result = mysqli_query($conn, $sql);
 
     $pdf->SetFont('Times', 'B', 7);
@@ -67,29 +114,48 @@ if ($type === "master" || $type === "pwdcwd") {
 
     while ($row = mysqli_fetch_assoc($result)) {
 
-        $fullName = strtoupper($row['last_name'] . ', ' . $row['first_name'] . ' ' . $row['middle_name']);
+        $fullName = strtoupper(
+            ($row['last_name'] ?? '') . ', ' .
+            ($row['first_name'] ?? '') . ' ' .
+            ($row['middle_name'] ?? '')
+        );
 
         $pdf->Cell(8, 7, $no++, 1, 0, 'C');
         $pdf->Cell(45, 7, substr($fullName, 0, 32), 1);
-        $pdf->Cell(18, 7, $row['resident_type'], 1, 0, 'C');
-        $pdf->Cell(12, 7, strtoupper($row['sex']), 1, 0, 'C');
-        $pdf->Cell(10, 7, $row['age'], 1, 0, 'C');
-        $pdf->Cell(22, 7, $row['birthdate'], 1, 0, 'C');
-        $pdf->Cell(48, 7, substr($row['address'], 0, 35), 1);
-        $pdf->Cell(28, 7, $row['contact_num'], 1, 0, 'C');
-        $pdf->Cell(35, 7, substr($row['guardian_name'], 0, 24), 1);
-        $pdf->Cell(28, 7, $row['pwdid_num'], 1, 0, 'C');
-        $pdf->Cell(30, 7, $row['disablity_type'], 1, 1, 'C');
+        $pdf->Cell(18, 7, $row['resident_type'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(12, 7, strtoupper($row['sex'] ?? 'N/A'), 1, 0, 'C');
+        $pdf->Cell(10, 7, getAge($row['birthdate'] ?? null), 1, 0, 'C');
+        $pdf->Cell(22, 7, $row['birthdate'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(48, 7, substr($row['address'] ?? 'N/A', 0, 35), 1);
+        $pdf->Cell(28, 7, $row['contact_num'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(35, 7, substr($row['guardian_name'] ?? 'N/A', 0, 24), 1);
+        $pdf->Cell(28, 7, $row['pwdid_num'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(30, 7, substr($row['disability_type'] ?? 'N/A', 0, 22), 1, 1, 'C');
     }
 
 } elseif ($type === "disability") {
 
     $sql = "
-        SELECT disablity_type, resident_type, COUNT(*) AS total
-        FROM residents
-        $where
-        GROUP BY disablity_type, resident_type
-        ORDER BY disablity_type, resident_type
+    SELECT
+        resident_disabilities.disability_type,
+        residents.resident_type,
+        COUNT(DISTINCT residents.ID) AS total
+
+    FROM resident_disabilities
+
+    LEFT JOIN residents
+    ON resident_disabilities.resident_id = residents.ID
+
+    WHERE residents.record_status != 'archived'
+    $whereCategory
+
+    GROUP BY
+        resident_disabilities.disability_type,
+        residents.resident_type
+
+    ORDER BY
+        resident_disabilities.disability_type,
+        residents.resident_type
     ";
 
     $result = mysqli_query($conn, $sql);
@@ -102,9 +168,9 @@ if ($type === "master" || $type === "pwdcwd") {
     $pdf->SetFont('Times', '', 9);
 
     while ($row = mysqli_fetch_assoc($result)) {
-        $pdf->Cell(90, 8, $row['disablity_type'], 1, 0, 'C');
-        $pdf->Cell(70, 8, $row['resident_type'], 1, 0, 'C');
-        $pdf->Cell(40, 8, $row['total'], 1, 1, 'C');
+        $pdf->Cell(90, 8, $row['disability_type'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(70, 8, $row['resident_type'] ?? 'N/A', 1, 0, 'C');
+        $pdf->Cell(40, 8, $row['total'] ?? 0, 1, 1, 'C');
     }
 
 } else {

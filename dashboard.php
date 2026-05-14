@@ -1,9 +1,9 @@
-<?php require_once("func/getDashboardData.php");
-require_once("func/processDailyBackup.php");
+<?php
 require_once("func/db.php");
+require_once("func/getDashboardData.php");
+require_once("func/processDailyBackup.php");
 require_once("func/getNotifications.php");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -423,12 +423,25 @@ require_once("func/getNotifications.php");
             $full_name = htmlspecialchars(
               $user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']
             );
-            $disability = htmlspecialchars($user['disablity_type'] ?? '—');
-            $badge      = badgeClass($user['disablity_type'] ?? '');
+            $disability = htmlspecialchars($user['disability_type'] ?? '—');
+            $badge      = badgeClass($user['disability_type'] ?? '');
             $category   = htmlspecialchars($user['resident_type'] ?? '—');
             $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
-            $status     = htmlspecialchars($user['status'] ?? 'Pending');
-            $status_cls = "status-" . str_replace(' ', '-', strtolower($status));
+
+if (($user['record_status'] ?? '') === 'expired') {
+    $status = 'Expired';
+} elseif (($user['application_status'] ?? '') === 'under review') {
+    $status = 'Under Review';
+} elseif (($user['application_status'] ?? '') === 'needs correction') {
+    $status = 'Needs Correction';
+} elseif (($user['application_status'] ?? '') === 'rejected') {
+    $status = 'Rejected';
+} else {
+    $status = 'Active';
+}
+
+$status = htmlspecialchars($status);
+$status_cls = "status-" . str_replace(' ', '-', strtolower($status));
           ?>
             <tr>
               <td class="td-name"><?php echo $full_name; ?></td>

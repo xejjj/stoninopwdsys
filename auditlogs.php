@@ -108,7 +108,16 @@ if ($role !== "admin") {
 
         <select name="action" onchange="this.form.submit()">
           <option value="">All Actions</option>
-          <?php foreach (["LOGIN","CREATE","UPDATE","ARCHIVE","RESTORE","DELETE"] as $a): ?>
+          <?php foreach ([
+              "LOGIN",
+              "CREATE",
+              "UPDATE",
+              "APPROVE",
+              "REJECT",
+              "ARCHIVE",
+              "RESTORE",
+              "DELETE"
+          ] as $a): ?>
             <option value="<?= $a ?>" <?= $action_filter === $a ? "selected" : "" ?>><?= $a ?></option>
           <?php endforeach; ?>
         </select>
@@ -126,11 +135,11 @@ if ($role !== "admin") {
         <thead>
           <tr>
             <th>Date & Time</th>
-            <th>Admin</th>
+            <th>Name</th>
             <th>Role</th>
             <th>Action</th>
             <th>Module</th>
-            <th>Record ID</th>
+            <th>Resident ID</th>
             <th>Description</th>
           </tr>
         </thead>
@@ -152,7 +161,7 @@ if ($role !== "admin") {
                   </span>
                 </td>
                 <td><?= htmlspecialchars($log["module"]) ?></td>
-                <td><?= htmlspecialchars($log["record_id"] ?? "—") ?></td>
+                <td><?= htmlspecialchars($log["resident_id"] ?? "—") ?></td>
                 <td><?= htmlspecialchars($log["description"]) ?></td>
               </tr>
             <?php endwhile; ?>

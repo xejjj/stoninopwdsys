@@ -12,8 +12,7 @@ $conn = mysqli_connect(
     $db_name
 );
 
-if (mysqli_connect_errno()) {
-
+if (!$conn) {
     die(
         "Failed to connect to MySQL: " .
         mysqli_connect_error()
@@ -21,83 +20,47 @@ if (mysqli_connect_errno()) {
 }
 
 /* =========================
-   UPDATE AGES
-========================= */
-
-mysqli_query(
-    $conn,
-    "UPDATE residents
-     SET age = TIMESTAMPDIFF(
-        YEAR,
-        birthdate,
-        CURDATE()
-     )
-     WHERE birthdate IS NOT NULL
-     AND birthdate != ''"
-);
-
-mysqli_query(
-    $conn,
-    "UPDATE archive
-     SET age = TIMESTAMPDIFF(
-        YEAR,
-        birthdate,
-        CURDATE()
-     )
-     WHERE birthdate IS NOT NULL
-     AND birthdate != ''"
-);
-
-
-/* =========================
    AUTO UPDATE RESIDENT TYPE
 ========================= */
 
-/* 1 TO 17 = CWD */
+/* BELOW 18 = CWD */
 
 mysqli_query(
     $conn,
     "UPDATE residents
      SET resident_type = 'CWD'
-     WHERE age >= 1
-     AND age < 18"
+     WHERE TIMESTAMPDIFF(
+        YEAR,
+        birthdate,
+        CURDATE()
+     ) < 18"
 );
 
-/* 0 OR 18+ = PWD */
+/* 18+ = PWD */
 
 mysqli_query(
     $conn,
     "UPDATE residents
      SET resident_type = 'PWD'
-     WHERE age = 0
-     OR age >= 18"
+     WHERE TIMESTAMPDIFF(
+        YEAR,
+        birthdate,
+        CURDATE()
+     ) >= 18"
 );
 
-/* ARCHIVE TABLE */
-
-mysqli_query(
-    $conn,
-    "UPDATE archive
-     SET resident_type = 'CWD'
-     WHERE age >= 1
-     AND age < 18"
-);
-
-mysqli_query(
-    $conn,
-    "UPDATE archive
-     SET resident_type = 'PWD'
-     WHERE age = 0
-     OR age >= 18"
-);
+/* =========================
+   AUTO UPDATE RECORD STATUS
+========================= */
 
 mysqli_query(
     $conn,
     "UPDATE residents
-     SET status = 'Expired'
+     SET record_status = 'expired'
      WHERE idexpiration_date IS NOT NULL
      AND idexpiration_date != ''
      AND DATE(idexpiration_date) < CURDATE()
-     AND status != 'Expired'"
+     AND record_status != 'archived'"
 );
+
 ?>

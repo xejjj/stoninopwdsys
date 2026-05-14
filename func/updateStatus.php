@@ -3,71 +3,135 @@ session_start();
 require_once("db.php");
 require_once("audit.php");
 
-// ── Auth check ────────────────────────────────────────
 if (!isset($_SESSION["admin_id"])) {
     header("Location: ../login.php");
     exit();
 }
 
-if (isset($_GET['id']) && isset($_GET['status'])) {
-    $id = intval($_GET['id']);
-    $status = $_GET['status'];
+if (!isset($_GET["id"]) || !isset($_GET["status"])) {
+    header("Location: ../review.php");
+    exit();
+}
 
-    $allowed_statuses = ['Active', 'Rejected', 'Under Review', 'Needs Correction'];
-    $main_table = "residents";
+$id = intval($_GET["id"]);
+$status = trim($_GET["status"]);
 
-    if (in_array($status, $allowed_statuses)) {
+$allowed_statuses = [
+    "Active",
+    "Rejected",
+    "Under Review",
+    "Needs Correction"
+];
 
-        if ($status === 'Needs Correction') {
-            $reason = isset($_GET['reason']) ? trim($_GET['reason']) : 'No reason provided.';
+if ($id <= 0 || !in_array($status, $allowed_statuses)) {
+    header("Location: ../review.php");
+    exit();
+}
 
-            $stmt = $conn->prepare("UPDATE residents SET status = 'Needs Correction', correction_remarks = ? WHERE ID = ?");
-            $stmt->bind_param("si", $reason, $id);
+if ($status === "Needs Correction") {
+    $reason = trim($_GET["reason"] ?? "No reason provided.");
 
-            if ($stmt->execute()) {
-                $del = $conn->prepare("DELETE FROM rejected WHERE ID = ?");
-                $del->bind_param("i", $id);
-                $del->execute();
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE residents
+         SET application_status = 'needs correction',
+             record_status = 'active',
+             correction_remarks = ?
+         WHERE ID = ?"
+    );
 
-                auditLog($conn, "UPDATE", "Residents", $id, "Status set to Needs Correction");
-                header("Location: ../review.php?filter=Needs%20Correction&success=moved");
-                exit();
-            }
+    mysqli_stmt_bind_param($stmt, "si", $reason, $id);
 
-        } elseif ($status === 'Active') {
-            $stmt = $conn->prepare("UPDATE residents SET status = 'Active' WHERE ID = ?");
-            $stmt->bind_param("i", $id);
+    if (mysqli_stmt_execute($stmt)) {
+        auditLog(
+            $conn,
+            "UPDATE",
+            "Review",
+            $id,
+            "Status set to Needs Correction. Reason: " . $reason
+        );
 
-            if ($stmt->execute()) {
-                $del = $conn->prepare("DELETE FROM rejected WHERE ID = ?");
-                $del->bind_param("i", $id);
-                $del->execute();
-
-                auditLog($conn, "UPDATE", "Residents", $id, "Status set to Active (approved)");
-                header("Location: ../review.php?filter=All&success=approved");
-                exit();
-            }
-
-        } elseif ($status === 'Rejected') {
-            $upd = $conn->prepare("UPDATE residents SET status = 'Rejected' WHERE ID = ?");
-            $upd->bind_param("i", $id);
-            $upd->execute();
-
-            $copy = $conn->prepare("INSERT IGNORE INTO rejected SELECT * FROM residents WHERE ID = ?");
-            $copy->bind_param("i", $id);
-
-            if ($copy->execute()) {
-                $del = $conn->prepare("DELETE FROM residents WHERE ID = ?");
-                $del->bind_param("i", $id);
-                $del->execute();
-
-                auditLog($conn, "DELETE", "Residents", $id, "Resident rejected and moved to rejected table");
-                header("Location: ../review.php?filter=Rejected&success=rejected");
-                exit();
-            }
-        }
+        header("Location: ../review.php?filter=Needs%20Correction&success=moved");
+        exit();
     }
 }
 
-$conn->close();
+if ($status === "Active") {
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE residents
+         SET application_status = 'approved',
+             record_status = 'active'
+         WHERE ID = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "i", $id);
+
+    if (mysqli_stmt_execute($stmt)) {
+        auditLog(
+            $conn,
+            "APPROVE",
+            "Review",
+            $id,
+            "Resident approved"
+        );
+
+        header("Location: ../review.php?filter=All&success=approved");
+        exit();
+    }
+}
+
+if ($status === "Rejected") {
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE residents
+         SET application_status = 'rejected',
+             record_status = 'active'
+         WHERE ID = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "i", $id);
+
+    if (mysqli_stmt_execute($stmt)) {
+        auditLog(
+            $conn,
+            "REJECT",
+            "Review",
+            $id,
+            "Resident rejected"
+        );
+
+        header("Location: ../review.php?filter=Rejected&success=rejected");
+        exit();
+    }
+}
+
+if ($status === "Under Review") {
+    $stmt = mysqli_prepare(
+        $conn,
+        "UPDATE residents
+         SET application_status = 'under review',
+             record_status = 'active'
+         WHERE ID = ?"
+    );
+
+    mysqli_stmt_bind_param($stmt, "i", $id);
+
+    if (mysqli_stmt_execute($stmt)) {
+        auditLog(
+            $conn,
+            "UPDATE",
+            "Review",
+            $id,
+            "Status set to Under Review"
+        );
+
+        header("Location: ../review.php?filter=Under%20Review&success=updated");
+        exit();
+    }
+}
+
+$_SESSION["review_error"] = "Failed to update status.";
+header("Location: ../review.php");
+exit();
 ?>

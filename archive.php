@@ -182,7 +182,7 @@ if (isset($_SESSION["arch_error"]))   unset($_SESSION["arch_error"]);
             <?php while ($row = mysqli_fetch_assoc($archived_result)): ?>
               <?php
                 $full_name  = htmlspecialchars($row['last_name'] . ", " . $row['first_name'] . " " . $row['middle_name']);
-                $disability = $row['disablity_type'] ?? '';
+                $disability = $row['disability_type'] ?? '';
                 $category   = htmlspecialchars($row['resident_type'] ?? '—');
                 $sex        = htmlspecialchars(strtoupper($row['sex'] ?? '—'));
                 $types_arr  = array_filter(array_map('trim', explode(",", $disability)));

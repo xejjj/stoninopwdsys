@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require_once("db.php");
 require_once("audit.php");
 
@@ -14,41 +15,85 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
 }
 
 $id = intval($_POST["archive_id"] ?? 0);
+mysqli_begin_transaction($conn);
 
 if ($id <= 0) {
     header("Location: ../archive.php");
     exit();
 }
 
-// Fetch file paths and resident name before deleting
-$fetch = mysqli_prepare($conn, "SELECT first_name, last_name, profile, med_cert FROM archive WHERE ID = ?");
-mysqli_stmt_bind_param($fetch, "i", $id);
+/* FETCH FILES */
+
+$fetch = mysqli_prepare(
+    $conn,
+    "
+    SELECT first_name, last_name,
+           profile, med_cert
+    FROM residents
+    WHERE ID = ?
+    "
+);
+
+mysqli_stmt_bind_param(
+    $fetch,
+    "i",
+    $id
+);
+
 mysqli_stmt_execute($fetch);
-$result = mysqli_stmt_get_result($fetch);
-$r = mysqli_fetch_assoc($result);
+
+$result =
+    mysqli_stmt_get_result($fetch);
+
+$r =
+    mysqli_fetch_assoc($result);
 
 if (!$r) {
-    $_SESSION["arch_error"] = "Archived resident not found.";
+
+    $_SESSION["arch_error"] =
+        "Resident not found.";
+
     header("Location: ../archive.php");
     exit();
 }
 
-$del = mysqli_prepare($conn, "DELETE FROM archive WHERE ID = ?");
-mysqli_stmt_bind_param($del, "i", $id);
+
+/* DELETE MAIN */
+
+$del = mysqli_prepare(
+    $conn,
+    "
+    DELETE FROM residents
+    WHERE ID = ?
+    "
+);
+
+mysqli_stmt_bind_param(
+    $del,
+    "i",
+    $id
+);
 
 if (mysqli_stmt_execute($del)) {
+    mysqli_commit($conn);
 
     if (!empty($r["profile"])) {
-        $profile_file = "../" . $r["profile"];
-        if (file_exists($profile_file)) {
-            unlink($profile_file);
+
+        $profile =
+            "../" . $r["profile"];
+
+        if (file_exists($profile)) {
+            unlink($profile);
         }
     }
 
     if (!empty($r["med_cert"])) {
-        $med_cert_file = "../" . $r["med_cert"];
-        if (file_exists($med_cert_file)) {
-            unlink($med_cert_file);
+
+        $med =
+            "../" . $r["med_cert"];
+
+        if (file_exists($med)) {
+            unlink($med);
         }
     }
 
@@ -57,15 +102,22 @@ if (mysqli_stmt_execute($del)) {
         "DELETE",
         "Archive",
         $id,
-        "Permanently deleted archived resident: " . $r["first_name"] . " " . $r["last_name"]
+        "Deleted archived resident permanently"
     );
 
-    $_SESSION["arch_success"] = "Resident permanently deleted.";
-    header("Location: ../archive.php");
-    exit();
+    $_SESSION["arch_success"] =
+        "Resident permanently deleted.";
+
 } else {
-    $_SESSION["arch_error"] = "Failed to delete: " . mysqli_stmt_error($del);
-    header("Location: ../archive.php");
-    exit();
+
+    $_SESSION["arch_error"] =
+        "Failed to delete resident.";
 }
+
+if (mysqli_errno($conn)) {
+    mysqli_rollback($conn);
+}
+header("Location: ../archive.php");
+
+exit();
 ?>

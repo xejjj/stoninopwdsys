@@ -178,11 +178,37 @@
             <?php while ($user = mysqli_fetch_assoc($residents_result)): ?>
               <?php
                 $full_name  = htmlspecialchars($user['last_name'] . ", " . $user['first_name'] . " " . $user['middle_name']);
-                $disability = $user['disablity_type'] ?? '';
+                $disability = $user['disability_type'] ?? '';
                 $category   = htmlspecialchars($user['resident_type'] ?? '—');
                 $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
-                $status     = htmlspecialchars($user['status'] ?? 'Pending');
-                $status_cls ="status-" .strtolower(str_replace(" ", "-", $status));
+                if (($user['record_status'] ?? '') === 'expired') {
+
+    $status = 'Expired';
+
+} elseif (($user['application_status'] ?? '') === 'under review') {
+
+    $status = 'Under Review';
+
+} elseif (($user['application_status'] ?? '') === 'needs correction') {
+
+    $status = 'Needs Correction';
+
+} elseif (($user['application_status'] ?? '') === 'rejected') {
+
+    $status = 'Rejected';
+
+} else {
+
+    $status = 'Active';
+}
+
+$status = htmlspecialchars($status);
+
+$status_cls =
+    "status-" .
+    strtolower(
+        str_replace(" ", "-", $status)
+    );
                 $is_expiring_soon = false;
 
 if (!empty($user['idexpiration_date']) && $status !== 'Expired') {

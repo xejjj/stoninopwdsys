@@ -4,11 +4,11 @@ require_once("db.php");
 $type = $_GET['type'] ?? '';
 $category = $_GET['category'] ?? 'ALL';
 
-$where = "";
+$whereCategory = "";
 
 if ($category === "PWD" || $category === "CWD") {
     $safeCategory = mysqli_real_escape_string($conn, $category);
-    $where = "WHERE resident_type = '$safeCategory'";
+    $whereCategory = "AND residents.resident_type = '$safeCategory'";
 }
 
 function getTitle($type, $category) {
@@ -29,6 +29,65 @@ function getTitle($type, $category) {
     }
 
     return "Report";
+}
+
+function getAge($birthdate) {
+    if (empty($birthdate)) {
+        return "N/A";
+    }
+
+    try {
+        return date_diff(
+            date_create($birthdate),
+            date_create("today")
+        )->y;
+    } catch (Exception $e) {
+        return "N/A";
+    }
+}
+
+
+function getResidentReportSql($whereCategory = "") {
+    return "
+    SELECT
+        residents.*,
+
+        resident_contacts.contact_num,
+
+        GROUP_CONCAT(
+            DISTINCT resident_disabilities.disability_type
+            SEPARATOR ', '
+        ) AS disability_type,
+
+        MAX(resident_disabilities.notes)
+        AS disability_remarks,
+
+        MAX(
+            CASE
+                WHEN resident_family_members.relationship
+                NOT IN ('Father','Mother','Spouse')
+                THEN resident_family_members.name
+            END
+        ) AS guardian_name
+
+    FROM residents
+
+    LEFT JOIN resident_contacts
+    ON residents.ID = resident_contacts.resident_id
+
+    LEFT JOIN resident_disabilities
+    ON residents.ID = resident_disabilities.resident_id
+
+    LEFT JOIN resident_family_members
+    ON residents.ID = resident_family_members.resident_id
+
+    WHERE residents.record_status != 'archived'
+    $whereCategory
+
+    GROUP BY residents.ID
+
+    ORDER BY residents.resident_type, residents.last_name, residents.first_name
+    ";
 }
 ?>
 <!DOCTYPE html>
@@ -141,7 +200,7 @@ th {
     <button class="print-btn" onclick="window.print()">Print Report</button>
 
     <a class="print-btn"
-       href="processDownloadReportPDF.php?type=<?php echo $type; ?>&category=<?php echo $category; ?>">
+       href="processDownloadReportPDF.php?type=<?php echo htmlspecialchars($type); ?>&category=<?php echo htmlspecialchars($category); ?>">
         Download PDF
     </a>
 </div>
@@ -160,12 +219,7 @@ th {
 <?php if ($type === "master") : ?>
 
     <?php
-    $sql = "
-        SELECT *
-        FROM residents
-        ORDER BY resident_type, last_name, first_name
-    ";
-
+    $sql = getResidentReportSql();
     $result = mysqli_query($conn, $sql);
     ?>
 
@@ -182,29 +236,29 @@ th {
             <th>Guardian</th>
             <th>PWD ID No.</th>
             <th>Disability Type</th>
-            <th>Status</th>
         </tr>
 
         <?php $no = 1; ?>
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-
             <?php
-            $fullName = $row['last_name'] . ", " . $row['first_name'] . " " . $row['middle_name'];
+            $fullName =
+                ($row['last_name'] ?? '') . ", " .
+                ($row['first_name'] ?? '') . " " .
+                ($row['middle_name'] ?? '');
             ?>
 
             <tr>
                 <td><?php echo $no++; ?></td>
-                <td><?php echo $fullName; ?></td>
-                <td><?php echo $row['resident_type']; ?></td>
-                <td><?php echo ucfirst($row['sex']); ?></td>
-                <td><?php echo $row['age']; ?></td>
-                <td><?php echo $row['birthdate']; ?></td>
-                <td><?php echo $row['address']; ?></td>
-                <td><?php echo $row['contact_num']; ?></td>
-                <td><?php echo $row['guardian_name']; ?></td>
-                <td><?php echo $row['pwdid_num']; ?></td>
-                <td><?php echo $row['disablity_type']; ?></td>
-                <td><?php echo $row['status']; ?></td>
+                <td><?php echo htmlspecialchars($fullName); ?></td>
+                <td><?php echo htmlspecialchars($row['resident_type'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars(ucfirst($row['sex'] ?? 'N/A')); ?></td>
+                <td><?php echo htmlspecialchars(getAge($row['birthdate'] ?? null)); ?></td>
+                <td><?php echo htmlspecialchars($row['birthdate'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['address'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['contact_num'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['guardian_name'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['pwdid_num'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['disability_type'] ?? 'N/A'); ?></td>
             </tr>
 
         <?php endwhile; ?>
@@ -213,13 +267,7 @@ th {
 <?php elseif ($type === "pwdcwd") : ?>
 
     <?php
-    $sql = "
-        SELECT *
-        FROM residents
-        $where
-        ORDER BY resident_type, last_name, first_name
-    ";
-
+    $sql = getResidentReportSql($whereCategory);
     $result = mysqli_query($conn, $sql);
     ?>
 
@@ -236,29 +284,29 @@ th {
             <th>PWD ID No.</th>
             <th>Disability Type</th>
             <th>Remarks</th>
-            <th>Status</th>
         </tr>
 
         <?php $no = 1; ?>
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
-
             <?php
-            $fullName = $row['last_name'] . ", " . $row['first_name'] . " " . $row['middle_name'];
+            $fullName =
+                ($row['last_name'] ?? '') . ", " .
+                ($row['first_name'] ?? '') . " " .
+                ($row['middle_name'] ?? '');
             ?>
 
             <tr>
                 <td><?php echo $no++; ?></td>
-                <td><?php echo $fullName; ?></td>
-                <td><?php echo ucfirst($row['sex']); ?></td>
-                <td><?php echo $row['age']; ?></td>
-                <td><?php echo $row['birthdate']; ?></td>
-                <td><?php echo $row['address']; ?></td>
-                <td><?php echo $row['contact_num']; ?></td>
-                <td><?php echo $row['guardian_name']; ?></td>
-                <td><?php echo $row['pwdid_num']; ?></td>
-                <td><?php echo $row['disablity_type']; ?></td>
-                <td><?php echo $row['disability_remarks']; ?></td>
-                <td><?php echo $row['status']; ?></td>
+                <td><?php echo htmlspecialchars($fullName); ?></td>
+                <td><?php echo htmlspecialchars(ucfirst($row['sex'] ?? 'N/A')); ?></td>
+                <td><?php echo htmlspecialchars(getAge($row['birthdate'] ?? null)); ?></td>
+                <td><?php echo htmlspecialchars($row['birthdate'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['address'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['contact_num'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['guardian_name'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['pwdid_num'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['disability_type'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['disability_remarks'] ?? 'N/A'); ?></td>
             </tr>
 
         <?php endwhile; ?>
@@ -268,14 +316,26 @@ th {
 
     <?php
     $sql = "
-        SELECT 
-            disablity_type,
-            resident_type,
-            COUNT(*) AS total
-        FROM residents
-        $where
-        GROUP BY disablity_type, resident_type
-        ORDER BY disablity_type, resident_type
+    SELECT
+        resident_disabilities.disability_type,
+        residents.resident_type,
+        COUNT(DISTINCT residents.ID) AS total
+
+    FROM resident_disabilities
+
+    LEFT JOIN residents
+    ON resident_disabilities.resident_id = residents.ID
+
+    WHERE residents.record_status != 'archived'
+    $whereCategory
+
+    GROUP BY
+        resident_disabilities.disability_type,
+        residents.resident_type
+
+    ORDER BY
+        resident_disabilities.disability_type,
+        residents.resident_type
     ";
 
     $result = mysqli_query($conn, $sql);
@@ -290,9 +350,9 @@ th {
 
         <?php while ($row = mysqli_fetch_assoc($result)) : ?>
             <tr>
-                <td><?php echo $row['disablity_type']; ?></td>
-                <td><?php echo $row['resident_type']; ?></td>
-                <td><?php echo $row['total']; ?></td>
+                <td><?php echo htmlspecialchars($row['disability_type'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['resident_type'] ?? 'N/A'); ?></td>
+                <td><?php echo htmlspecialchars($row['total'] ?? 0); ?></td>
             </tr>
         <?php endwhile; ?>
     </table>

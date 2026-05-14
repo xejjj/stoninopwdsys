@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($passwordMatch) {
             $_SESSION["admin_id"] = $user["id"];
             $_SESSION["admin_name"] = $user["full_name"];
+            $_SESSION["full_name"] = $user["full_name"];
             $_SESSION["username"] = $user["username"];
             $_SESSION["role"] = $user["role"];
 
@@ -49,10 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $conn,
                 "LOGIN",
                 "Authentication",
-                $_SESSION["admin_id"],
+                null,
                 $_SESSION["admin_name"] . " logged in"
             );
-
             header("Location: ../dashboard.php");
             exit();
         } else {

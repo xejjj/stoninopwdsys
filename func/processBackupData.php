@@ -16,8 +16,10 @@ if (($_SESSION["role"] ?? "") !== "admin") {
 $tables = [
     "admincreds",
     "residents",
-    "archive",
-    "rejected",
+    "resident_contacts",
+    "resident_emergency_contacts",
+    "resident_disabilities",
+    "resident_family_members",
     "audit_logs"
 ];
 
@@ -31,13 +33,16 @@ if (!is_dir($backupFolder)) {
 $backupPath = $backupFolder . $backupName;
 $sqlScript = "";
 
+$sqlScript .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
+
 foreach ($tables as $table) {
+
     $createTable = mysqli_query($conn, "SHOW CREATE TABLE `$table`");
 
     if (!$createTable) {
-        $_SESSION['error'] = "Backup failed while reading table: $table";
+        $_SESSION["error"] = "Backup failed while reading table: $table";
         header("Location: ../system.php");
-        exit;
+        exit();
     }
 
     $tableResult = mysqli_fetch_row($createTable);
@@ -48,14 +53,17 @@ foreach ($tables as $table) {
     $rows = mysqli_query($conn, "SELECT * FROM `$table`");
 
     while ($row = mysqli_fetch_assoc($rows)) {
+
         $columns = array_keys($row);
 
-        $values = array_map(function($value) use ($conn) {
+        $values = array_map(function ($value) use ($conn) {
+
             if ($value === null) {
                 return "NULL";
             }
 
             return "'" . mysqli_real_escape_string($conn, $value) . "'";
+
         }, array_values($row));
 
         $sqlScript .= "INSERT INTO `$table` (`" .
@@ -68,10 +76,12 @@ foreach ($tables as $table) {
     $sqlScript .= "\n";
 }
 
+$sqlScript .= "SET FOREIGN_KEY_CHECKS=1;\n\n";
+
 if (file_put_contents($backupPath, $sqlScript) === false) {
-    $_SESSION['error'] = "Backup failed. Cannot save file to backups folder.";
+    $_SESSION["error"] = "Backup failed. Cannot save file to backups folder.";
     header("Location: ../system.php");
-    exit;
+    exit();
 }
 
 auditLog(
@@ -82,7 +92,8 @@ auditLog(
     "Created database backup: $backupName"
 );
 
-$_SESSION['success'] = "Database backup created successfully!";
+$_SESSION["success"] = "Database backup created successfully!";
+
 header("Location: ../system.php");
-exit;
+exit();
 ?>

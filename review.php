@@ -135,22 +135,53 @@
     </div>
 
     <?php 
-    if (mysqli_num_rows($submissions) > 0):
-        while ($resident = mysqli_fetch_assoc($submissions)): 
-            $full_name = htmlspecialchars(trim(($resident['first_name'] ?? '') . ' ' . ($resident['middle_name'] ?? '') . ' ' . ($resident['last_name'] ?? '')));
-            // Defaulting fallback status to Under Review now
-            $status = htmlspecialchars($resident['status'] ?: 'Under Review');
-            $status_cls = "badge-" . str_replace(' ', '-', strtolower($status)); 
-            
-            $dob_string = $resident['birthdate'] ?? null;
-            $dob_formatted = 'N/A';
-            if ($dob_string) {
-                try {
-                    $dob = new DateTime($dob_string);
-                    $dob_formatted = $dob->format('F j, Y');
-                } catch (Exception $e) { }
-            }
-    ?>
+if (mysqli_num_rows($submissions) > 0):
+    while ($resident = mysqli_fetch_assoc($submissions)): 
+
+        $full_name = htmlspecialchars(
+            trim(
+                ($resident['first_name'] ?? '') . ' ' .
+                ($resident['middle_name'] ?? '') . ' ' .
+                ($resident['last_name'] ?? '')
+            )
+        );
+
+        if (($resident['record_status'] ?? '') === 'expired') {
+            $status = 'Expired';
+
+        } elseif (($resident['application_status'] ?? '') === 'needs correction') {
+            $status = 'Needs Correction';
+
+        } elseif (($resident['application_status'] ?? '') === 'rejected') {
+            $status = 'Rejected';
+
+        } elseif (($resident['application_status'] ?? '') === 'approved') {
+            $status = 'Active';
+
+        } else {
+            $status = 'Under Review';
+        }
+
+        $status = htmlspecialchars($status);
+
+        $status_cls =
+            "badge-" .
+            str_replace(
+                ' ',
+                '-',
+                strtolower($status)
+            );
+
+        $dob_string = $resident['birthdate'] ?? null;
+        $dob_formatted = 'N/A';
+
+        if ($dob_string) {
+            try {
+                $dob = new DateTime($dob_string);
+                $dob_formatted = $dob->format('F j, Y');
+            } catch (Exception $e) { }
+        }
+?>
     <div class="submission-card">
       <div class="sub-header">
         <div class="sub-user">
@@ -204,7 +235,7 @@
             <div class="detail-item"><span>Civil Status:</span> <?php echo htmlspecialchars($resident['civil_status'] ?: 'N/A'); ?></div>
           </div>
           <div class="detail-col">
-            <div class="detail-item"><span>Disability:</span> <?php echo htmlspecialchars($resident['disablity_type'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Disability:</span> <?php echo htmlspecialchars($resident['disability_type'] ?: 'N/A'); ?></div>
             <div class="detail-item"><span>Cause of Disability:</span> <?php echo htmlspecialchars($resident['disability_remarks'] ?: 'N/A'); ?></div>
             <div class="detail-item"><span>Medical Certificate:</span> <a href="#" class="link">View</a></div>
           </div>

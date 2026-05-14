@@ -18,8 +18,11 @@ if (count($existingBackups) > 0) {
 $tables = [
     "admincreds",
     "residents",
-    "archive",
-    "rejected"
+    "resident_contacts",
+    "resident_emergency_contacts",
+    "resident_disabilities",
+    "resident_family_members",
+    "audit_logs"
 ];
 
 $backupName = "StoNinoPWDSys_daily_backup_" . date("Y-m-d_H-i-s") . ".sql";

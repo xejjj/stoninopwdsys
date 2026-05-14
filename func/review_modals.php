@@ -60,7 +60,7 @@
 
   document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
     if (currentRecordId) {
-      window.location.href = `func/deleteRejected.php?id=${currentRecordId}`;
+      window.location.href = `func/processDeleteResident.php?id=${currentRecordId}`;
     }
   });
 
