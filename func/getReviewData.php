@@ -4,6 +4,11 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 require_once("func/db.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 // Changed default filter to Under Review
 $filter = isset($_GET['filter']) ? $_GET['filter'] : 'Under Review';
 $allowed_filters = ['Under Review', 'Needs Correction', 'Rejected', 'All'];

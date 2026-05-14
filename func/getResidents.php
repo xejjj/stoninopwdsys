@@ -2,6 +2,11 @@
 session_start();
 require_once("db.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 // ── Pagination ────────────────────────────────────────
 $per_page    = 10;
 $current_page = isset($_GET["page"]) && is_numeric($_GET["page"]) ? (int)$_GET["page"] : 1;

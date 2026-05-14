@@ -2,6 +2,11 @@
 session_start();
 require_once("db.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 // ── Parameters ────────────────────────────────────────
 $search       = trim($_GET["search"]     ?? "");
 $filter_disab = trim($_GET["disability"] ?? "");

@@ -2,6 +2,11 @@
 session_start();
 require_once("db.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 /* TOTAL = ONLY ACTIVE RESIDENTS */
 $total_result = mysqli_query($conn, "
     SELECT COUNT(*) AS total 

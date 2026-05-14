@@ -3,6 +3,11 @@ session_start();
 require_once("db.php");
 require_once("audit.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../archive.php");
     exit();

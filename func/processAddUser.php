@@ -3,6 +3,16 @@ session_start();
 require_once("db.php");
 require_once("audit.php");
 
+if (!isset($_SESSION["admin_id"])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+if (($_SESSION["role"] ?? "") !== "admin") {
+    header("Location: ../dashboard.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $full_name = trim($_POST["full_name"] ?? "");
     $username = trim($_POST["username"] ?? "");
