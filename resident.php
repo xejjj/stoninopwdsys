@@ -56,20 +56,20 @@
     $isAdmin = ($_SESSION["role"] ?? "") === "admin";
     $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
     if ($isAdmin): ?>
-<div class="nav-group">
-  <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
-    <img src="assets/settingicon.png" width="20">
-    System
-    <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
-  </a>
-  <div class="nav-sub" id="system-sub">
-    <a class="nav-sub-item" href="system.php">System Tools</a>
-    <a class="nav-sub-item" href="account.php">Accounts</a>
-    <a class="nav-sub-item" href="archive.php">Archive</a>
-    <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
-  </div>
-</div>
-<?php endif; ?>
+    <div class="nav-group">
+      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+        <img src="assets/settingicon.png" width="20">
+        System
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
+      </a>
+      <div class="nav-sub" id="system-sub">
+        <a class="nav-sub-item" href="system.php">System Tools</a>
+        <a class="nav-sub-item" href="account.php">Accounts</a>
+        <a class="nav-sub-item" href="archive.php">Archive</a>
+        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
+      </div>
+    </div>
+    <?php endif; ?>
   </nav>
 
   <div class="sidebar-footer">
@@ -97,7 +97,7 @@
         <?php if (!empty($filter_disab)):  ?><input type="hidden" name="disability" value="<?= htmlspecialchars($filter_disab) ?>"><?php endif; ?>
         <div class="search-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input type="text" name="search" placeholder="Search name" value="<?= htmlspecialchars($search) ?>">
+          <input type="text" name="search" id="liveSearchInput" placeholder="Search name" value="<?= htmlspecialchars($search) ?>" autocomplete="off">
         </div>
       </form>
     </div>
@@ -111,11 +111,11 @@
         <option value="">All Disability Types</option>
         <option value="Cognitive"    <?= $filter_disab === "Cognitive"    ? "selected" : "" ?>>Cognitive</option>
         <option value="Visual"       <?= $filter_disab === "Visual"       ? "selected" : "" ?>>Visual</option>
-        <option value="Physical"        <?= $filter_disab === "Physical"        ? "selected" : "" ?>>Physical</option>
+        <option value="Physical"     <?= $filter_disab === "Physical"     ? "selected" : "" ?>>Physical</option>
         <option value="Auditory"     <?= $filter_disab === "Auditory"     ? "selected" : "" ?>>Auditory</option>
         <option value="Speech"       <?= $filter_disab === "Speech"       ? "selected" : "" ?>>Speech</option>
         <option value="Psychosocial" <?= $filter_disab === "Psychosocial" ? "selected" : "" ?>>Psychosocial</option>
-        <option value="Others" <?= $filter_disab === "Others" ? "selected" : "" ?>>Others</option>
+        <option value="Others"       <?= $filter_disab === "Others"       ? "selected" : "" ?>>Others</option>
       </select>
       <select name="category" id="sel-category" style="display:none" onchange="document.getElementById('filterForm').submit()">
         <option value="">All Categories</option>
@@ -254,24 +254,58 @@ function logout() {
   window.location.href = "func/logout.php";
 }
 
+// ── LIVE SEARCH LOGIC ──
+const searchForm = document.getElementById("searchForm");
+const searchInput = document.getElementById("liveSearchInput");
 let searchTimer;
-function debounceSearch() {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(() => {
-    document.getElementById("searchForm").submit();
-  }, 400);
-}
 
+// Prevent full page reload if user presses Enter
+searchForm.addEventListener("submit", function(e) {
+  e.preventDefault();
+});
+
+// Trigger search on every letter typed
+searchInput.addEventListener("input", function() {
+  clearTimeout(searchTimer);
+  
+  // Wait 300ms after typing stops to prevent lagging the server
+  searchTimer = setTimeout(() => {
+    // Automatically grab the search text AND any active hidden filters
+    const formData = new FormData(searchForm);
+    const params = new URLSearchParams(formData);
+    params.set("page", 1); // Reset to page 1 on a new search
+
+    const url = "resident.php?" + params.toString();
+
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        // Parse the downloaded page content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        // Seamlessly swap only the table and the pagination
+        document.querySelector(".table-wrap").innerHTML = doc.querySelector(".table-wrap").innerHTML;
+        document.querySelector(".pagination").innerHTML = doc.querySelector(".pagination").innerHTML;
+
+        // Update the browser's address bar silently (keeps pagination links working)
+        window.history.pushState({path: url}, "", url);
+      })
+      .catch(err => console.error("Search fetch error:", err));
+  }, 300);
+});
+
+// ── FILTER DROPDOWN LOGIC ──
 const filterOptions = {
   'sel-disability': [
     {value:'', label:'All Disability Types'},
     {value:'Cognitive',    label:'Cognitive'},
     {value:'Visual',       label:'Visual'},
-    {value:'Physical',        label:'Physical'},
+    {value:'Physical',     label:'Physical'},
     {value:'Auditory',     label:'Auditory'},
     {value:'Speech',       label:'Speech'},
     {value:'Psychosocial', label:'Psychosocial'},
-    {value:'Others', label:'Others'},
+    {value:'Others',       label:'Others'},
   ],
   'sel-category': [
     {value:'', label:'All Categories'},
