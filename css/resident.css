@@ -392,4 +392,34 @@
   .filter-option:hover    { background: #f5f0f0; color: var(--primary); }
   .filter-option.selected { color: var(--primary); font-weight: 800; }
 
-  
+  .expiry-warning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+
+  margin-right: 8px;
+
+  border-radius: 50%;
+
+  background-color: #FFD54A;
+
+  color: #7A4D00;
+
+  border: 1.5px solid #E6B800;
+
+  font-size: 11px;
+  font-weight: 900;
+
+  line-height: 1;
+
+  flex-shrink: 0;
+
+  vertical-align: middle;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+
+  cursor: help;
+}

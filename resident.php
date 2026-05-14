@@ -189,10 +189,73 @@
                 $sex        = htmlspecialchars(strtoupper($user['sex'] ?? '—'));
                 $status     = htmlspecialchars($user['status'] ?? 'Pending');
                 $status_cls ="status-" .strtolower(str_replace(" ", "-", $status));
+                $is_expiring_soon = false;
+
+if (!empty($user['idexpiration_date']) && $status !== 'Expired') {
+    $today = date('Y-m-d');
+    $one_month = date('Y-m-d', strtotime('+1 month'));
+
+    $exp_date = date('Y-m-d', strtotime($user['idexpiration_date']));
+
+    if ($exp_date >= $today && $exp_date <= $one_month) {
+        $is_expiring_soon = true;
+    }
+}$is_expiring_soon = false;
+
+if (!empty($user['idexpiration_date']) && $status !== 'Expired') {
+    $today = date('Y-m-d');
+    $one_month = date('Y-m-d', strtotime('+1 month'));
+
+    $exp_date = date('Y-m-d', strtotime($user['idexpiration_date']));
+
+    if ($exp_date >= $today && $exp_date <= $one_month) {
+        $is_expiring_soon = true;
+    }
+}
                 $types_arr  = array_filter(array_map('trim', explode(",", $disability)));
               ?>
               <tr>
-                <td class="fw-bold"><?= $full_name ?></td>
+                <td class="fw-bold">
+
+  <?php
+    $is_expiring_soon = false;
+
+    if (
+      !empty($user['idexpiration_date']) &&
+      $status !== 'Expired'
+    ) {
+
+      $today = date('Y-m-d');
+
+      $one_month =
+        date('Y-m-d', strtotime('+1 month'));
+
+      $exp_date =
+        date(
+          'Y-m-d',
+          strtotime($user['idexpiration_date'])
+        );
+
+      if (
+        $exp_date >= $today &&
+        $exp_date <= $one_month
+      ) {
+        $is_expiring_soon = true;
+      }
+    }
+  ?>
+
+  <?php if ($is_expiring_soon): ?>
+    <span
+      class="expiry-warning"
+      title="ID Expiring Soon (<?= htmlspecialchars($user['idexpiration_date']) ?>)">
+      !
+    </span>
+  <?php endif; ?>
+
+  <?= $full_name ?>
+
+</td>
                 <td>
                   <div class="badge-group">
                     <?php foreach ($types_arr as $t): ?>

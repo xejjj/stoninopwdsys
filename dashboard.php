@@ -130,6 +130,14 @@ require_once("func/getNotifications.php");
         </div>
       <?php endif; ?>
 
+      <?php if ($expiring_soon_count > 0): ?>
+        <div class="notification-item warning">
+          <strong><?= $expiring_soon_count ?> ID(s) expiring soon</strong>
+          <p>Some resident IDs will expire within 1 month.</p>
+          <a href="resident.php">View Residents</a>
+        </div>
+      <?php endif; ?>
+
       <?php if ($backupReminder): ?>
         <div class="notification-item backup">
           <strong>Backup Reminder</strong>
@@ -222,30 +230,41 @@ require_once("func/getNotifications.php");
 
       <?php if ($status_total > 0): ?>
 
-        <?php if ($active_count > 0): ?>
-          <path class="pie-slice" d="<?= $active_path ?>" fill="#A84040"/>
-        <?php endif; ?>
+  <?php if ($active_count == $status_total): ?>
+    <circle cx="90" cy="90" r="80" fill="#A84040"/>
 
-        <?php if ($under_review_count > 0): ?>
-          <path class="pie-slice" d="<?= $under_review_path ?>" fill="#D4736F"/>
-        <?php endif; ?>
+  <?php elseif ($under_review_count == $status_total): ?>
+    <circle cx="90" cy="90" r="80" fill="#D4736F"/>
 
-        <?php if ($needs_correction_count > 0): ?>
-          <path class="pie-slice" d="<?= $needs_correction_path ?>" fill="#F2B8A0"/>
-        <?php endif; ?>
+  <?php elseif ($needs_correction_count == $status_total): ?>
+    <circle cx="90" cy="90" r="80" fill="#F2B8A0"/>
 
-        <?php if ($expired_count > 0): ?>
-          <path class="pie-slice" d="<?= $expired_path ?>" fill="#5C1010"/>
-        <?php endif; ?>
+  <?php elseif ($expired_count == $status_total): ?>
+    <circle cx="90" cy="90" r="80" fill="#5C1010"/>
 
-      <?php else: ?>
+  <?php else: ?>
 
-        <circle cx="90"
-                cy="90"
-                r="80"
-                fill="#eee"/>
+    <?php if ($active_count > 0): ?>
+      <path class="pie-slice" d="<?= $active_path ?>" fill="#A84040"/>
+    <?php endif; ?>
 
-      <?php endif; ?>
+    <?php if ($under_review_count > 0): ?>
+      <path class="pie-slice" d="<?= $under_review_path ?>" fill="#D4736F"/>
+    <?php endif; ?>
+
+    <?php if ($needs_correction_count > 0): ?>
+      <path class="pie-slice" d="<?= $needs_correction_path ?>" fill="#F2B8A0"/>
+    <?php endif; ?>
+
+    <?php if ($expired_count > 0): ?>
+      <path class="pie-slice" d="<?= $expired_path ?>" fill="#5C1010"/>
+    <?php endif; ?>
+
+  <?php endif; ?>
+
+<?php else: ?>
+  <circle cx="90" cy="90" r="80" fill="#eee"/>
+<?php endif; ?>
 
     </svg>
 

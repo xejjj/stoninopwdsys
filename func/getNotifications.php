@@ -14,6 +14,7 @@ AND idexpiration_date != ''
 AND idexpiration_date < '$today'
 ";
 
+
 $expired_result =
     mysqli_query($conn, $expired_sql);
 
@@ -45,8 +46,9 @@ $review_count =
 $medcert_sql = "
 SELECT COUNT(*) AS total
 FROM residents
-WHERE med_cert IS NULL
-OR med_cert = ''
+WHERE (med_cert IS NULL
+OR med_cert = '')
+AND status != 'Active' 
 ";
 
 $medcert_result =
@@ -85,18 +87,30 @@ if ($backupFiles && count($backupFiles) > 0) {
     $backupReminder = true;
 }
 
+$expiring_soon_result = mysqli_query(
+    $conn,
+    "SELECT COUNT(*) AS total
+     FROM residents
+     WHERE idexpiration_date IS NOT NULL
+     AND idexpiration_date != ''
+     AND DATE(idexpiration_date) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 MONTH)
+     AND status != 'Expired'"
+);
 
-/* =========================
-   TOTAL
-========================= */
+$expiring_soon_count =
+    mysqli_fetch_assoc($expiring_soon_result)["total"] ?? 0;
 
 $notification_count =
     $expired_ids_count +
+    $expiring_soon_count +
     $review_count +
     $missing_medcert_count;
 
 if ($backupReminder) {
-
     $notification_count++;
 }
+
+
+
+
 ?>
