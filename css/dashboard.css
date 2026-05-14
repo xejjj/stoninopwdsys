@@ -309,12 +309,13 @@
   .search-wrap input::placeholder { color: var(--text-muted); }
 
   /* Table */
-  table { width: 100%; border-collapse: collapse; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead tr { background-color: #F4F4F4; }
   thead th {
     font-size: 10.5px; font-weight: 800; letter-spacing: 0.7px;
     text-transform: uppercase; color: var(--text-muted);
-    padding: 8px 10px; text-align: left;
-    border-bottom: 1.5px solid var(--border);
+    padding: 10px 10px; text-align: left;
+    border-bottom: none;
   }
   tbody tr {
     border-bottom: 1px solid var(--border);
@@ -329,7 +330,48 @@
     vertical-align: middle;
   }
 
-  .td-name { font-weight: 700; font-size: 13.5px; }
+  .td-name { font-weight: 700; font-size: 13.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ── th filter headers ── */
+  .th-filter {
+    cursor: pointer; user-select: none; white-space: nowrap;
+    position: relative;
+  }
+  .th-filter:hover { color: var(--primary); }
+  .th-active { color: var(--primary) !important; }
+  .th-chevron { vertical-align: middle; margin-bottom: 2px; }
+
+  /* ── Inline filter dropdown — lives inside the <th> ── */
+  .th-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 9999;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    min-width: 160px;
+    overflow: hidden;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--text);
+  }
+  .th-dropdown.open { display: block; }
+
+  .th-drop-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background .12s;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+  .th-drop-item:hover    { background: #f5f0f0; color: var(--primary); }
+  .th-drop-item.selected { color: var(--primary); font-weight: 800; }
 
 
 .badge,

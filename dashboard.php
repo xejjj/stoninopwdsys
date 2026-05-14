@@ -309,7 +309,12 @@ require_once("func/getNotifications.php");
   <!-- Directory Table -->
   <div class="dir-card">
     <div class="dir-header">
-      <div class="dir-title">Directory</div>
+      <div class="dir-title">
+        Directory
+        <?php if (!empty($dash_filter_disab) || !empty($dash_filter_cat) || !empty($dash_filter_sex) || !empty($dash_filter_status)): ?>
+          <a href="dashboard.php" style="font-size:11px;font-weight:700;color:var(--primary);text-decoration:none;margin-left:10px;">✕ Clear filters</a>
+        <?php endif; ?>
+      </div>
       <form id="searchForm" onsubmit="event.preventDefault();" style="margin: 0;">
         <div class="search-wrap">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -318,14 +323,85 @@ require_once("func/getNotifications.php");
       </form>
     </div>
 
+    <!-- Hidden filter form (driven by th clicks) -->
+    <form method="GET" action="dashboard.php" id="dashFilterForm">
+      <select name="disability" id="dash-sel-disability" style="display:none" onchange="document.getElementById('dashFilterForm').submit()">
+        <option value="">All Disability Types</option>
+        <option value="Cognitive"    <?= $dash_filter_disab === "Cognitive"    ? "selected" : "" ?>>Cognitive</option>
+        <option value="Visual"       <?= $dash_filter_disab === "Visual"       ? "selected" : "" ?>>Visual</option>
+        <option value="Physical"     <?= $dash_filter_disab === "Physical"     ? "selected" : "" ?>>Physical</option>
+        <option value="Auditory"     <?= $dash_filter_disab === "Auditory"     ? "selected" : "" ?>>Auditory</option>
+        <option value="Speech"       <?= $dash_filter_disab === "Speech"       ? "selected" : "" ?>>Speech</option>
+        <option value="Psychosocial" <?= $dash_filter_disab === "Psychosocial" ? "selected" : "" ?>>Psychosocial</option>
+        <option value="Others"       <?= $dash_filter_disab === "Others"       ? "selected" : "" ?>>Others</option>
+      </select>
+      <select name="category" id="dash-sel-category" style="display:none" onchange="document.getElementById('dashFilterForm').submit()">
+        <option value="">All Categories</option>
+        <option value="PWD" <?= $dash_filter_cat === "PWD" ? "selected" : "" ?>>PWD</option>
+        <option value="CWD" <?= $dash_filter_cat === "CWD" ? "selected" : "" ?>>CWD</option>
+      </select>
+      <select name="sex" id="dash-sel-sex" style="display:none" onchange="document.getElementById('dashFilterForm').submit()">
+        <option value="">All Sexes</option>
+        <option value="male"   <?= $dash_filter_sex === "male"   ? "selected" : "" ?>>Male</option>
+        <option value="female" <?= $dash_filter_sex === "female" ? "selected" : "" ?>>Female</option>
+      </select>
+      <select name="status" id="dash-sel-status" style="display:none" onchange="document.getElementById('dashFilterForm').submit()">
+        <option value="">All Statuses</option>
+        <option value="Active"           <?= $dash_filter_status === "Active"           ? "selected" : "" ?>>Active</option>
+        <option value="Under Review"     <?= $dash_filter_status === "Under Review"     ? "selected" : "" ?>>Under Review</option>
+        <option value="Needs Correction" <?= $dash_filter_status === "Needs Correction" ? "selected" : "" ?>>Needs Correction</option>
+        <option value="Expired"          <?= $dash_filter_status === "Expired"          ? "selected" : "" ?>>Expired</option>
+      </select>
+    </form>
+
     <table>
+      <colgroup>
+        <col style="width:30%">
+        <col style="width:20%">
+        <col style="width:12%">
+        <col style="width:10%">
+        <col style="width:18%">
+        <col style="width:10%">
+      </colgroup>
       <thead>
         <tr>
           <th>Full Name</th>
-          <th>Disability Type</th>
-          <th>Category</th>
-          <th>Sex</th>
-          <th>Status</th>
+          <th class="th-filter <?= !empty($dash_filter_disab) ? 'th-active' : '' ?>" onclick="dashToggleFilter('drop-disability', event)">
+            Disability Type
+            <svg width="14" height="14" class="th-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="th-dropdown" id="drop-disability">
+              <?php foreach ([''=>'All Disability Types','Cognitive'=>'Cognitive','Visual'=>'Visual','Physical'=>'Physical','Auditory'=>'Auditory','Speech'=>'Speech','Psychosocial'=>'Psychosocial','Others'=>'Others'] as $val => $label): ?>
+                <div class="th-drop-item <?= $dash_filter_disab === $val ? 'selected' : '' ?>" onclick="dashSetFilter('disability','<?= $val ?>', event)"><?= $label ?></div>
+              <?php endforeach; ?>
+            </div>
+          </th>
+          <th class="th-filter <?= !empty($dash_filter_cat) ? 'th-active' : '' ?>" onclick="dashToggleFilter('drop-category', event)">
+            Category
+            <svg width="14" height="14" class="th-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="th-dropdown" id="drop-category">
+              <?php foreach ([''=>'All Categories','PWD'=>'PWD','CWD'=>'CWD'] as $val => $label): ?>
+                <div class="th-drop-item <?= $dash_filter_cat === $val ? 'selected' : '' ?>" onclick="dashSetFilter('category','<?= $val ?>', event)"><?= $label ?></div>
+              <?php endforeach; ?>
+            </div>
+          </th>
+          <th class="th-filter <?= !empty($dash_filter_sex) ? 'th-active' : '' ?>" onclick="dashToggleFilter('drop-sex', event)">
+            Sex
+            <svg width="14" height="14" class="th-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="th-dropdown" id="drop-sex">
+              <?php foreach ([''=>'All Sexes','male'=>'Male','female'=>'Female'] as $val => $label): ?>
+                <div class="th-drop-item <?= $dash_filter_sex === $val ? 'selected' : '' ?>" onclick="dashSetFilter('sex','<?= $val ?>', event)"><?= $label ?></div>
+              <?php endforeach; ?>
+            </div>
+          </th>
+          <th class="th-filter <?= !empty($dash_filter_status) ? 'th-active' : '' ?>" onclick="dashToggleFilter('drop-status', event)">
+            Status
+            <svg width="14" height="14" class="th-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            <div class="th-dropdown" id="drop-status">
+              <?php foreach ([''=>'All Statuses','Active'=>'Active','Under Review'=>'Under Review','Needs Correction'=>'Needs Correction','Expired'=>'Expired'] as $val => $label): ?>
+                <div class="th-drop-item <?= $dash_filter_status === $val ? 'selected' : '' ?>" onclick="dashSetFilter('status','<?= addslashes($val) ?>', event)"><?= $label ?></div>
+              <?php endforeach; ?>
+            </div>
+          </th>
           <th></th>
         </tr>
       </thead>
@@ -405,7 +481,6 @@ searchInput.addEventListener("input", function() {
   clearTimeout(searchTimer);
   
   searchTimer = setTimeout(() => {
-    // We send a request back to dashboard.php with the search parameter
     const url = "dashboard.php?search=" + encodeURIComponent(searchInput.value);
 
     fetch(url)
@@ -413,13 +488,39 @@ searchInput.addEventListener("input", function() {
       .then(html => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-        
-        // Swap out just the table body
         document.getElementById("residentTable").innerHTML = doc.getElementById("residentTable").innerHTML;
       })
       .catch(err => console.error("Search fetch error:", err));
   }, 300);
 });
+
+// ── COLUMN FILTER LOGIC ──
+let dashActiveDropdown = null;
+
+function dashCloseAll() {
+  document.querySelectorAll('.th-dropdown.open').forEach(d => d.classList.remove('open'));
+  dashActiveDropdown = null;
+}
+
+function dashToggleFilter(dropId, event) {
+  event.stopPropagation();
+  const drop = document.getElementById(dropId);
+  const isOpen = drop.classList.contains('open');
+  dashCloseAll();
+  if (!isOpen) {
+    drop.classList.add('open');
+    dashActiveDropdown = dropId;
+  }
+}
+
+function dashSetFilter(param, value, event) {
+  event.stopPropagation();
+  document.getElementById('dash-sel-' + param).value = value;
+  dashCloseAll();
+  document.getElementById('dashFilterForm').submit();
+}
+
+document.addEventListener('click', () => dashCloseAll());
 
 // ── NOTIFICATIONS LOGIC ──
 function toggleNotifications(event) {

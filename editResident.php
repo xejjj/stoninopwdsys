@@ -1,4 +1,4 @@
-<?php
+t<?php
 session_start();
 require_once("func/db.php");
 
@@ -262,29 +262,6 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
         </div>
       </div>
 
-      <!-- CWD Only -->
-      <div class="card">
-        <div class="card-title">For CWD Only</div>
-        <div class="cwd-note">
-          <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Fill this section only for Children with Disabilities (CWD)
-        </div>
-        <div class="form-grid cols-3">
-          <div class="field">
-            <label>Parent/Guardian Name</label>
-            <input type="text" name="guardian_name" value="<?= htmlspecialchars($r['guardian_name']) ?>" placeholder="Full name">
-          </div>
-          <div class="field">
-            <label>Parent/Guardian Number</label>
-            <input type="tel" name="guardian_number" value="<?= htmlspecialchars($r['guardian_cont_num']) ?>" placeholder="09XX XXX XXXX">
-          </div>
-          <div class="field">
-            <label>Relationship with Child</label>
-            <input type="text" name="child_relation" value="<?= htmlspecialchars($r['guardian_rel']) ?>" placeholder="e.g. Mother, Father">
-          </div>
-        </div>
-      </div>
-
       <!-- Family Information -->
       <div class="card">
         <div class="card-title">Family Information</div>
@@ -300,6 +277,19 @@ if ($edit_error)           unset($_SESSION["edit_error"]);
           <div class="field">
             <label>Spouse Name</label>
             <input type="text" name="spouse_name" value="<?= htmlspecialchars($r['spouse_name']) ?>">
+          </div>
+          <div class="field span-all" style="margin-top:8px;"></div>
+          <div class="field">
+            <label>Parent/Guardian Name</label>
+            <input type="text" name="guardian_name" value="<?= htmlspecialchars($r['guardian_name']) ?>" placeholder="Full name">
+          </div>
+          <div class="field">
+            <label>Relationship with Child</label>
+            <input type="text" name="child_relation" value="<?= htmlspecialchars($r['guardian_rel']) ?>" placeholder="e.g. Mother, Father">
+          </div>
+          <div class="field">
+            <label>Parent/Guardian Number</label>
+            <input type="tel" name="guardian_number" value="<?= htmlspecialchars($r['guardian_cont_num']) ?>" placeholder="09XX XXX XXXX">
           </div>
         </div>
       </div>

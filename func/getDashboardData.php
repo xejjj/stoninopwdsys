@@ -90,39 +90,59 @@ $expired_path = $status_total > 0
 $recent_ids = $_SESSION['recent_views'] ?? [];
 $status_order = "'Under Review', 'Needs Correction', 'Expired', 'Active'";
 
+// Column filter params
+$dash_filter_disab  = trim($_GET['disability'] ?? '');
+$dash_filter_cat    = trim($_GET['category']   ?? '');
+$dash_filter_sex    = trim($_GET['sex']        ?? '');
+$dash_filter_status = trim($_GET['status']     ?? '');
+
 // Check if user is actively searching
 $search = trim($_GET["search"] ?? "");
 
+// Build WHERE clause from active column filters
+$where_parts = [];
+if ($dash_filter_disab !== '') {
+    $safe_disab = mysqli_real_escape_string($conn, $dash_filter_disab);
+    $where_parts[] = "FIND_IN_SET('$safe_disab', REPLACE(disablity_type, ', ', ','))";
+}
+if ($dash_filter_cat !== '') {
+    $safe_cat = mysqli_real_escape_string($conn, $dash_filter_cat);
+    $where_parts[] = "resident_type = '$safe_cat'";
+}
+if ($dash_filter_sex !== '') {
+    $safe_sex = mysqli_real_escape_string($conn, $dash_filter_sex);
+    $where_parts[] = "sex = '$safe_sex'";
+}
+if ($dash_filter_status !== '') {
+    $safe_status = mysqli_real_escape_string($conn, $dash_filter_status);
+    $where_parts[] = "status = '$safe_status'";
+}
+$filter_where = !empty($where_parts) ? implode(" AND ", $where_parts) : "";
+
 if (!empty($search)) {
-    // Search Mode: Query the entire database
+    // Search Mode: Query the entire database (with any active column filters)
     $search_param = "%" . $search . "%";
-    
-    $query = "SELECT * FROM residents 
-              WHERE CONCAT(first_name,' ',middle_name,' ',last_name) LIKE ? 
-                 OR CONCAT(last_name,', ',first_name,' ',middle_name) LIKE ?
-              ORDER BY FIELD(status, $status_order) ASC, ID DESC";
-              
-    $stmt = mysqli_prepare($conn, $query);
+    $search_cond  = "(CONCAT(first_name,' ',middle_name,' ',last_name) LIKE ? OR CONCAT(last_name,', ',first_name,' ',middle_name) LIKE ?)";
+    $full_where   = $filter_where !== '' ? "$search_cond AND $filter_where" : $search_cond;
+
+    $query = "SELECT * FROM residents WHERE $full_where ORDER BY FIELD(status, $status_order) ASC, ID DESC";
+    $stmt  = mysqli_prepare($conn, $query);
     mysqli_stmt_bind_param($stmt, "ss", $search_param, $search_param);
     mysqli_stmt_execute($stmt);
     $residents_result = mysqli_stmt_get_result($stmt);
-    
+
 } else {
-    // Default Mode: Show Recent Views (or top rows if none)
+    // Default Mode: Show Recent Views (or top rows if none), with any active column filters
+    $base_where = $filter_where !== '' ? "WHERE $filter_where" : "";
+
     if (!empty($recent_ids)) {
         $reversed_recents = array_reverse($recent_ids);
         $id_list = implode(',', array_map('intval', $reversed_recents));
-
-        $query = "SELECT * FROM residents 
-                  ORDER BY 
-                    FIELD(status, $status_order) ASC,
-                    FIELD(ID, $id_list) DESC,
-                    ID DESC";
+        $query = "SELECT * FROM residents $base_where
+                  ORDER BY FIELD(status, $status_order) ASC, FIELD(ID, $id_list) DESC, ID DESC";
     } else {
-        $query = "SELECT * FROM residents 
-                  ORDER BY 
-                    FIELD(status, $status_order) ASC,
-                    ID DESC";
+        $query = "SELECT * FROM residents $base_where
+                  ORDER BY FIELD(status, $status_order) ASC, ID DESC";
     }
 
     $residents_result = mysqli_query($conn, $query);
