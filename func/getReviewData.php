@@ -108,15 +108,63 @@ $data_sql = "
 SELECT
     residents.*,
 
+    resident_contacts.contact_num,
+    resident_contacts.socials,
+
+    resident_emergency_contacts.name AS emergency_name,
+    resident_emergency_contacts.contact_num AS emergency_number,
+    resident_emergency_contacts.relationship AS emergency_relation,
+
     GROUP_CONCAT(
-        resident_disabilities.disability_type
+        DISTINCT resident_disabilities.disability_type
         SEPARATOR ', '
-    ) AS disability_type
+    ) AS disability_type,
+
+    MAX(resident_disabilities.notes) AS disability_remarks,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Father'
+        THEN resident_family_members.name
+    END) AS father_name,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Mother'
+        THEN resident_family_members.name
+    END) AS mother_name,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Spouse'
+        THEN resident_family_members.name
+    END) AS spouse_name,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.name
+    END) AS guardian_name,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.relationship
+    END) AS guardian_rel,
+
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.contact_num
+    END) AS guardian_number
 
 FROM residents
 
+LEFT JOIN resident_contacts
+ON residents.ID = resident_contacts.resident_id
+
+LEFT JOIN resident_emergency_contacts
+ON residents.ID = resident_emergency_contacts.resident_id
+
 LEFT JOIN resident_disabilities
 ON residents.ID = resident_disabilities.resident_id
+
+LEFT JOIN resident_family_members
+ON residents.ID = resident_family_members.resident_id
 
 $where_sql
 
@@ -127,14 +175,10 @@ ORDER BY residents.ID DESC
 LIMIT $limit OFFSET $offset
 ";
 
-$submissions =
-    mysqli_query($conn, $data_sql);
+$submissions = mysqli_query($conn, $data_sql);
 
 if (!$submissions) {
-    die(
-        "Query Failed: " .
-        mysqli_error($conn)
-    );
+    die("Query Failed: " . mysqli_error($conn));
 }
 
 /* =========================

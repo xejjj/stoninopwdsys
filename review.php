@@ -237,7 +237,14 @@ if (mysqli_num_rows($submissions) > 0):
           <div class="detail-col">
             <div class="detail-item"><span>Disability:</span> <?php echo htmlspecialchars($resident['disability_type'] ?: 'N/A'); ?></div>
             <div class="detail-item"><span>Cause of Disability:</span> <?php echo htmlspecialchars($resident['disability_remarks'] ?: 'N/A'); ?></div>
-            <div class="detail-item"><span>Medical Certificate:</span> <a href="#" class="link">View</a></div>
+            <div class="detail-item">
+  <span>Medical Certificate:</span>
+  <?php if (!empty($resident['med_cert'])): ?>
+    <a href="<?= htmlspecialchars($resident['med_cert']) ?>" target="_blank" class="link">View</a>
+  <?php else: ?>
+    N/A
+  <?php endif; ?>
+</div>
           </div>
         </div>
         
@@ -248,9 +255,12 @@ if (mysqli_num_rows($submissions) > 0):
             <div class="detail-item"><span>Mobile Number:</span> <?php echo htmlspecialchars($resident['contact_num'] ?: 'N/A'); ?></div>
             <div class="detail-item"><span>House No. / Street:</span> <?php echo htmlspecialchars($resident['address'] ?: 'N/A'); ?></div>
             <div class="detail-item"><span>Email/Facebook Account: </span> <?php echo htmlspecialchars($resident['socials'] ?: 'N/A'); ?></div>
-            <div class="detail-item"><span>Emergency Contact Name:</span> <?php echo htmlspecialchars($resident['guardian_name'] ?: 'N/A'); ?></div>
-            <div class="detail-item"><span>Emergency Contact Number:</span> <?php echo htmlspecialchars($resident['guardian_cont_num'] ?: 'N/A'); ?></div>
-            <div class="detail-item"><span>Relationship:</span> <?php echo htmlspecialchars($resident['guardian_rel'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Emergency Contact Name:</span> <?php echo htmlspecialchars($resident['emergency_name'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Emergency Contact Number:</span> <?php echo htmlspecialchars($resident['emergency_number'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Relationship:</span> <?php echo htmlspecialchars($resident['emergency_relation'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Guardian Name:</span> <?php echo htmlspecialchars($resident['guardian_name'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Guardian Number:</span> <?php echo htmlspecialchars($resident['guardian_number'] ?: 'N/A'); ?></div>
+            <div class="detail-item"><span>Guardian Relationship:</span> <?php echo htmlspecialchars($resident['guardian_rel'] ?: 'N/A'); ?></div>
           </div>
           <div class="detail-col">
             <div class="detail-item"><span>Mother Name:</span> <?php echo htmlspecialchars($resident['mother_name'] ?: 'N/A'); ?></div>
