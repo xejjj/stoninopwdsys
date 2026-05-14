@@ -190,14 +190,14 @@ function previewProfile(input) {
         <div class="field span-all">
           <label>Disability Types <span class="req">*</span></label>
           <div class="checkbox-grid">
-            <?php $disabilities = $form_data['disablity_type'] ?? []; ?>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Cognitive" <?= in_array('Cognitive', $disabilities) ? 'checked' : '' ?>> Cognitive</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Visual" <?= in_array('Visual', $disabilities) ? 'checked' : '' ?>> Visual</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Physical" <?= in_array('Physical', $disabilities) ? 'checked' : '' ?>> Physical</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Auditory" <?= in_array('Auditory', $disabilities) ? 'checked' : '' ?>> Auditory</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Speech" <?= in_array('Speech', $disabilities) ? 'checked' : '' ?>> Speech</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Psychosocial" <?= in_array('Psychosocial', $disabilities) ? 'checked' : '' ?>> Psychosocial</label>
-            <label class="checkbox-label"><input type="checkbox" name="disablity_type[]" value="Others" <?= in_array('Others', $disabilities) ? 'checked' : '' ?>> Others</label>
+            <?php $disabilities = $form_data['disability_type'] ?? []; ?>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Cognitive" <?= in_array('Cognitive', $disabilities) ? 'checked' : '' ?>> Cognitive</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Visual" <?= in_array('Visual', $disabilities) ? 'checked' : '' ?>> Visual</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Physical" <?= in_array('Physical', $disabilities) ? 'checked' : '' ?>> Physical</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Auditory" <?= in_array('Auditory', $disabilities) ? 'checked' : '' ?>> Auditory</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Speech" <?= in_array('Speech', $disabilities) ? 'checked' : '' ?>> Speech</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Psychosocial" <?= in_array('Psychosocial', $disabilities) ? 'checked' : '' ?>> Psychosocial</label>
+            <label class="checkbox-label"><input type="checkbox" name="disability_type[]" value="Others" <?= in_array('Others', $disabilities) ? 'checked' : '' ?>> Others</label>
           </div>
         </div>
         <div class="field span-all">
@@ -217,40 +217,40 @@ function previewProfile(input) {
     </div>
 
     <div class="card">
-      <div class="card-title">For CWD Only</div>
-      <div class="form-grid cols-3">
-        <div class="field">
-          <label>Parent/Guardian Name <span class="req">*</span></label>
-          <input type="text" name="guardian_name" placeholder="Full name" value="<?= htmlspecialchars($form_data['guardian_name'] ?? '') ?>">
-        </div>
-        <div class="field">
-          <label>Parent/Guardian Number <span class="req">*</span></label>
-          <input type="text" name="guardian_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>">
-        </div>
-        <div class="field">
-          <label>Relationship with Child <span class="req">*</span></label>
-          <input type="text" name="child_relation" placeholder="e.g. Mother, Father" value="<?= htmlspecialchars($form_data['child_relation'] ?? '') ?>">
-        </div>
-      </div>
+  <div class="card-title">Family / Guardian Information</div>
+
+  <div class="form-grid cols-3">
+    <div class="field">
+      <label>Father Name</label>
+      <input type="text" name="father_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['father_name'] ?? '') ?>">
     </div>
 
-    <div class="card">
-      <div class="card-title">Family Information</div>
-      <div class="form-grid cols-3">
-        <div class="field">
-          <label>Father Name<span class="req">*</span></label>
-          <input type="text" name="father_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['father_name'] ?? '') ?>">
-        </div>
-        <div class="field">
-          <label>Mother Name<span class="req">*</span></label>
-          <input type="text" name="mother_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['mother_name'] ?? '') ?>">
-        </div>
-        <div class="field">
-          <label>Spouse Name<span class="req">*</span></label>
-          <input type="text" name="spouse_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['spouse_name'] ?? '') ?>">
-        </div>
-      </div>
+    <div class="field">
+      <label>Mother Name</label>
+      <input type="text" name="mother_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['mother_name'] ?? '') ?>">
     </div>
+
+    <div class="field">
+      <label>Spouse Name</label>
+      <input type="text" name="spouse_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['spouse_name'] ?? '') ?>">
+    </div>
+    <div class="field span-all" style="margin-top:1px;"></div>
+    <div class="field">
+      <label>Guardian Name</label>
+      <input type="text" name="guardian_name" placeholder="Full Name" value="<?= htmlspecialchars($form_data['guardian_name'] ?? '') ?>">
+    </div>
+
+    <div class="field">
+      <label>Guardian Relationship</label>
+      <input type="text" name="child_relation" placeholder="e.g. Brother, Mother, Aunt" value="<?= htmlspecialchars($form_data['child_relation'] ?? '') ?>">
+    </div>
+
+    <div class="field">
+      <label>Guardian Number</label>
+      <input type="text" name="guardian_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>">
+    </div>
+  </div>
+</div>
 
     <div class="card">
       <div class="card-title">ID Registration Details</div>

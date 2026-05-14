@@ -27,29 +27,35 @@ SELECT
 
     MAX(resident_disabilities.notes) AS disability_remarks,
 
-    MAX(CASE WHEN resident_family_members.relationship = 'Father'
-    THEN resident_family_members.name END) AS father_name,
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Father'
+        THEN resident_family_members.name
+    END) AS father_name,
 
-MAX(CASE WHEN resident_family_members.relationship = 'Mother'
-    THEN resident_family_members.name END) AS mother_name,
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Mother'
+        THEN resident_family_members.name
+    END) AS mother_name,
 
-MAX(CASE WHEN resident_family_members.relationship = 'Spouse'
-    THEN resident_family_members.name END) AS spouse_name,
+    MAX(CASE
+        WHEN resident_family_members.relationship = 'Spouse'
+        THEN resident_family_members.name
+    END) AS spouse_name,
 
-MAX(CASE
-    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-    THEN resident_family_members.name
-END) AS guardian_name,
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.name
+    END) AS guardian_name,
 
-MAX(CASE
-    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-    THEN resident_family_members.relationship
-END) AS guardian_rel,
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.relationship
+    END) AS guardian_rel,
 
-MAX(CASE
-    WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-    THEN resident_family_members.contact_num
-END) AS guardian_number
+    MAX(CASE
+        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
+        THEN resident_family_members.contact_num
+    END) AS guardian_number
 
 FROM residents
 
@@ -260,7 +266,7 @@ if ($edit_error) {
         <div class="form-grid">
           <div class="field">
             <label>Contact Number</label>
-            <input type="tel" name="contact_number" value="<?= htmlspecialchars($r['contact_number'] ?? '') ?>" placeholder="09XX XXX XXXX">
+            <input type="tel" name="contact_number" value="<?= htmlspecialchars($r['contact_num'] ?? '') ?>" placeholder="09XX XXX XXXX">
           </div>
           <div class="field">
             <label>Emergency Contact Name</label>
@@ -346,7 +352,14 @@ if ($edit_error) {
           </div>
           <div class="field">
             <label>Guardian Number</label>
-            <input type="tel" name="guardian_number" value="" placeholder="09XX XXX XXXX">
+            
+    <input
+    type="tel"
+    name="guardian_number"
+    value="<?= htmlspecialchars($r['guardian_number'] ?? '') ?>"
+    placeholder="09XX XXX XXXX"
+>
+
           </div>
         </div>
       </div>

@@ -33,10 +33,6 @@ $resident_type =
     ? "CWD"
     : "PWD";
 
-/* =========================
-   STATUS
-========================= */
-
 $application_status = "approved";
 $record_status      = "active";
 
@@ -46,43 +42,20 @@ $record_status      = "active";
 
 $profile = "";
 
-if (
-    isset($_FILES["profile_pic"])
-    && $_FILES["profile_pic"]["error"] === 0
-) {
-
-    $upload_dir =
-        "../uploads/profiles/";
+if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
+    $upload_dir = "../uploads/profiles/";
 
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $ext =
-        strtolower(
-            pathinfo(
-                $_FILES["profile_pic"]["name"],
-                PATHINFO_EXTENSION
-            )
-        );
+    $ext = strtolower(pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION));
+    $safe_name = time() . "_profile." . $ext;
+    $target = $upload_dir . $safe_name;
 
-    $safe_name =
-        time() .
-        "_profile." .
-        $ext;
+    move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target);
 
-    $target =
-        $upload_dir .
-        $safe_name;
-
-    move_uploaded_file(
-        $_FILES["profile_pic"]["tmp_name"],
-        $target
-    );
-
-    $profile =
-        "uploads/profiles/" .
-        $safe_name;
+    $profile = "uploads/profiles/" . $safe_name;
 }
 
 /* =========================
@@ -91,76 +64,48 @@ if (
 
 $med_cert = "";
 
-if (
-    isset($_FILES["med_cert"])
-    && $_FILES["med_cert"]["error"] === 0
-) {
-
-    $upload_dir =
-        "../uploads/medical_certificates/";
+if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
+    $upload_dir = "../uploads/medical_certificates/";
 
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $ext =
-        strtolower(
-            pathinfo(
-                $_FILES["med_cert"]["name"],
-                PATHINFO_EXTENSION
-            )
-        );
+    $ext = strtolower(pathinfo($_FILES["med_cert"]["name"], PATHINFO_EXTENSION));
+    $safe_name = time() . "_medcert." . $ext;
+    $target = $upload_dir . $safe_name;
 
-    $safe_name =
-        time() .
-        "_medcert." .
-        $ext;
+    move_uploaded_file($_FILES["med_cert"]["tmp_name"], $target);
 
-    $target =
-        $upload_dir .
-        $safe_name;
-
-    move_uploaded_file(
-        $_FILES["med_cert"]["tmp_name"],
-        $target
-    );
-
-    $med_cert =
-        "uploads/medical_certificates/" .
-        $safe_name;
+    $med_cert = "uploads/medical_certificates/" . $safe_name;
 }
 
 /* =========================
    INSERT RESIDENT
 ========================= */
 
-$sql = "
-INSERT INTO residents (
-    first_name,
-    middle_name,
-    last_name,
-    civil_status,
-    birthdate,
-    birthplace,
-    sex,
-    address,
-    resident_type,
-    pwdid_num,
-    control_num,
-    idissue_date,
-    idexpiration_date,
-    profile,
-    med_cert,
-    application_status,
-    record_status
-)
-VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?
-)
-";
-
-$stmt = mysqli_prepare($conn, $sql);
+$stmt = mysqli_prepare(
+    $conn,
+    "INSERT INTO residents (
+        first_name,
+        middle_name,
+        last_name,
+        civil_status,
+        birthdate,
+        birthplace,
+        sex,
+        address,
+        resident_type,
+        pwdid_num,
+        control_num,
+        idissue_date,
+        idexpiration_date,
+        profile,
+        med_cert,
+        application_status,
+        record_status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+);
 
 mysqli_stmt_bind_param(
     $stmt,
@@ -185,48 +130,38 @@ mysqli_stmt_bind_param(
 );
 
 if (!mysqli_stmt_execute($stmt)) {
-
-    $_SESSION["reg_error"] =
-        mysqli_error($conn);
-
+    $_SESSION["reg_error"] = mysqli_stmt_error($stmt);
     header("Location: ../registration.php");
     exit();
 }
 
-$resident_id =
-    mysqli_insert_id($conn);
+$resident_id = mysqli_insert_id($conn);
 
 /* =========================
    CONTACTS
 ========================= */
 
-$contact_num =
-    trim($_POST["contact_number"] ?? "");
+$contact_num = trim($_POST["contact_number"] ?? "");
+$socials = trim($_POST["account_name"] ?? "");
 
-$socials =
-    trim($_POST["account_name"] ?? "");
-
-if (
-    !empty($contact_num)
-    || !empty($socials)
-) {
+if (!empty($contact_num) || !empty($socials)) {
+    $contact_name = "Primary Contact";
 
     $stmt = mysqli_prepare(
         $conn,
-        "
-        INSERT INTO resident_contacts (
+        "INSERT INTO resident_contacts (
             resident_id,
-            contact_number,
+            name,
+            contact_num,
             socials
-        )
-        VALUES (?, ?, ?)
-        "
+        ) VALUES (?, ?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "iss",
+        "isss",
         $resident_id,
+        $contact_name,
         $contact_num,
         $socials
     );
@@ -238,28 +173,19 @@ if (
    EMERGENCY CONTACT
 ========================= */
 
-$emergency_name =
-    trim($_POST["emergency_name"] ?? "");
-
-$emergency_number =
-    trim($_POST["emergency_number"] ?? "");
-
-$emergency_relation =
-    trim($_POST["emergency_relation"] ?? "");
+$emergency_name = trim($_POST["emergency_name"] ?? "");
+$emergency_number = trim($_POST["emergency_number"] ?? "");
+$emergency_relation = trim($_POST["emergency_relation"] ?? "");
 
 if (!empty($emergency_name)) {
-
     $stmt = mysqli_prepare(
         $conn,
-        "
-        INSERT INTO resident_emergency_contacts (
+        "INSERT INTO resident_emergency_contacts (
             resident_id,
-            contact_name,
-            contact_number,
+            name,
+            contact_num,
             relationship
-        )
-        VALUES (?, ?, ?, ?)
-        "
+        ) VALUES (?, ?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
@@ -278,24 +204,23 @@ if (!empty($emergency_name)) {
    DISABILITIES
 ========================= */
 
-$disabilities =
-    $_POST["disability_type"] ?? [];
-
-$remarks =
-    trim($_POST["remarks"] ?? "");
+$disabilities = $_POST["disability_type"] ?? [];
+$remarks = trim($_POST["remarks"] ?? "");
 
 foreach ($disabilities as $type) {
+    $type = trim($type);
+
+    if (empty($type)) {
+        continue;
+    }
 
     $stmt = mysqli_prepare(
         $conn,
-        "
-        INSERT INTO resident_disabilities (
+        "INSERT INTO resident_disabilities (
             resident_id,
             disability_type,
-            remarks
-        )
-        VALUES (?, ?, ?)
-        "
+            notes
+        ) VALUES (?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
@@ -313,53 +238,53 @@ foreach ($disabilities as $type) {
    FAMILY MEMBERS
 ========================= */
 
-$family = [
+$father_name = trim($_POST["father_name"] ?? "");
+$mother_name = trim($_POST["mother_name"] ?? "");
+$spouse_name = trim($_POST["spouse_name"] ?? "");
+$guardian_name = trim($_POST["guardian_name"] ?? "");
+$guardian_rel = trim($_POST["child_relation"] ?? "");
+$guardian_number = trim($_POST["guardian_number"] ?? "");
 
-    [
-        "Father",
-        trim($_POST["father_name"] ?? "")
-    ],
-
-    [
-        "Mother",
-        trim($_POST["mother_name"] ?? "")
-    ],
-
-    [
-        "Spouse",
-        trim($_POST["spouse_name"] ?? "")
-    ],
-
-    [
-        trim($_POST["child_relation"] ?? ""),
-        trim($_POST["guardian_name"] ?? "")
-    ]
+$family_members = [
+    ["Father", $father_name, ""],
+    ["Mother", $mother_name, ""],
+    ["Spouse", $spouse_name, ""],
 ];
 
-foreach ($family as $member) {
+if (!empty($guardian_name)) {
+    $family_members[] = [
+        !empty($guardian_rel) ? $guardian_rel : "Guardian",
+        $guardian_name,
+        $guardian_number
+    ];
+}
 
-    if (empty($member[1])) {
+foreach ($family_members as $member) {
+    $relationship = $member[0];
+    $name = $member[1];
+    $family_contact_num = $member[2];
+
+    if (empty($name)) {
         continue;
     }
 
     $stmt = mysqli_prepare(
         $conn,
-        "
-        INSERT INTO resident_family_members (
+        "INSERT INTO resident_family_members (
             resident_id,
-            member_role,
-            member_name
-        )
-        VALUES (?, ?, ?)
-        "
+            name,
+            relationship,
+            contact_num
+        ) VALUES (?, ?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "iss",
+        "isss",
         $resident_id,
-        $member[0],
-        $member[1]
+        $name,
+        $relationship,
+        $family_contact_num
     );
 
     mysqli_stmt_execute($stmt);
@@ -381,6 +306,5 @@ $_SESSION["reg_success"] =
     "Resident registered successfully.";
 
 header("Location: ../registration.php");
-
 exit();
 ?>

@@ -216,41 +216,40 @@
 
 
       <div class="card">
-        <div class="card-title">Guardian Information</div>
-        <div class="form-grid cols-3">
-          <div class="field">
-            <label>Guardian Name</label>
-            <input type="text" name="guardian_name" placeholder="Full name">
-          </div>
-          <div class="field">
-            <label>Guardian Number</label>
-            <input type="tel" name="guardian_number" placeholder="09XX XXX XXXX">
-          </div>
-          <div class="field">
-            <label>Relationship</label>
-            <input type="text" name="child_relation" placeholder="e.g. Mother, Father">
-          </div>
-        </div>
-      </div>
+  <div class="card-title">Family / Guardian Information</div>
 
-      <!-- Family Information -->
-      <div class="card">
-        <div class="card-title">Family Information</div>
-        <div class="form-grid cols-3">
-          <div class="field">
-            <label>Father Name</label>
-            <input type="text" name="father_name" placeholder="Full Name">
-          </div>
-          <div class="field">
-            <label>Mother Name</label>
-            <input type="text" name="mother_name" placeholder="Full Name">
-          </div>
-          <div class="field">
-            <label>Spouse Name</label>
-            <input type="text" name="spouse_name" placeholder="Full Name">
-          </div>
-        </div>
-      </div>
+  <div class="form-grid cols-3">
+    <div class="field">
+      <label>Father Name</label>
+      <input type="text" name="father_name" placeholder="Full Name">
+    </div>
+
+    <div class="field">
+      <label>Mother Name</label>
+      <input type="text" name="mother_name" placeholder="Full Name">
+    </div>
+
+    <div class="field">
+      <label>Spouse Name</label>
+      <input type="text" name="spouse_name" placeholder="Full Name">
+    </div>
+  <div class="field span-all" style="margin-top:1px;"></div>
+    <div class="field">
+      <label>Guardian Name</label>
+      <input type="text" name="guardian_name" placeholder="Full Name">
+    </div>
+
+    <div class="field">
+      <label>Guardian Relationship</label>
+      <input type="text" name="child_relation" placeholder="e.g. Brother, Mother, Aunt">
+    </div>
+
+    <div class="field">
+      <label>Guardian Number</label>
+      <input type="tel" name="guardian_number" placeholder="09XX XXX XXXX">
+    </div>
+  </div>
+</div>
 
       <!-- ID Registration Details -->
       <div class="card">

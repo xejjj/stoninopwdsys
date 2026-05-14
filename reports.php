@@ -144,10 +144,36 @@
     </button>
 
     <div class="dropdown-menu" id="disabilityMenu">
-        <a href="func/processPrintReports.php?type=disability&category=PWD" target="_blank">Print PWD Classification</a>
-        <a href="func/processPrintReports.php?type=disability&category=CWD" target="_blank">Print CWD Classification</a>
-        <a href="func/processPrintReports.php?type=disability&category=ALL" target="_blank">Print All Classification</a>
-    </div>
+
+    <a href="func/processPrintReports.php?type=disability&category=Cognitive" target="_blank">
+        Cognitive
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Visual" target="_blank">
+        Visual
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Physical" target="_blank">
+        Physical
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Auditory" target="_blank">
+        Auditory
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Speech" target="_blank">
+        Speech
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Psychosocial" target="_blank">
+        Psychosocial
+    </a>
+
+    <a href="func/processPrintReports.php?type=disability&category=Others" target="_blank">
+        Others
+    </a>
+
+</div>
 </div>
                   </div>
                 </div>

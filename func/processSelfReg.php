@@ -31,10 +31,13 @@ $guardian_name   = trim($_POST["guardian_name"] ?? "");
 $guardian_number = trim($_POST["guardian_number"] ?? "");
 $guardian_rel    = trim($_POST["child_relation"] ?? "");
 
-$resident_type = !empty($guardian_name) ? "CWD" : "PWD";
+$resident_type =
+    !empty($guardian_name)
+    ? "CWD"
+    : "PWD";
 
 $application_status = "under review";
-$record_status = "active";
+$record_status      = "active";
 
 /* =========================
    VALIDATION
@@ -46,17 +49,26 @@ if (
     empty($birthdate) ||
     empty($sex)
 ) {
-    $_SESSION["reg_error"] = "Please fill in all required fields.";
+
+    $_SESSION["reg_error"] =
+        "Please fill in all required fields.";
+
     $_SESSION["form_data"] = $_POST;
+
     header("Location: ../selfregistration.php");
     exit();
 }
 
-$disabilities = $_POST["disability_type"] ?? [];
+$disabilities =
+    $_POST["disability_type"] ?? [];
 
 if (empty($disabilities)) {
-    $_SESSION["reg_error"] = "Please select at least one disability type.";
+
+    $_SESSION["reg_error"] =
+        "Please select at least one disability type.";
+
     $_SESSION["form_data"] = $_POST;
+
     header("Location: ../selfregistration.php");
     exit();
 }
@@ -67,111 +79,186 @@ if (empty($disabilities)) {
 
 $profile = "";
 
-if (isset($_FILES["profile_pic"]) && $_FILES["profile_pic"]["error"] === 0) {
+if (
+    isset($_FILES["profile_pic"])
+    && $_FILES["profile_pic"]["error"] === 0
+) {
 
-    $upload_dir = "../uploads/profiles/";
+    $upload_dir =
+        "../uploads/profiles/";
 
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $ext = strtolower(pathinfo($_FILES["profile_pic"]["name"], PATHINFO_EXTENSION));
-    $allowed = ["jpg", "jpeg", "png", "gif", "webp"];
+    $ext =
+        strtolower(
+            pathinfo(
+                $_FILES["profile_pic"]["name"],
+                PATHINFO_EXTENSION
+            )
+        );
+
+    $allowed =
+        ["jpg", "jpeg", "png", "gif", "webp"];
 
     if (!in_array($ext, $allowed)) {
-        $_SESSION["reg_error"] = "Invalid profile picture. Only JPG, JPEG, PNG, GIF, WEBP allowed.";
+
+        $_SESSION["reg_error"] =
+            "Invalid profile picture.";
+
         $_SESSION["form_data"] = $_POST;
+
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
-    $safe_name = $base_name . "_profile_" . time() . "." . $ext;
-    $target = $upload_dir . $safe_name;
+    $base_name =
+        strtolower(
+            preg_replace(
+                "/[^a-zA-Z0-9]+/",
+                "_",
+                $first_name . "_" . $last_name
+            )
+        );
 
-    if (!move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target)) {
-        $_SESSION["reg_error"] = "Failed to upload profile picture.";
+    $safe_name =
+        $base_name .
+        "_profile_" .
+        time() .
+        "." .
+        $ext;
+
+    $target =
+        $upload_dir .
+        $safe_name;
+
+    if (!move_uploaded_file(
+        $_FILES["profile_pic"]["tmp_name"],
+        $target
+    )) {
+
+        $_SESSION["reg_error"] =
+            "Failed to upload profile picture.";
+
         $_SESSION["form_data"] = $_POST;
+
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    $profile = "uploads/profiles/" . $safe_name;
+    $profile =
+        "uploads/profiles/" .
+        $safe_name;
 }
 
 /* =========================
-   MEDICAL CERTIFICATE UPLOAD
+   MED CERT
 ========================= */
 
 $med_cert = "";
 
-if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
+if (
+    isset($_FILES["med_cert"])
+    && $_FILES["med_cert"]["error"] === 0
+) {
 
-    $upload_dir = "../uploads/medical_certificates/";
+    $upload_dir =
+        "../uploads/medical_certificates/";
 
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0755, true);
     }
 
-    $ext = strtolower(pathinfo($_FILES["med_cert"]["name"], PATHINFO_EXTENSION));
-    $allowed = ["pdf", "jpg", "jpeg", "png"];
+    $ext =
+        strtolower(
+            pathinfo(
+                $_FILES["med_cert"]["name"],
+                PATHINFO_EXTENSION
+            )
+        );
+
+    $allowed =
+        ["pdf", "jpg", "jpeg", "png"];
 
     if (!in_array($ext, $allowed)) {
-        $_SESSION["reg_error"] = "Invalid medical certificate. Only PDF, JPG, JPEG, PNG allowed.";
+
+        $_SESSION["reg_error"] =
+            "Invalid medical certificate.";
+
         $_SESSION["form_data"] = $_POST;
+
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    $base_name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "_", $first_name . "_" . $last_name));
-    $safe_name = $base_name . "_medcert_" . time() . "." . $ext;
-    $target = $upload_dir . $safe_name;
+    $base_name =
+        strtolower(
+            preg_replace(
+                "/[^a-zA-Z0-9]+/",
+                "_",
+                $first_name . "_" . $last_name
+            )
+        );
 
-    if (!move_uploaded_file($_FILES["med_cert"]["tmp_name"], $target)) {
-        $_SESSION["reg_error"] = "Failed to upload medical certificate.";
+    $safe_name =
+        $base_name .
+        "_medcert_" .
+        time() .
+        "." .
+        $ext;
+
+    $target =
+        $upload_dir .
+        $safe_name;
+
+    if (!move_uploaded_file(
+        $_FILES["med_cert"]["tmp_name"],
+        $target
+    )) {
+
+        $_SESSION["reg_error"] =
+            "Failed to upload medical certificate.";
+
         $_SESSION["form_data"] = $_POST;
+
         header("Location: ../selfregistration.php");
         exit();
     }
 
-    $med_cert = "uploads/medical_certificates/" . $safe_name;
+    $med_cert =
+        "uploads/medical_certificates/" .
+        $safe_name;
 }
 
 /* =========================
-   INSERT MAIN RESIDENT
+   INSERT RESIDENT
 ========================= */
 
-$sql = "
-INSERT INTO residents (
-    first_name,
-    middle_name,
-    last_name,
-    civil_status,
-    birthdate,
-    birthplace,
-    sex,
-    address,
-    resident_type,
-    pwdid_num,
-    control_num,
-    idissue_date,
-    idexpiration_date,
-    profile,
-    med_cert,
-    application_status,
-    record_status
-)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-";
-
-$stmt = mysqli_prepare($conn, $sql);
-
-if (!$stmt) {
-    $_SESSION["reg_error"] = "Database error: " . mysqli_error($conn);
-    $_SESSION["form_data"] = $_POST;
-    header("Location: ../selfregistration.php");
-    exit();
-}
+$stmt = mysqli_prepare(
+    $conn,
+    "INSERT INTO residents (
+        first_name,
+        middle_name,
+        last_name,
+        civil_status,
+        birthdate,
+        birthplace,
+        sex,
+        address,
+        resident_type,
+        pwdid_num,
+        control_num,
+        idissue_date,
+        idexpiration_date,
+        profile,
+        med_cert,
+        application_status,
+        record_status
+    ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )"
+);
 
 mysqli_stmt_bind_param(
     $stmt,
@@ -196,36 +283,52 @@ mysqli_stmt_bind_param(
 );
 
 if (!mysqli_stmt_execute($stmt)) {
-    $_SESSION["reg_error"] = "Failed to submit: " . mysqli_stmt_error($stmt);
+
+    $_SESSION["reg_error"] =
+        mysqli_stmt_error($stmt);
+
     $_SESSION["form_data"] = $_POST;
+
     header("Location: ../selfregistration.php");
     exit();
 }
 
-$resident_id = mysqli_insert_id($conn);
+$resident_id =
+    mysqli_insert_id($conn);
 
 /* =========================
-   CONTACT INFO
+   CONTACTS
 ========================= */
 
-$contact_num = trim($_POST["contact_number"] ?? "");
-$socials = trim($_POST["account_name"] ?? "");
+$contact_num =
+    trim($_POST["contact_number"] ?? "");
 
-if (!empty($contact_num) || !empty($socials)) {
+$socials =
+    trim($_POST["account_name"] ?? "");
+
+if (
+    !empty($contact_num)
+    || !empty($socials)
+) {
+
+    $contact_name =
+        "Primary Contact";
 
     $stmt = mysqli_prepare(
         $conn,
         "INSERT INTO resident_contacts (
             resident_id,
-            contact_number,
+            name,
+            contact_num,
             socials
-        ) VALUES (?, ?, ?)"
+        ) VALUES (?, ?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "iss",
+        "isss",
         $resident_id,
+        $contact_name,
         $contact_num,
         $socials
     );
@@ -237,9 +340,14 @@ if (!empty($contact_num) || !empty($socials)) {
    EMERGENCY CONTACT
 ========================= */
 
-$emergency_name = trim($_POST["emergency_name"] ?? "");
-$emergency_number = trim($_POST["emergency_number"] ?? "");
-$emergency_relation = trim($_POST["emergency_relation"] ?? "");
+$emergency_name =
+    trim($_POST["emergency_name"] ?? "");
+
+$emergency_number =
+    trim($_POST["emergency_number"] ?? "");
+
+$emergency_relation =
+    trim($_POST["emergency_relation"] ?? "");
 
 if (!empty($emergency_name)) {
 
@@ -247,8 +355,8 @@ if (!empty($emergency_name)) {
         $conn,
         "INSERT INTO resident_emergency_contacts (
             resident_id,
-            contact_name,
-            contact_number,
+            name,
+            contact_num,
             relationship
         ) VALUES (?, ?, ?, ?)"
     );
@@ -269,7 +377,8 @@ if (!empty($emergency_name)) {
    DISABILITIES
 ========================= */
 
-$remarks = trim($_POST["remarks"] ?? "");
+$remarks =
+    trim($_POST["remarks"] ?? "");
 
 foreach ($disabilities as $type) {
 
@@ -284,7 +393,7 @@ foreach ($disabilities as $type) {
         "INSERT INTO resident_disabilities (
             resident_id,
             disability_type,
-            remarks
+            notes
         ) VALUES (?, ?, ?)"
     );
 
@@ -303,23 +412,43 @@ foreach ($disabilities as $type) {
    FAMILY MEMBERS
 ========================= */
 
+$father_name =
+    trim($_POST["father_name"] ?? "");
+
+$mother_name =
+    trim($_POST["mother_name"] ?? "");
+
+$spouse_name =
+    trim($_POST["spouse_name"] ?? "");
+
 $family_members = [
-    ["Father", trim($_POST["father_name"] ?? "")],
-    ["Mother", trim($_POST["mother_name"] ?? "")],
-    ["Spouse", trim($_POST["spouse_name"] ?? "")],
+    ["Father", $father_name, ""],
+    ["Mother", $mother_name, ""],
+    ["Spouse", $spouse_name, ""],
 ];
 
 if (!empty($guardian_name)) {
+
     $family_members[] = [
-        !empty($guardian_rel) ? $guardian_rel : "Guardian",
-        $guardian_name
+        !empty($guardian_rel)
+            ? $guardian_rel
+            : "Guardian",
+
+        $guardian_name,
+        $guardian_number
     ];
 }
 
 foreach ($family_members as $member) {
 
-    $role = $member[0];
-    $name = $member[1];
+    $relationship =
+        $member[0];
+
+    $name =
+        $member[1];
+
+    $family_contact_num =
+        $member[2];
 
     if (empty($name)) {
         continue;
@@ -329,17 +458,19 @@ foreach ($family_members as $member) {
         $conn,
         "INSERT INTO resident_family_members (
             resident_id,
-            member_role,
-            member_name
-        ) VALUES (?, ?, ?)"
+            name,
+            relationship,
+            contact_num
+        ) VALUES (?, ?, ?, ?)"
     );
 
     mysqli_stmt_bind_param(
         $stmt,
-        "iss",
+        "isss",
         $resident_id,
-        $role,
-        $name
+        $name,
+        $relationship,
+        $family_contact_num
     );
 
     mysqli_stmt_execute($stmt);
@@ -349,7 +480,8 @@ foreach ($family_members as $member) {
    SUCCESS
 ========================= */
 
-$_SESSION["reg_success"] = "Registration submitted successfully! Please wait 3-5 business days for processing.";
+$_SESSION["reg_success"] =
+    "Registration submitted successfully! Please wait 3-5 business days for processing.";
 
 header("Location: ../selfregistration.php");
 exit();

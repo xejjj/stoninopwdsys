@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2026 at 08:10 PM
+-- Generation Time: May 15, 2026 at 12:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,8 +29,8 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admincreds` (
   `ID` int(11) NOT NULL,
-  `full_name` varchar(255) NOT NULL,
   `username` varchar(255) NOT NULL,
+  `full_name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','encoder') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -39,49 +39,9 @@ CREATE TABLE `admincreds` (
 -- Dumping data for table `admincreds`
 --
 
-INSERT INTO `admincreds` (`ID`, `full_name`, `username`, `password`, `role`) VALUES
-(1, 'Test Creds', 'test', 'test', 'admin'),
-(10, 'Test Creds 2', 'teste', '$2y$10$1JBWrkD/KcxO2L7NOTBjX.Z2M6r2ML2Vb4z0M57AB77KFysxs6Uz.', 'encoder');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `archive`
---
-
-CREATE TABLE `archive` (
-  `ID` int(11) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `middle_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `civil_status` enum('Single','Married','Widowed','Separated') NOT NULL,
-  `birthdate` date NOT NULL,
-  `age` int(11) NOT NULL,
-  `birthplace` varchar(255) NOT NULL,
-  `sex` enum('male','female') NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `contact_num` varchar(255) NOT NULL,
-  `emergency_cont` varchar(255) NOT NULL,
-  `emergency_cont_num` varchar(255) NOT NULL,
-  `emergency_cont_rel` varchar(255) NOT NULL,
-  `socials` varchar(255) NOT NULL,
-  `disablity_type` enum('Cognitive','Visual','Physical','Auditory','Speech','Psychosocial','Others') NOT NULL,
-  `disability_remarks` varchar(255) DEFAULT NULL,
-  `resident_type` enum('PWD','CWD') NOT NULL,
-  `guardian_name` varchar(255) NOT NULL,
-  `guardian_cont_num` varchar(255) NOT NULL,
-  `guardian_rel` varchar(255) NOT NULL,
-  `father_name` varchar(255) NOT NULL,
-  `mother_name` varchar(255) NOT NULL,
-  `spouse_name` varchar(255) NOT NULL,
-  `pwdid_num` varchar(255) NOT NULL,
-  `control_num` varchar(255) NOT NULL,
-  `idissue_date` date NOT NULL,
-  `idexpiration_date` date NOT NULL,
-  `profile` varchar(255) NOT NULL,
-  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Pending',
-  `med_cert` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `admincreds` (`ID`, `username`, `full_name`, `password`, `role`) VALUES
+(1, 'test', 'Test Creds', 'test', 'admin'),
+(10, 'teste', 'Test Creds 2', '$2y$10$1JBWrkD/KcxO2L7NOTBjX.Z2M6r2ML2Vb4z0M57AB77KFysxs6Uz.', 'encoder');
 
 -- --------------------------------------------------------
 
@@ -90,13 +50,13 @@ CREATE TABLE `archive` (
 --
 
 CREATE TABLE `audit_logs` (
-  `id` int(11) NOT NULL,
+  `ID` int(11) NOT NULL,
   `admin_id` int(11) DEFAULT NULL,
   `admin_name` varchar(100) NOT NULL,
   `role` varchar(50) NOT NULL,
+  `resident_id` int(11) DEFAULT NULL,
   `action` varchar(50) NOT NULL,
   `module` varchar(100) NOT NULL,
-  `record_id` int(11) DEFAULT NULL,
   `description` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -105,55 +65,138 @@ CREATE TABLE `audit_logs` (
 -- Dumping data for table `audit_logs`
 --
 
-INSERT INTO `audit_logs` (`id`, `admin_id`, `admin_name`, `role`, `action`, `module`, `record_id`, `description`, `created_at`) VALUES
-(5, 1, '', 'admin', 'LOGIN', 'Authentication', 1, ' logged in', '2026-05-13 18:04:19'),
-(6, 1, '', 'admin', 'ARCHIVE', 'Residents', 150, 'Archived resident: RYAN CARLO SESE', '2026-05-13 18:06:52'),
-(7, 1, '', 'admin', 'UPDATE', 'Accounts', 1, 'Updated account:  (test) to Test Creds (test), role: admin', '2026-05-13 18:07:08'),
-(8, 1, '', 'admin', 'CREATE', 'Accounts', 10, 'Added account: Test Creds 2 (teste) as encoder', '2026-05-13 18:07:17'),
-(9, 1, '', 'admin', 'DELETE', 'Archive', 38, 'Permanently deleted archived resident: RYAN CARLO SESE', '2026-05-13 18:07:38'),
-(10, 1, '', 'admin', 'RESTORE', 'System', NULL, 'Restored database backup', '2026-05-13 18:07:51'),
-(11, 1, '', 'admin', 'RESTORE', 'System', NULL, 'Restored database backup', '2026-05-13 18:08:24');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `rejected`
---
-
-CREATE TABLE `rejected` (
-  `ID` int(11) NOT NULL,
-  `first_name` varchar(255) NOT NULL,
-  `middle_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
-  `civil_status` enum('Single','Married','Widowed','Separated') NOT NULL,
-  `birthdate` date NOT NULL,
-  `age` int(11) NOT NULL,
-  `birthplace` varchar(255) NOT NULL,
-  `sex` enum('male','female') NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `contact_num` varchar(255) NOT NULL,
-  `emergency_cont` varchar(255) NOT NULL,
-  `emergency_cont_num` varchar(255) NOT NULL,
-  `emergency_cont_rel` varchar(255) NOT NULL,
-  `socials` varchar(255) NOT NULL,
-  `disablity_type` varchar(255) DEFAULT NULL,
-  `disability_remarks` varchar(255) DEFAULT NULL,
-  `resident_type` enum('PWD','CWD') NOT NULL,
-  `guardian_name` varchar(255) NOT NULL,
-  `guardian_cont_num` varchar(255) NOT NULL,
-  `guardian_rel` varchar(255) NOT NULL,
-  `father_name` varchar(255) NOT NULL,
-  `mother_name` varchar(255) NOT NULL,
-  `spouse_name` varchar(255) NOT NULL,
-  `pwdid_num` varchar(255) NOT NULL,
-  `control_num` varchar(255) NOT NULL,
-  `idissue_date` date NOT NULL,
-  `idexpiration_date` date NOT NULL,
-  `profile` varchar(255) NOT NULL,
-  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Pending',
-  `med_cert` varchar(255) DEFAULT NULL,
-  `correction_remarks` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `audit_logs` (`ID`, `admin_id`, `admin_name`, `role`, `resident_id`, `action`, `module`, `description`, `created_at`) VALUES
+(5, 1, '', '', NULL, 'LOGIN', '', 'logged in', '2026-05-13 18:04:19'),
+(6, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: RYAN CARLO SESE', '2026-05-13 18:06:52'),
+(7, 1, '', '', NULL, 'UPDATE', '', 'Updated account:  (test) to Test Creds (test), role: admin', '2026-05-13 18:07:08'),
+(8, 1, '', '', NULL, 'CREATE', '', 'Added account: Test Creds 2 (teste) as encoder', '2026-05-13 18:07:17'),
+(9, 1, '', '', NULL, 'DELETE', '', 'Permanently deleted archived resident: RYAN CARLO SESE', '2026-05-13 18:07:38'),
+(10, 1, '', '', NULL, 'RESTORE', '', 'Restored database backup', '2026-05-13 18:07:51'),
+(11, 1, '', '', NULL, 'RESTORE', '', 'Restored database backup', '2026-05-13 18:08:24'),
+(12, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-13 19:05:15'),
+(13, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-13 19:10:21'),
+(14, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-13 19:25:38'),
+(15, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:11:28'),
+(16, 10, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 03:11:44'),
+(17, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:11:48'),
+(18, 1, '', '', NULL, 'CREATE', '', 'Registered new resident: expired test', '2026-05-14 03:14:34'),
+(19, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:18:12'),
+(20, 1, '', '', NULL, 'BACKUP', '', 'Created database backup: backup_2026-05-14_05-19-08.sql', '2026-05-14 03:19:08'),
+(21, 1, '', '', NULL, 'CREATE', '', 'Registered new resident: test', '2026-05-14 03:22:24'),
+(22, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test', '2026-05-14 03:24:06'),
+(23, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: expired test', '2026-05-14 03:24:16'),
+(24, 1, '', '', NULL, 'RESTORE', '', 'Restored resident from archive: test', '2026-05-14 03:35:50'),
+(25, 1, '', '', NULL, 'DELETE', '', 'Permanently deleted archived resident: expired test', '2026-05-14 03:53:51'),
+(26, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test', '2026-05-14 03:55:51'),
+(27, 1, '', '', NULL, 'DELETE', '', 'Permanently deleted archived resident: test', '2026-05-14 03:55:58'),
+(28, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test test', '2026-05-14 03:56:21'),
+(29, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test test', '2026-05-14 03:57:51'),
+(30, 10, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 04:29:29'),
+(31, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 04:53:29'),
+(32, 1, '', '', 3, 'UPDATE', '', 'Updated resident profile: ARLENE AGUINALDO', '2026-05-14 05:49:59'),
+(33, 1, '', '', 4, 'UPDATE', '', 'Updated resident profile: ALLAN ALABANZA', '2026-05-14 05:52:27'),
+(34, 1, '', '', 6, 'UPDATE', '', 'Updated resident profile: IISHA KARMEL ALDAY', '2026-05-14 05:53:36'),
+(35, 1, '', '', 7, 'UPDATE', '', 'Updated resident profile: EDGILINE AQUINO', '2026-05-14 05:54:51'),
+(36, 1, '', '', 8, 'UPDATE', '', 'Updated resident profile: LIZA BACSAL', '2026-05-14 05:55:24'),
+(37, 1, '', '', 9, 'UPDATE', '', 'Updated resident profile: LAN\'S BARTOLATA', '2026-05-14 05:55:49'),
+(38, 1, '', '', 10, 'UPDATE', '', 'Updated resident profile: HARVEIAME BARRACA', '2026-05-14 05:57:07'),
+(39, 1, '', '', 10, 'UPDATE', '', 'Updated resident profile: HARVEIAME BARRACA', '2026-05-14 05:57:39'),
+(40, 1, '', '', 13, 'UPDATE', '', 'Updated resident profile: ALEC JOSHUA BERNARDO', '2026-05-14 05:59:28'),
+(41, 1, '', '', 17, 'UPDATE', '', 'Updated resident profile: LEICESTER MICHAEL CADANO', '2026-05-14 06:01:06'),
+(42, 1, '', '', 18, 'UPDATE', '', 'Updated resident profile: KRISTOFFHERSON JUAN CARLOS CAGUIWA', '2026-05-14 06:02:20'),
+(43, 1, '', '', 20, 'UPDATE', '', 'Updated resident profile: ROSEMARIE CALING', '2026-05-14 06:02:53'),
+(44, 1, '', '', 22, 'UPDATE', '', 'Updated resident profile: MA. MELISSA CANDADO', '2026-05-14 06:05:24'),
+(45, 1, '', '', 24, 'UPDATE', '', 'Updated resident profile: RIZZA JONE CASIO', '2026-05-14 06:06:13'),
+(46, 1, '', '', 25, 'UPDATE', '', 'Updated resident profile: KATHLEEN ROSE CASTILLO', '2026-05-14 06:09:16'),
+(47, 1, '', '', 26, 'UPDATE', '', 'Updated resident profile: DIANNA JAZZETTE CENTILLO', '2026-05-14 06:10:16'),
+(48, 1, '', '', 29, 'UPDATE', '', 'Updated resident profile: ROMMEL CRISTAL', '2026-05-14 06:10:53'),
+(49, 1, '', '', 30, 'UPDATE', '', 'Updated resident profile: DARWIN CRUZ', '2026-05-14 06:11:22'),
+(50, 1, '', '', 31, 'UPDATE', '', 'Updated resident profile: JOHN RANDOLF CRUZ', '2026-05-14 06:12:09'),
+(51, 1, '', '', 32, 'UPDATE', '', 'Updated resident profile: KURT REY CRUZ', '2026-05-14 06:12:27'),
+(52, 1, '', '', 32, 'UPDATE', '', 'Updated resident profile: KURT REY CRUZ', '2026-05-14 06:12:45'),
+(53, 1, '', '', 34, 'UPDATE', '', 'Updated resident profile: CHRISTIE DANGANAN', '2026-05-14 06:13:24'),
+(54, 1, '', '', 38, 'UPDATE', '', 'Updated resident profile: FERNANDO DE GUZMAN', '2026-05-14 06:14:04'),
+(55, 1, '', '', 42, 'UPDATE', '', 'Updated resident profile: ELISA DE LEON', '2026-05-14 06:14:54'),
+(56, 1, '', '', 44, 'UPDATE', '', 'Updated resident profile: ARNOLD DELGADO', '2026-05-14 06:20:13'),
+(57, 1, '', '', 45, 'UPDATE', '', 'Updated resident profile: MARIBETH DIEZ', '2026-05-14 06:21:22'),
+(58, 1, '', '', 50, 'UPDATE', '', 'Updated resident profile: MICHAEL LOUIS DUCUSIN', '2026-05-14 06:22:28'),
+(59, 1, '', '', 58, 'UPDATE', '', 'Updated resident profile: DEJAN KALJEVIC ESPINOSA', '2026-05-14 06:24:13'),
+(60, 1, '', '', 88, 'UPDATE', '', 'Updated resident profile: MELISSA RIVERA MATIAS', '2026-05-14 06:30:19'),
+(61, 1, '', '', 2, 'UPDATE', '', 'Updated resident profile: BRENT NYLSEN AGUILLERA', '2026-05-14 06:41:49'),
+(62, 1, '', '', 7, 'UPDATE', '', 'Updated resident profile: EDGILINE AQUINO', '2026-05-14 06:48:08'),
+(63, 1, '', '', 11, 'UPDATE', '', 'Updated resident profile: NYMPHA BASCONES', '2026-05-14 06:56:39'),
+(64, 1, '', '', 25, 'UPDATE', '', 'Updated resident profile: KATHLEEN ROSE CASTILLO', '2026-05-14 07:05:27'),
+(65, 1, '', '', 38, 'UPDATE', '', 'Updated resident profile: FERNANDO DE GUZMAN', '2026-05-14 07:10:04'),
+(66, 1, '', '', 112, 'UPDATE', '', 'Updated resident profile: JOYCE REYES', '2026-05-14 07:11:16'),
+(67, 1, '', '', 35, 'UPDATE', '', 'Updated resident profile: JOSE DAYO JR.', '2026-05-14 07:30:39'),
+(68, 1, '', '', 43, 'UPDATE', '', 'Updated resident profile: FELICITY MHAE DELA VEGA', '2026-05-14 07:34:42'),
+(69, 1, '', '', 142, 'UPDATE', '', 'Updated resident profile: EIJAY DIVINA', '2026-05-14 07:39:23'),
+(70, 1, '', '', 48, 'UPDATE', '', 'Updated resident profile: AARON GABRIEL DOMONDON', '2026-05-14 07:40:46'),
+(71, 1, '', '', 49, 'UPDATE', '', 'Updated resident profile: AEON STEFAN DORNIDON', '2026-05-14 07:42:35'),
+(72, 1, '', '', 50, 'UPDATE', '', 'Updated resident profile: MICHAEL LOUIS DUCUSIN', '2026-05-14 07:43:44'),
+(73, 1, '', '', NULL, 'BACKUP', '', 'Created database backup: backup_2026-05-14_09-50-01.sql', '2026-05-14 07:50:01'),
+(74, 1, '', '', 55, 'UPDATE', '', 'Updated resident profile: JOHN CYREL ENRIQUEZ', '2026-05-14 07:50:22'),
+(75, 1, '', '', 67, 'UPDATE', '', 'Updated resident profile: LANI GALAPIN', '2026-05-14 07:58:04'),
+(76, 1, '', '', 68, 'UPDATE', '', 'Updated resident profile: ALMIRA MIGEL GALERA', '2026-05-14 07:58:45'),
+(77, 1, '', '', 71, 'UPDATE', '', 'Updated resident profile: MA. THERESA GUANIZO', '2026-05-14 08:00:34'),
+(78, 1, '', '', 74, 'UPDATE', '', 'Updated resident profile: RUDY HUAB', '2026-05-14 08:04:28'),
+(79, 1, '', '', 73, 'UPDATE', '', 'Updated resident profile: ANNE BERNADETTE HUAB', '2026-05-14 08:04:48'),
+(80, 1, '', '', 75, 'UPDATE', '', 'Updated resident profile: JOHN MICHAEL JINDANI', '2026-05-14 08:05:49'),
+(81, NULL, '', '', 77, 'UPDATE', '', 'Updated resident profile: MARIA JUNIO', '2026-05-14 08:08:56'),
+(82, NULL, '', '', 78, 'UPDATE', '', 'Updated resident profile: HONEY FAYE LAXAMANA', '2026-05-14 08:09:26'),
+(83, NULL, '', '', 82, 'UPDATE', '', 'Updated resident profile: JACKLYN MANABAT', '2026-05-14 08:11:42'),
+(84, NULL, '', '', 84, 'UPDATE', '', 'Updated resident profile: CHRISTEL MANIPOL', '2026-05-14 08:12:22'),
+(85, NULL, '', '', 85, 'UPDATE', '', 'Updated resident profile: CHRIAN MANIPOL', '2026-05-14 08:12:41'),
+(86, NULL, '', '', 86, 'UPDATE', '', 'Updated resident profile: EXEQUIEL IVAN MARIÑAS', '2026-05-14 08:29:20'),
+(87, NULL, '', '', 87, 'UPDATE', '', 'Updated resident profile: DAVID JOSIAH MARQUEZ', '2026-05-14 08:29:48'),
+(88, NULL, '', '', 91, 'UPDATE', '', 'Updated resident profile: JONATHAN MELO', '2026-05-14 08:31:30'),
+(89, NULL, '', '', 96, 'UPDATE', '', 'Updated resident profile: BENEDICT MUYONG', '2026-05-14 08:33:52'),
+(90, NULL, '', '', 97, 'UPDATE', '', 'Updated resident profile: ERIC NUADA', '2026-05-14 08:34:33'),
+(91, NULL, '', '', 98, 'UPDATE', '', 'Updated resident profile: ENRICO ORTIZ', '2026-05-14 08:35:00'),
+(92, NULL, '', '', 99, 'UPDATE', '', 'Updated resident profile: YUAN PADILLA', '2026-05-14 08:35:35'),
+(93, NULL, '', '', 101, 'UPDATE', '', 'Updated resident profile: JOSHUA PAGARAGAN', '2026-05-14 08:36:10'),
+(94, NULL, '', '', 102, 'UPDATE', '', 'Updated resident profile: DAN AEDHEN PAJARILLO', '2026-05-14 08:36:26'),
+(95, NULL, '', '', 103, 'UPDATE', '', 'Updated resident profile: MARLON PAMEL', '2026-05-14 08:36:37'),
+(96, NULL, '', '', 106, 'UPDATE', '', 'Updated resident profile: KATRINA PANGAN', '2026-05-14 08:37:39'),
+(97, NULL, '', '', 109, 'UPDATE', '', 'Updated resident profile: DEAN RYLLE QUIAMBAO', '2026-05-14 08:38:38'),
+(98, NULL, '', '', 110, 'UPDATE', '', 'Updated resident profile: EMMANUEL RAMOS', '2026-05-14 08:39:02'),
+(99, NULL, '', '', 111, 'UPDATE', '', 'Updated resident profile: DWAYNE MATTHEW REYES', '2026-05-14 08:39:28'),
+(100, NULL, '', '', 113, 'UPDATE', '', 'Updated resident profile: IVANNA RODRIGUEZ', '2026-05-14 08:39:54'),
+(101, NULL, '', '', 141, 'UPDATE', '', 'Updated resident profile: SOJIRO VILLENA', '2026-05-14 08:40:49'),
+(102, NULL, '', '', 116, 'UPDATE', '', 'Updated resident profile: ALEXEUZ JOSIAH SALAZAR', '2026-05-14 08:48:37'),
+(103, NULL, '', '', 117, 'UPDATE', '', 'Updated resident profile: DAMIEN ELEAZAR SALVADOR', '2026-05-14 08:49:48'),
+(104, NULL, '', '', 118, 'UPDATE', '', 'Updated resident profile: LOUISSE DANE SALVADOR', '2026-05-14 08:50:25'),
+(105, NULL, '', '', 122, 'UPDATE', '', 'Updated resident profile: MARCUS SHAWN FRANCIS SAMSON', '2026-05-14 08:51:44'),
+(106, NULL, '', '', 121, 'UPDATE', '', 'Updated resident profile: MARCO SANTHINO SAMSON', '2026-05-14 08:51:59'),
+(107, NULL, '', '', 123, 'UPDATE', '', 'Updated resident profile: ANGEL SANTIAGO JR.', '2026-05-14 08:52:22'),
+(108, NULL, '', '', 125, 'UPDATE', '', 'Updated resident profile: ANA LIZA SARSALIJO', '2026-05-14 08:52:48'),
+(109, NULL, '', '', 126, 'UPDATE', '', 'Updated resident profile: KHEANE ANGELO SIOSON', '2026-05-14 08:53:51'),
+(110, NULL, '', '', 127, 'UPDATE', '', 'Updated resident profile: CANDY SIU', '2026-05-14 08:54:14'),
+(111, NULL, '', '', 130, 'UPDATE', '', 'Updated resident profile: LANS TAMAYO', '2026-05-14 08:55:16'),
+(112, NULL, '', '', 135, 'UPDATE', '', 'Updated resident profile: JENALYNE TRINIDAD', '2026-05-14 08:57:31'),
+(113, NULL, '', '', 136, 'UPDATE', '', 'Updated resident profile: ALVIN TUGAY', '2026-05-14 08:57:53'),
+(114, NULL, '', '', 137, 'UPDATE', '', 'Updated resident profile: AMERIZZA TUGAY', '2026-05-14 08:58:25'),
+(115, NULL, '', '', 138, 'UPDATE', '', 'Updated resident profile: APRILYN TUGAY', '2026-05-14 08:58:50'),
+(116, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 08:59:32'),
+(117, 1, '', '', NULL, 'BACKUP', '', 'Created database backup: backup_2026-05-14_10-59-41.sql', '2026-05-14 08:59:41'),
+(118, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 13:52:01'),
+(119, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 16:26:25'),
+(120, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 16:33:33'),
+(121, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 16:35:46'),
+(122, 1, '', '', 1, 'ARCHIVE', '', 'Archived resident ID: 1', '2026-05-14 16:50:45'),
+(123, 1, '', '', 143, 'CREATE', '', 'Registered new resident', '2026-05-14 17:07:17'),
+(124, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 18:03:43'),
+(125, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 18:48:42'),
+(126, 10, 'Test Creds 2', 'encoder', NULL, 'LOGIN', 'Authentication', 'Test Creds 2 logged in', '2026-05-14 18:50:35'),
+(127, 10, 'Test Creds 2', 'encoder', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:04:17'),
+(128, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:04'),
+(129, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:21'),
+(130, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:32'),
+(131, 10, 'Test Creds 2', 'encoder', NULL, 'LOGOUT', 'Authentication', 'Test Creds 2 logged out', '2026-05-14 19:49:35'),
+(132, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 19:50:10'),
+(133, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:46:39'),
+(134, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:49:25'),
+(135, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:59:02');
 
 -- --------------------------------------------------------
 
@@ -164,34 +207,21 @@ CREATE TABLE `rejected` (
 CREATE TABLE `residents` (
   `ID` int(11) NOT NULL,
   `first_name` varchar(255) NOT NULL,
-  `middle_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) DEFAULT NULL,
   `last_name` varchar(255) NOT NULL,
-  `civil_status` enum('Single','Married','Widowed','Separated') NOT NULL,
-  `birthdate` date NOT NULL,
-  `age` int(11) NOT NULL,
-  `birthplace` varchar(255) NOT NULL,
-  `sex` enum('male','female') NOT NULL,
-  `address` varchar(255) NOT NULL,
-  `contact_num` varchar(255) NOT NULL,
-  `emergency_cont` varchar(255) NOT NULL,
-  `emergency_cont_num` varchar(255) NOT NULL,
-  `emergency_cont_rel` varchar(255) NOT NULL,
-  `socials` varchar(255) NOT NULL,
-  `disablity_type` varchar(255) DEFAULT NULL,
-  `disability_remarks` varchar(255) DEFAULT NULL,
+  `civil_status` enum('Single','Married','Widowed','Separated') DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `birthplace` varchar(255) DEFAULT NULL,
+  `sex` enum('male','female') DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `resident_type` enum('PWD','CWD') NOT NULL,
-  `guardian_name` varchar(255) NOT NULL,
-  `guardian_cont_num` varchar(255) NOT NULL,
-  `guardian_rel` varchar(255) NOT NULL,
-  `father_name` varchar(255) NOT NULL,
-  `mother_name` varchar(255) NOT NULL,
-  `spouse_name` varchar(255) NOT NULL,
-  `pwdid_num` varchar(255) NOT NULL,
-  `control_num` varchar(255) NOT NULL,
-  `idissue_date` date NOT NULL,
-  `idexpiration_date` date NOT NULL,
-  `profile` varchar(255) NOT NULL,
-  `status` enum('Active','Pending','Expired','Under Review','Needs Correction','Rejected') DEFAULT 'Under Review',
+  `control_num` varchar(255) DEFAULT NULL,
+  `pwdid_num` varchar(255) DEFAULT NULL,
+  `idissue_date` date DEFAULT NULL,
+  `idexpiration_date` date DEFAULT NULL,
+  `profile` varchar(255) DEFAULT NULL,
+  `application_status` enum('needs correction','under review','approved','rejected') NOT NULL DEFAULT 'under review',
+  `record_status` enum('active','expired','archived') NOT NULL DEFAULT 'active',
   `med_cert` varchar(255) DEFAULT NULL,
   `correction_remarks` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -200,149 +230,554 @@ CREATE TABLE `residents` (
 -- Dumping data for table `residents`
 --
 
-INSERT INTO `residents` (`ID`, `first_name`, `middle_name`, `last_name`, `civil_status`, `birthdate`, `age`, `birthplace`, `sex`, `address`, `contact_num`, `emergency_cont`, `emergency_cont_num`, `emergency_cont_rel`, `socials`, `disablity_type`, `disability_remarks`, `resident_type`, `guardian_name`, `guardian_cont_num`, `guardian_rel`, `father_name`, `mother_name`, `spouse_name`, `pwdid_num`, `control_num`, `idissue_date`, `idexpiration_date`, `profile`, `status`, `med_cert`, `correction_remarks`) VALUES
-(1, 'PERLITA', 'R', 'ABELLERA', '', '0000-00-00', 0, '', 'female', '63-C SANTOL ST.', '09472622313', '', '', '', '', 'Physical', NULL, 'PWD', 'MAGCAWAS, JESSIELEN', '', '', '', '', '', '109-525', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(2, 'BRENT NYLSEN', 'PABLICO', 'AGUILLERA', '', '1979-12-24', 46, '', 'male', '68 WOMEN\'S CLUB ST.', '09158828474', '', '', '', '', 'Cognitive', NULL, 'PWD', 'AGUILLERA, LYN ROSE P.', '', '', '', '', '', '899-217', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(3, 'ARLENE', 'ALFILER', 'AGUINALDO', '', '0000-00-00', 53, '', 'female', '65 SANTOL ST.', '09215751865', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '12400000204300', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(4, 'ALLAN', 'HILANTAGAAN', 'ALABANZA', '', '0000-00-00', 50, '', 'male', '18 BIAK N BATO ST.', '09457821893', '', '', '', '', 'Visual', NULL, 'PWD', '', '', '', '', '', '', '12400000974777', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(5, 'NORMA', 'B', 'ALCUINO', '', '0000-00-00', 0, '', '', '88 WOMEN\'S CLUB ST.', '09291019040', '', '', '', '', '', NULL, 'PWD', 'SANTIAGO JR., CARLOS', '', '', '', '', '', '109-484', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(6, 'IISHA KARMEL', 'ULIT', 'ALDAY', '', '0000-00-00', 19, '', 'female', '15 BIAK NA BATO ST.', '09273242992', '', '', '', '', 'Auditory', NULL, 'PWD', 'ALDAY, ALLANDALE M.', '', '', '', '', '', '21400000652846', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(7, 'EDGILINE ', 'DENOFRA', 'AQUINO', '', '0000-00-00', 33, '', 'female', '93 WOMEN\'S CLUB ST.', '09171749249', '', '', '', '', 'Physical', NULL, 'PWD', 'AQUINO, GILDA', '', '', '', '', '', '1240001464691', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(8, 'LIZA', 'ARAGON', 'BACSAL', '', '0000-00-00', 32, '', 'female', '106 UNION CIVICA ST.', '09158935460', '', '', '', '', 'Speech', NULL, 'PWD', 'HOMBREBUENO, DOLORES', '', '', '', '', '', '12400007487793', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(9, 'LAN\'S', 'TAMAYO', 'BARTOLATA', '', '0000-00-00', 26, '', 'male', '6-8 BAGONG BUHAY ST.', '09555432325', '', '', '', '', 'Psychosocial', NULL, 'PWD', 'BARTOLATA, MARYANNE', '', '', '', '', '', '12400000723870', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(10, 'HARVEIAME', 'JUMAWAN', 'BARRACA', '', '0000-00-00', 2, '', 'male', '75B CUATRO DE JULIO ST.', '09274220847', '', '', '', '', 'Speech', NULL, 'CWD', 'JUMAWAN, SALVE REGINA', '', '', '', '', '', '12400001794303', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(11, 'NYMPHA', 'PANIZARES', 'BASCONES', '', '0000-00-00', 0, '', 'female', '43 TOMAS PINPIN ST.', '', '', '', '', '', 'Physical', '', 'PWD', 'BASCONES JR., GUILLERMO', '', '', '', '', '', '109-555', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(12, 'ADRIAN DEXTER', 'ESTEVES', 'BELLA', '', '0000-00-00', 0, '', 'male', '101 CUATRO DE JULIO ST.', '09074101145', '', '', '', '', 'Auditory', '', 'PWD', 'BELLA, ANNALY', '', '', '', '', '', '109-456', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(16, 'ALEC JOSHUA', 'J', 'BERNARDO', '', '0000-00-00', 27, '', 'male', '62 WOMEN\'S CLUB ST.', '09758566752', '', '', '', '', '', '', 'PWD', '', '', '', '', '', '', '133901060014', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(17, 'VLADY', 'B', 'BORILLO', '', '0000-00-00', 0, '', 'male', '72 BAGONG BUHAY ST.', '09281357524', '', '', '', '', '', '', 'PWD', 'BORILLO, ROLLIE', '', '', '', '', '', '109-589', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(18, 'HENRY', 'MANRIQUE', 'BORNALES III', '', '0000-00-00', 0, '', 'male', '30 BIAK NA BATO ST.', '09956337288', '', '', '', '', 'Cognitive', '', 'PWD', '', '', '', '', '', '', '109-477', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(19, 'JONALYN', 'DIEGA', 'BUCASAS', '', '0000-00-00', 0, '', 'female', '101 CUATRO DE JULIO ST.', '09383706780', '', '', '', '', 'Auditory', '', 'PWD', '', '', '', '', '', '', '109-073', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(20, 'LEICESTER MICHAEL', 'ASIS', 'CADANO', '', '0000-00-00', 44, '', 'male', '43 LIBERATION ST.', '09174967964', '', '', '', '', 'Visual', '', 'PWD', 'CADANO, ARABELLE MICHELLE', '', '', '', '', '', '109-474', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(21, 'KRISTOFFHERSON JUAN CARLOS', 'BATICBATIC', 'CAGUIWA', '', '0000-00-00', 10, '', 'male', '78 WOMENS CLUB ST,', '091760082223', '', '', '', '', 'Psychosocial', '', 'CWD', '', '', '', '', '', '', '12400000569932', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(22, 'ALIHUR', 'P', 'CALEZAR', '', '0000-00-00', 0, '', 'male', '110 BUSTAMANTE ST.', '09212715147', '', '', '', '', '', '', 'PWD', '', '', '', '', '', '', '109-542', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(23, 'ROSEMARIE', '', 'CALING', '', '0000-00-00', 21, '', 'female', '32 UNION CIVICA ST.', '', '', '', '', '', 'Visual', '', 'PWD', '', '', '', '', '', '', '10200000726757', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(24, 'JONATHAN', 'NAKPIL', 'CANDADO', '', '0000-00-00', 0, '', 'male', '92 LIBERATION ST.', '09669764920', '', '', '', '', 'Psychosocial', '', 'PWD', '', '', '', '', '', '', '109-117', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(25, 'MA. MELISSA', 'MANGALUS', 'CANDADO', '', '0000-00-00', 45, '', 'female', '92 LIBERATION ST.', '', '', '', '', '', 'Psychosocial', '', 'PWD', 'CANDADO, JONATHAN N.', '', '', '', '', '', '256342', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(26, 'BONIFACIO', '', 'CANLAS', '', '0000-00-00', 0, '', 'male', '96 LIBERATION ST.', '09453292998', '', '', '', '', '', '', 'PWD', 'CANLAS, MARY JANE', '', '', '', '', '', '109-476', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(27, 'RIZZA JONE', 'EVASCO', 'CASIO', '', '0000-00-00', 36, '', 'female', '81 CUATRO DE JULIO ST.', '09360389313', '', '', '', '', 'Psychosocial', '', 'PWD', '', '', '', '', '', '', '763-033', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(28, 'KATHLEEN ROSE', 'JOCSON', 'CASTILLO', '', '0000-00-00', 17, '', 'female', '15 PHODACA ST.', '', '', '', '', '', 'Physical', '', 'CWD', '', '', '', '', '', '', '12400001018873', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(29, 'DIANNA JAZZETTE', 'DELGADO', 'CENTILLO', '', '0000-00-00', 38, '', 'female', '106 UNION CIVICA ST.', '', '', '', '', '', 'Physical', '', 'PWD', 'NIMIA CENTILLO', '', '', '', '', '', '12400000437294', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(30, 'ANTHONY ALEZER', 'T.', 'CHICA', '', '0000-00-00', 0, '', 'male', '6-B MINDANAO ST.', '09178573537', '', '', '', '', '', '', 'PWD', '', '', '', '', '', '', '109-591', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(31, 'REYNALDO', '', 'CORTEZ', '', '0000-00-00', 0, '', 'male', '30 LIBERATION ST.', '09166942002', '', '', '', '', '', '', 'PWD', '', '', '', '', '', '', '12400000098039', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(32, 'ROMMEL', 'LLAMOSO', 'CRISTAL', '', '0000-00-00', 41, '', 'male', '114 BUSTAMANTE ST.', '09755481852', '', '', '', '', 'Physical', '', 'PWD', 'LUNA, REBECCA L.', '', '', '', '', '', '12400000192431', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(33, 'DARWIN', 'V', 'CRUZ', '', '0000-00-00', 31, '', 'male', '153 BATANES ST.', '', '', '', '', '', '', '', 'PWD', '', '', '', '', '', '', '109-605', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(34, 'JOHN RANDOLF', 'E', 'CRUZ', '', '0000-00-00', 10, '', 'male', '81 CUATRO DE JULIO ST.', '09357421813', '', '', '', '', '', '', 'CWD', '', '', '', '', '', '', '109-500', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(35, 'KURT REY', 'REYES', 'CRUZ', '', '0000-00-00', 22, '', 'male', '7 MADIAS-AS ST.', '09501370574', '', '', '', '', 'Auditory', '', 'PWD', 'CRUZ, RAQUEL R.', '', '', '', '', '', '1135-929', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(36, 'ALLAN', 'P', 'DAMES', '', '0000-00-00', 0, '', 'male', '112 LIBERATION ST.', '09950270700', '', '', '', '', '', '', 'PWD', 'DAMES, MAGDALENA', '', '', '', '', '', '109-030', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(37, 'CHRISTIE', 'RAMOS', 'DANGANAN', '', '0000-00-00', 51, '', 'female', '71B SAN ISIDRO ST.', '', '', '', '', '', 'Physical', '', 'PWD', 'DANGANAN, JOSELITO', '', '', '', '', '', '10900000274205', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(38, 'JOSE', '', 'DAYO JR.', '', '0000-00-00', 0, '', 'female', '82 BAGONG BUHAY ST', '', '', '', '', '', '', '', 'PWD', 'DAYO, BABY', '', '', '', '', '', '109-466', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(39, 'RAUL', 'G', 'DE CASTRO JR.', '', '0000-00-00', 0, '', 'male', '115 BAGONG BUHAY ST.', '09061683132', '', '', '', '', '', NULL, 'PWD', 'DE CASTRO, RAQUEL', '', '', '', '', '', '109-420', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(40, 'ROGEL', 'G', 'DE CASTRO', '', '0000-00-00', 0, '', 'male', '114 BAGONG BUHAY ST.', '09475803830', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '109-509', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(41, 'FERNANDO', 'FRIAS', 'DE GUZMAN', '', '0000-00-00', 46, '', 'male', '20 VISAYAN LIBERATION', '', '', '', '', '', 'Physical', 'CANCER', 'PWD', '', '', '', '', '', '', '138570', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(42, 'MANUEL', 'GUEVARRA', 'DE GUZMAN', '', '0000-00-00', 0, '', 'male', '82 BAGONG BUHAY ST', '09269903907', '', '', '', '', 'Physical', NULL, 'PWD', 'DE GUZMAN, TERESITA', '', '', '', '', '', '109-116', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(43, 'CATALINA', 'DIZON', 'DE JESUS', '', '0000-00-00', 0, '', 'female', '66 CUATRO DE JULIO ST.', '09497455168', '', '', '', '', 'Psychosocial', NULL, 'PWD', 'DE JESUS, RODOLFO', '', '', '', '', '', '109-389', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(44, 'TAGUMPAY', 'DIZON', 'DE JESUS', '', '0000-00-00', 0, '', 'female', '66 CUATRO DE JULIO ST.', '09497455168', '', '', '', '', 'Cognitive', NULL, 'PWD', 'DE JESUS, RODOLFO', '', '', '', '', '', '109-388', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(45, 'ELISA', 'A', 'DE LEON', '', '0000-00-00', 48, '', 'female', '75 WOMEN\'S CLUB ST.', '', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '109-647', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(48, 'FELICITY MHAE', 'M', 'DELA VEGA', '', '2018-01-05', 8, '', 'female', '65 UNANG HAKBANG ST.', '', '', '', '', '', 'Others', '', 'CWD', '', '', '', '', '', '', '109-600', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(49, 'ARNOLD', 'S', 'DELGADO', '', '1970-04-20', 56, '', 'male', '79 LIBERATION ST.', '09074830015', '', '', '', '', 'Others', '', 'PWD', 'DELGADO, ALLAN', '', '', '', '', '', '109-604', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(50, 'MARIBETH', 'TRINIDAD', 'DIEZ', '', '1970-08-19', 55, '', 'female', '64 SAN ISIDRO ST.', '09958251845', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400001339920', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(51, 'EDWIN', '', 'DIOCTON', '', '0000-00-00', 0, '', 'male', '64 SAN ISIDRO ST.', '09984469990', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '109-109', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(52, 'ARIEN', 'CAMPO', 'DIVINA', '', '0000-00-00', 0, '', 'female', '93 LIBERATION ST.', '0917874819', '', '', '', '', 'Physical', NULL, 'PWD', 'DIVINA, MA. EURNE BETH CAMPO', '', '', '', '', '', '109-539', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(53, 'AARON GABRIEL', 'DC', 'DOMONDON', '', '0000-00-00', 0, '', 'male', '3 P.D. TAVERA ST.', '', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '109-418', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(54, 'AEON STEFAN', 'U', 'DORNIDON', '', '0000-00-00', 0, '', 'male', '16 SAN CRISTOBAL ST.', '09173263984', '', '', '', '', '', NULL, 'PWD', '', '', '', '', '', '', '109-382', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(55, 'MICHAEL LOUIS', 'NIEVERA', 'DUCUSIN', '', '0000-00-00', 31, '', 'male', '9-B MINDANAO AVE.', '0918429960', '', '', '', '', 'Cognitive', 'LEARNING', 'PWD', '', '', '', '', '', '', '104-344', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(56, 'JOHN MICHAEL', 'SANTOS', 'DUMANIG', '', '1986-12-28', 39, '', 'male', '68 WOMEN\'S CLUB ST.', '09057008025', '', '', '', '', 'Physical', '', 'PWD', 'NGO, MARY ANN G.', '', '', '', '', '', '656906', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(57, 'MARIA ESTELA', 'SANTOS', 'DUMANIG', '', '0000-00-00', 0, '', 'female', '68 WOMEN\'S CLUB ST.', '09323274574', '', '', '', '', 'Auditory', '', 'PWD', '', '', '', '', '', '', '109-533', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(58, 'ANALYN', 'O', 'EISMA', '', '1972-05-28', 53, '', 'female', '23-A SAN ISIDRO EXT.', '09955427384', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '098-174', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(59, 'ARIEL', '', 'ELIQUEN', '', '0000-00-00', 0, '', 'male', '38 MINDANAO AVE.', '09561578008', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-081', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(60, 'JOHN CYREL', 'I', 'ENRIQUEZ', '', '0000-00-00', 0, '', 'male', '38 MINDANAO AVE.', '09561578008', '', '', '', '', 'Others', 'N/A', 'PWD', 'ENRIQUEZ, ARNILO D.', '', '', '', '', '', '', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(61, 'DANICA', 'SISON', 'ESGUERRA', '', '0000-00-00', 0, '', 'female', '89 UNION CIVICA ST.', '09178724747', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '124000026627', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(62, 'DIANA', 'SISON', 'ESGUERRA', '', '0000-00-00', 0, '', 'female', '86 BUSTAMANTE ST.', '09185836268', '', '', '', '', 'Psychosocial', '', 'PWD', 'ESGUERRA, DANILO B.', '', '', '', '', '', '137404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(63, 'DEJAN KALJEVIC', 'B', 'ESPINOSA', '', '2005-09-18', 20, '', 'male', '24 SANCIANGCO ST.', '09398508515', '', '', '', '', '', '', 'PWD', 'ESPINOSA, TERESA', '', '', '', '', '', '109-552', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(64, 'SOPHIA ALEXA', 'B', 'ESPINOSA', '', '2013-04-15', 13, '', 'female', '24 SANCIANGCO ST.', '09398508515', '', '', '', '', '', '', 'CWD', 'ESPINOSA, TERESA', '', '', '', '', '', '109-563', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(65, 'SETH FAVIO', 'MENDEZ', 'ESTOY', '', '2020-06-11', 5, '', 'male', '65 UNANG HAKBANG ST.', '09275817962', '', '', '', '', 'Physical', '', 'CWD', 'ESTOY, ARLENE M.', '', '', '', '', '', '124000018115111', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(66, 'JOSHUA REN DE', 'CASTRO', 'FAGARAGAN', '', '0000-00-00', 0, '', 'male', '7 SAN ISIDRO ST.', '09956920902', '', '', '', '', 'Cognitive', '', 'PWD', 'FAGARAGAN, ANGELITA', '', '', '', '', '', '109-469', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(67, 'EVA MARICRIS CATHERINE', 'DOCTOR', 'FAMA', '', '0000-00-00', 0, '', 'female', '4 MINDANAO AVE.', '09165138474', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '109-508', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(68, 'GLADYS', 'BENITEZ', 'FULGENCIO', '', '1966-07-04', 59, '', 'female', '93 WOMEN\'S CLUB ST.', '09184180284', '', '', '', '', 'Physical', 'ORTHOPEDIC', 'PWD', 'FULGENCIO, NEIL', '', '', '', '', '', '562-551', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(69, 'JONATHAN', 'BENITEZ', 'FULGENCIO', '', '1990-06-30', 35, '', 'male', '93 WOMEN\'S CLUB ST.', '', '', '', '', '', 'Physical', 'ORTHOPEDIC', 'PWD', '', '', '', '', '', '', '562-552', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(70, 'JOHN ULAP MALAIAH', 'SANTOS', 'FULGENCIO', '', '2020-02-14', 6, '', 'male', '90 BUSTAMANTE ST.', '09562533877', '', '', '', '', 'Psychosocial', '', 'CWD', 'FULGENCIO, JOHN TEDEN', '', '', '', '', '', '12400000816098', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(71, 'LUCIAN', '', 'FULGENCIO', '', '2017-09-11', 8, '', 'male', '93 WOMEN\'S CLUB ST.', '09184180284', '', '', '', '', 'Speech', '', 'CWD', 'FULGENCIO, GLADYS', '', '', '', '', '', '01662079', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(72, 'LANI', 'SIMPORIOS', 'GALAPIN', '', '0000-00-00', 0, '', 'female', '65 WOMEN\'S CLUB ST.', '', '', '', '', '', 'Speech', '', 'PWD', '', '', '', '', '', '', '090-181', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(73, 'ALMIRA MIGEL', 'ALATEIT', 'GALERA', '', '2020-09-13', 5, '', 'female', '74 WOMEN\'S CLUB ST.', '09230902949', '', '', '', '', 'Speech', '', 'CWD', 'GALERA, MICHELLE', '', '', '', '', '', '1402979', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(74, 'FERNANDEZ', 'LAGROSA', 'GALVEZ', '', '0000-00-00', 0, '', 'male', '37 TOMAS PINPIN ST.', '09276036854', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '109-129', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(75, 'ERICSON', 'LUSTADO', 'GATDULA', '', '1965-09-21', 60, '', 'male', '90 BAGONG BUHAY ST.', '', '', '', '', '', 'Physical', '', 'PWD', 'MERCADO, MA. LOURDES', '', '', '', '', '', '12400000137404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(76, 'MA. THERESA', 'V', 'GUANIZO', '', '0000-00-00', 0, '', 'female', '59 CUATRO DE JULIO ST.', '09293776666', '', '', '', '', 'Others', 'N/A', 'PWD', 'LOZA, EDWIN', '', '', '', '', '', '109-533', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(77, 'ELAIJAH JADE', 'M', 'HATI', '', '0000-00-00', 0, '', 'male', '18 G. SANCIANGCO ST.', '09777785504', '', '', '', '', 'Others', 'N/A', 'PWD', 'HATI, ELAINE', '', '', '', '', '', '109-095', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(78, 'ANNE BERNADETTE', '', 'HUAB', '', '0000-00-00', 0, '', 'female', '89 CUATRO DE JULIO ST.', '09392261464', '', '', '', '', 'Others', 'N/A', 'PWD', 'HUAB, ROSITA', '', '', '', '', '', '109-490', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(79, 'RUDY', 'G', 'HUAB', '', '0000-00-00', 0, '', 'male', '89 CUATRO DE JULIO ST.', '09994167734', '', '', '', '', 'Others', 'N/A', 'PWD', 'HUAB, ROSITA', '', '', '', '', '', '109-565', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(80, 'JOHN MICHAEL', '', 'JINDANI', '', '0000-00-00', 0, '', 'male', '25 G. SANCIANGCO ST.', '09166179589', '', '', '', '', 'Others', 'N/A', 'PWD', 'JINDANI, ALIIN', '', '', '', '', '', '109-402', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(81, 'SALVE REGINA', 'LUCERO', 'JUMAWAN', '', '1991-05-21', 34, '', 'female', '758 CUATRO DE JULIO ST.', '09244220847', '', '', '', '', 'Psychosocial', '', 'PWD', 'BARRACA, JAMES', '', '', '', '', '', '553229', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(82, 'MARIA', 'GUSI', 'JUNIO', '', '1966-12-09', 59, '', 'female', '108 BAGONG BUHAY ST.', '09297466853', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '1240000502151', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(83, 'HONEY FAYE', '', 'LAXAMANA', '', '0000-00-00', 0, '', 'female', '8 SAN CRISTOBAL ST.', '09560636227', '', '', '', '', 'Others', 'N/A', 'PWD', 'LAXAMANA, ROLANDO', '', '', '', '', '', '109-428', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(84, 'SHEIAN IZABEL', 'ANTESCO', 'MAALIW', '', '2017-03-22', 9, '', 'female', '99C -BAGONG BUHAY ST.', '', '', '', '', '', 'Speech', '', 'CWD', '', '', '', '', '', '', '137-404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(85, 'JUAN GARCIA', '', 'MAGALONG III', '', '2013-10-22', 12, '', 'male', '98-A CUATRO DE JULIO ST.', '', '', '', '', '', 'Cognitive', '', 'CWD', '', '', '', '', '', '', '12400001020497', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(86, 'AILEEN ELEONOR', 'GARCIA', 'MAGALONG', '', '1991-07-24', 34, '', 'female', '98-A CUATRO DE JULIO ST.', '09274019686', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '124000001100213', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(87, 'JACKLYN', 'J', 'MANABAT', '', '0000-00-00', 0, '', 'female', '82 BAGONG BUHAY ST.', '09561081835', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-078', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(88, 'CHRISTIAN PAU', 'PLATON', 'MANGILAYA', '', '1984-05-17', 41, '', 'male', '103 BAGONG BUHAY ST.', '', '', '', '', '', 'Psychosocial', '', 'PWD', '', '', '', '', '', '', '109-616', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(89, 'CHRISTEL', 'M', 'MANIPOL', '', '0000-00-00', 0, '', 'female', '72 LIBERATION ST.', '09569431517', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-036', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(90, 'CHRIAN', 'M', 'MANIPOL', '', '0000-00-00', 0, '', 'male', '72 LIBERATION ST.', '09260645577', '', '', '', '', 'Others', 'N/A', 'PWD', 'MANIPOL, LETICIA', '', '', '', '', '', '109-014', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(91, 'EXEQUIEL IVAN', 'URIEL', 'MARIÑAS', '', '1994-09-17', 31, '', 'male', '114 BAGONG BUHAY ST.', '09485216800', '', '', '', '', 'Others', 'N/A', 'PWD', 'ELIQUEN, ARIEL', '', '', '', '', '', '109-491', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(92, 'DAVID JOSIAH', 'F', 'MARQUEZ', '', '2016-06-01', 9, '', 'male', '6 SAN CRISTOBAL ST.', '09156423670', '', '', '', '', 'Others', 'N/A', 'CWD', 'FLORES, RUSHELLE', '', '', '', '', '', '0950000574119', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(93, 'MELISSA RIVERA', '', 'MATIAS', '', '2010-12-19', 15, '', 'male', '76-E BAYANI ST.', '092734700159', '', '', '', '', 'Cognitive', '', 'CWD', 'MATIAS, JHON JOSEPH', '', '', '', '', '', '12400000624704', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(94, 'GIL ANTHONY', 'GUEVARRA', 'MEDEL', '', '1977-06-06', 48, '', 'male', '11 BIAK N BATO ST.', '09982030099', '', '', '', '', 'Cognitive', 'MENTAL', 'PWD', 'MEDEL, GIL ANTONIO', '', '', '', '', '', '12400000654198', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(95, 'JEAN AUSTIN', 'JOCSON', 'MEDEL', '', '1998-09-13', 27, '', 'male', '11 BIAK N BATO ST.', '09269588600', '', '', '', '', 'Psychosocial', '', 'PWD', '', '', '', '', '', '', '12400000903116', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(96, 'JONATHAN', 'N', 'MELO', '', '0000-00-00', 0, '', 'male', '82 LIBERATION ST.', '09216365356', '', '', '', '', 'Others', 'N/A', 'PWD', 'PANGAN, KATRINA', '', '', '', '', '', '109-432', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(97, 'JAMES', 'ABELLAR', 'MENDOZA', '', '0000-00-00', 0, '', 'male', '34-D MINDANAO AVE.', '', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '109-442', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(98, 'OSCAR', 'MORAN', 'MESIAS JR.', '', '1965-12-28', 60, '', 'male', '78 WOMEN\'S CLUB ST.', '', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '678-989', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(99, 'STEPHEN DAVID', 'C', 'MESIAS', '', '1995-03-18', 31, '', 'male', '78 WOMEN\'S CLUB ST.', '', '', '', '', '', 'Cognitive', 'LEARNING', 'PWD', 'MESIAS, OSCAR', '', '', '', '', '', '12400000678914', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(100, 'FRANCIS DAVID', 'SISON', 'MOSQUEDA', '', '2019-07-31', 6, '', 'male', '25 G. SANCIANGCO ST.', '09663303899', '', '', '', '', 'Physical', '', 'CWD', 'MOSQUEDA, MICHELLE S.', '', '', '', '', '', '998623', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(101, 'BENEDICT', 'MANGHIRANG', 'MUYONG', '', '1992-06-01', 33, '', 'male', '69 BUSTAMANTE ST.', '090634822667', '', '', '', '', 'Auditory', 'DEAF/HARD OF HEARING', 'PWD', '', '', '', '', '', '', '12400000987895', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(102, 'ERIC', 'BIO', 'NUADA', '', '0000-00-00', 0, '', 'male', '10-A MADIAS-AS ST', '09228846605', '', '', '', '', 'Auditory', 'DEAF/HARD OF HEARING', 'PWD', 'NUADA, ROSALIE', '', '', '', '', '', '109-386', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(103, 'ENRICO', '', 'ORTIZ', '', '0000-00-00', 0, '', 'male', '16 VISAYAN AVE.', '0945345594', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-479', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(104, 'YUAN', 'ROA', 'PADILLA', '', '0000-00-00', 0, '', 'male', '85-8 LIBERATION ST.', '09656221956', '', '', '', '', 'Cognitive', 'INTELLECTUAL', 'PWD', 'PADILLA, MICHELLE', '', '', '', '', '', '109-050', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(105, 'EDWIN', 'ESPINOSA', 'PADUA', '', '1978-04-17', 48, '', 'male', '83 LIBERATION ST.', '09561578029', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400000137404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(106, 'JOSHUA', '', 'PAGARAGAN', '', '0000-00-00', 0, '', 'male', '7 SAN ISIDRO ST', '09956920902', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-399', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(107, 'DAN AEDHEN', 'A', 'PAJARILLO', '', '0000-00-00', 0, '', 'male', '91 LIBERATION ST.', '09219292642', '', '', '', '', 'Others', 'N/A', 'PWD', 'PAJARILLOLEAH,', '', '', '', '', '', '109-089', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(108, 'MARLON', 'T', 'PAMEL', '', '1980-05-31', 45, '', 'male', '46 TOMAS PINPIN ST.', '09982796255', '', '', '', '', 'Others', 'N/A', 'PWD', 'TUGAY, APRILYN', '', '', '', '', '', '109-387', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(109, 'MARVIN', 'TORRES', 'PAMEL', '', '1978-07-21', 47, '', 'male', '27 G. SANCIANGCO ST.', '09958700496', '', '', '', '', 'Physical', '', 'PWD', 'PAMEL, ANNALYN S.', '', '', '', '', '', '12400000748540', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(110, 'MICHAEL', 'TORRES', 'PAMEL', '', '1974-11-21', 51, '', 'male', '114 BAGONG BUHAY ST.', '09913158053', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400001128672', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(111, 'KATRINA', 'IDA', 'PANGAN', '', '0000-00-00', 0, '', 'female', '82 LIBERATION ST.', '09178675026', '', '', '', '', 'Others', 'N/A', 'PWD', 'PANGAN, MILDRED', '', '', '', '', '', '109-481', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(112, 'ROWENA', 'AGUILERA', 'PASCUAL', '', '0000-00-00', 0, '', 'female', 'AGUILERA', '09334719604', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '109-103', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(113, 'VIRGILIO', 'ORTEGA', 'PETALLO JR.', '', '1983-08-22', 42, '', 'male', '75 BUSTAMANTE ST.', '', '', '', '', '', 'Physical', 'ORTHOPEDIC', 'PWD', '', '', '', '', '', '', '12400000503600', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(114, 'DEAN RYLLE', 'GONZALES', 'QUIAMBAO', '', '2015-01-05', 11, '', 'male', '71-C BAGONG BUHAY ST.', '09273611693', '', '', '', '', 'Cognitive', 'LEARNING', 'CWD', 'GONZALES, RAQUEL C.', '', '', '', '', '', '12400000926293', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(115, 'EMMANUEL', 'L', 'RAMOS', '', '0000-00-00', 0, '', 'male', '71 SAN ISIDRO ST.', '09955427384', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-386', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(116, 'DWAYNE MATTHEW', 'SANTOS', 'REYES', '', '2017-01-27', 9, '', 'male', '96 BAGONG BUHAY ST.', '09477145183', '', '', '', '', 'Speech', 'SPEECH AND LANGUAGE', 'CWD', 'MAGLENTE, SHIRYL-LYN S.', '', '', '', '', '', '12400001029444', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(117, 'JOYCE', 'GUILLERMO', 'REYES', '', '0000-00-00', 0, '', 'female', '38 MINDANAO AVE.', '09982278335', '', '', '', '', 'Physical', 'CANCER', 'PWD', 'REYES, VICTORIA', '', '', '', '', '', '12400000109537', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(118, 'IVANNA', 'C', 'RODRIGUEZ', '', '0000-00-00', 0, '', 'female', '112 UNION CIVICA ST', '09206881276', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-125', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(119, 'HENRY', 'LETRUDO', 'SAJORDA', '', '1981-08-15', 44, '', 'male', '76 BAYANI ST.', '09205909595', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '1093830', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(120, 'JODERIC', 'LETRUDO', 'SAJORDA', '', '1980-10-01', 45, '', 'male', '76-F BAYANI ST...', '09067191026', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400008590432', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(121, 'ALEXEUZ JOSIAH', 'LAYUG', 'SALAZAR', '', '2019-03-12', 7, '', 'male', '96 BAGONG BUHAY ST.', '09230675795', '', '', '', '', 'Speech', 'SPEECH AND LANGUAGE', 'CWD', 'SALAZAR, JACQUIELYN', '', '', '', '', '', '124000000214606', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(122, 'DAMIEN ELEAZAR', 'B', 'SALVADOR', '', '2016-09-22', 9, '', 'male', '111 UNION CIVICA ST.', '09773585087', '', '', '', '', 'Speech', 'SPEECH AND LANGUAGE', 'CWD', 'SALVADOR, ELYLOU BALA', '', '', '', '', '', '01320062', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(123, 'LOUISSE DANE', 'B', 'SALVADOR', '', '2003-01-01', 23, '', 'female', '111 UNION CIVICA ST.', '09773585087', '', '', '', '', 'Cognitive', 'PSYCHOLOGICAL', 'PWD', 'SALVADOR, ELYLOU BALA', '', '', '', '', '', '545282', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(124, 'SHANE MARINETH', 'GONZALVO', 'SAMSON', '', '2004-10-11', 21, '', 'female', '65 SANTOL ST', '09175228891', '', '', '', '', 'Visual', '', 'PWD', 'SAMSON, SHENNA', '', '', '', '', '', '12400000109106', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(125, 'SHENNA', 'GONZALVO', 'SAMSON', '', '0000-00-00', 0, '', 'female', '65 SANTOL ST', '', '', '', '', '', 'Visual', '', 'PWD', 'GONZALVO, SERGIO C', '', '', '', '', '', '', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(126, 'MARCO SANTHINO', 'GONZALVO', 'SAMSON', '', '2009-02-08', 17, '', 'male', '65 SANTOL ST.', '09175228891', '', '', '', '', 'Cognitive', 'LEARNING', 'CWD', 'SAMSON, SHENNA', '', '', '', '', '', '12400000099118', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(127, 'MARCUS SHAWN FRANCIS', 'GONZALVO', 'SAMSON', '', '2013-03-14', 13, '', 'male', '65 SANTOL ST.', '09175228891', '', '', '', '', 'Cognitive', 'LEARNING', 'CWD', 'SAMSON, SHENNA', '', '', '', '', '', '124100000109422', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(128, 'ANGEL', 'B', 'SANTIAGO JR.', '', '0000-00-00', 0, '', 'male', '88 WOMEN\'S CLUB ST.', '09982030099', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-454', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(129, 'ALEXANDER', 'MANGALUS', 'SAQUING', '', '1980-07-24', 45, '', 'male', '92 LIBERATION ST.', '09979176520', '', '', '', '', 'Visual', '', 'PWD', 'SAQUING, MICHAEL', '', '', '', '', '', '303813', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(130, 'ANA LIZA', 'V', 'SARSALIJO', '', '0000-00-00', 0, '', 'female', '57 SAN ISIDRO ST.', '09984985385', '', '', '', '', 'Others', 'N/A', 'PWD', 'TABLIGAN, MARY ANN S.', '', '', '', '', '', '109-594', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(131, 'KHEANE ANGELO', 'G', 'SIOSON', '', '0000-00-00', 0, '', 'male', '117-C MADIAS-AS ST.', '09326281495', '', '', '', '', 'Others', 'N/A', 'PWD', 'AUSTRIA, YOLANDA', '', '', '', '', '', '109-384', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(132, 'CANDY', 'SIO', 'SIU', '', '1980-10-19', 45, '', 'female', '118 UNION CIVICA ST', '09176745845', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400000610828', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(133, 'MARINA', 'A', 'SY', '', '1975-03-01', 51, '', 'female', '114 UNION CIVICA ST', '09157423993', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '109-638', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(134, 'HIROMI', 'UMALI', 'TAKANO', '', '2014-07-02', 11, '', 'female', '76 SAN ISIDRO ST.', '09515217676', '', '', '', '', 'Visual', '', 'CWD', 'UMALI, CAREN JOY A.', '', '', '', '', '', '12400000553396', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(135, 'LANS', '', 'TAMAYO', '', '2000-02-16', 26, '', 'male', '6-B BAGONG BUHAY ST.', '', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '137-404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(136, 'JUAN', 'TORCUATOR', 'TEVAR', '', '1955-07-04', 70, '', 'male', '64 WOMEN\'S CLUB ST.', '09169628676', '', '', '', '', 'Physical', '', 'PWD', 'TEVAR, JEFFREY', '', '', '', '', '', '124000007748294', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(137, 'CHARINA', 'CORTEZ', 'TOLENTINO', '', '1976-09-10', 49, '', 'female', '37 SAN ISIDRO ST.', '09218650621', '', '', '', '', 'Psychosocial', '', 'PWD', 'TOLENTINO, ROSARIO C.', '', '', '', '', '', '12400000702565', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(138, 'KERBY', 'E', 'TORNILLA', '', '0000-00-00', 0, '', 'male', '118 LIBERATIONS ST.', '09164940046', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '110-220', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(139, 'RYAN', 'VERANO', 'TORRALBA', '', '1979-12-12', 46, '', 'male', '62 SAN ISIDRO ST.', '09277880489', '', '', '', '', 'Physical', '', 'PWD', '', '', '', '', '', '', '12400001241736', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(140, 'JENALYNE', 'C', 'TRINIDAD', '', '0000-00-00', 0, '', 'female', '75 CUATRO DE JULIO ST.', '09487092827', '', '', '', '', 'Others', 'N/A', 'PWD', 'CARINO JR., GUILLERMO', '', '', '', '', '', '109-483', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(141, 'ALVIN', 'DEXTER', 'TUGAY', '', '0000-00-00', 0, '', 'male', '27 G. SANCIANGCO ST.', '09359343180', '', '', '', '', 'Others', 'N/A', 'PWD', 'TUGAY, APRILYN', '', '', '', '', '', '109-421', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(142, 'AMERIZZA', 'L', 'TUGAY', '', '0000-00-00', 0, '', 'female', '27 G. SANČIANGCO ST.', '09155963303', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-406', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(143, 'APRILYN', 'L', 'TUGAY', '', '0000-00-00', 0, '', 'female', '27 G. SANCIANGCO ST.', '09164908709', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-390', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(144, 'JOSEFINA', 'GENEROSO', 'VELASCO', '', '1973-01-10', 53, '', 'female', '84 UNION CIVICA ST.', '09067191129', '', '', '', '', 'Physical', '', 'PWD', 'VELASCO, MENCHITA', '', '', '', '', '', '12400000802728', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(145, 'MARCO', 'S', 'VILLACORTA', '', '2006-12-12', 19, '', 'male', '114 UNION CIVICA ST', '', '', '', '', '', 'Physical', '', 'PWD', 'SY, MARINA', '', '', '', '', '', '337-404', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(146, 'SOJIRO', 'DE GUZMAN', 'VILLENA', '', '2012-09-18', 13, '', 'male', '82 BAGONG BUHAY ST.', '09537803625', '', '', '', '', 'Cognitive', 'LEARNING', 'CWD', 'VILLENA, CRISELDA', '', '', '', '', '', '12400001320024', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL),
-(147, 'EIJAY', 'C', 'DIVINA', '', '0000-00-00', 0, '', 'male', '93 LIBERATION ST.', '0917874819', '', '', '', '', 'Others', 'N/A', 'PWD', '', '', '', '', '', '', '109-060', '', '0000-00-00', '0000-00-00', '', 'Active', NULL, NULL);
+INSERT INTO `residents` (`ID`, `first_name`, `middle_name`, `last_name`, `civil_status`, `birthdate`, `birthplace`, `sex`, `address`, `resident_type`, `control_num`, `pwdid_num`, `idissue_date`, `idexpiration_date`, `profile`, `application_status`, `record_status`, `med_cert`, `correction_remarks`) VALUES
+(1, 'PERLITA', 'R', 'ABELLERA', NULL, NULL, NULL, 'female', '63-C SANTOL ST.', 'PWD', NULL, '109-525', NULL, NULL, NULL, 'approved', 'archived', NULL, NULL),
+(2, 'BRENT NYLSEN', 'PABLICO', 'AGUILLERA', '', '2008-10-03', '', 'male', '68 WOMEN\'S CLUB ST.', 'CWD', '', '899-217', '0000-00-00', '0000-00-00', '', 'approved', 'active', '', NULL),
+(3, 'ARLENE', 'ALFILER', 'AGUINALDO', NULL, '1972-05-12', NULL, 'female', '65 SANTOL ST.', 'PWD', NULL, '12400000204300', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(4, 'ALLAN', 'HILANTAGAAN', 'ALABANZA', NULL, '1975-12-31', NULL, 'male', '18 BIAK N BATO ST.', 'PWD', NULL, '12400000974777', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(5, 'NORMA', 'B', 'ALCUINO', NULL, NULL, NULL, NULL, '88 WOMEN\'S CLUB ST.', 'PWD', NULL, '109-484', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(6, 'IISHA KARMEL', 'ULIT', 'ALDAY', NULL, '2004-08-31', NULL, 'female', '15 BIAK NA BATO ST.', 'PWD', NULL, '21400000652846', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(7, 'EDGILINE', 'DENOFRA', 'AQUINO', NULL, '1992-05-27', NULL, 'female', '93 WOMEN\'S CLUB ST.', 'PWD', NULL, '1240001464691', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(8, 'LIZA', 'ARAGON', 'BACSAL', NULL, '1994-02-10', NULL, 'female', '106 UNION CIVICA ST.', 'PWD', NULL, '12400007487793', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(9, 'LAN\'S', 'TAMAYO', 'BARTOLATA', NULL, '2000-02-16', NULL, 'male', '6-8 BAGONG BUHAY ST.', 'PWD', NULL, '12400000723870', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(10, 'HARVEIAME', 'JUMAWAN', 'BARRACA', NULL, '2024-02-23', NULL, 'male', '75B CUATRO DE JULIO ST.', 'CWD', NULL, '12400001794303', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(11, 'NYMPHA', 'PANIZARES', 'BASCONES', NULL, NULL, NULL, 'female', '43 TOMAS PINPIN ST.', 'PWD', NULL, '109-555', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(12, 'ADRIAN DEXTER', 'ESTEVES', 'BELLA', NULL, NULL, NULL, 'male', '101 CUATRO DE JULIO ST.', 'PWD', NULL, '109-456', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(13, 'ALEC JOSHUA', 'J', 'BERNARDO', NULL, '1999-08-04', NULL, 'male', '62 WOMEN\'S CLUB ST.', 'PWD', NULL, '133901060014', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(14, 'VLADY', 'B', 'BORILLO', NULL, NULL, NULL, 'male', '72 BAGONG BUHAY ST.', 'PWD', NULL, '109-589', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(15, 'HENRY', 'MANRIQUE', 'BORNALES III', NULL, NULL, NULL, 'male', '30 BIAK NA BATO ST.', 'PWD', NULL, '109-477', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(16, 'JONALYN', 'DIEGA', 'BUCASAS', NULL, NULL, NULL, 'female', '101 CUATRO DE JULIO ST.', 'PWD', NULL, '109-073', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(17, 'LEICESTER MICHAEL', 'ASIS', 'CADANO', NULL, '1979-02-13', NULL, 'male', '43 LIBERATION ST.', 'PWD', NULL, '109-474', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(18, 'KRISTOFFHERSON JUAN CARLOS', 'BATICBATIC', 'CAGUIWA', NULL, '2015-12-08', NULL, 'male', '78 WOMENS CLUB ST,', 'CWD', NULL, '12400000569932', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(19, 'ALIHUR', 'P', 'CALEZAR', NULL, NULL, NULL, 'male', '110 BUSTAMANTE ST.', 'PWD', NULL, '109-542', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(20, 'ROSEMARIE', NULL, 'CALING', NULL, '2004-02-09', NULL, 'female', '32 UNION CIVICA ST.', 'PWD', NULL, '10200000726757', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(21, 'JONATHAN', 'NAKPIL', 'CANDADO', NULL, NULL, NULL, 'male', '92 LIBERATION ST.', 'PWD', NULL, '109-117', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(22, 'MA. MELISSA', 'MANGALUS', 'CANDADO', NULL, '1980-08-30', NULL, 'female', '92 LIBERATION ST.', 'PWD', NULL, '256342', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(23, 'BONIFACIO', NULL, 'CANLAS', NULL, NULL, NULL, 'male', '96 LIBERATION ST.', 'PWD', NULL, '109-476', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(24, 'RIZZA JONE', 'EVASCO', 'CASIO', NULL, '1987-03-22', NULL, 'female', '81 CUATRO DE JULIO ST.', 'PWD', NULL, '763-033', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(25, 'KATHLEEN ROSE', 'JOCSON', 'CASTILLO', NULL, '2012-10-23', NULL, 'female', '15 PHODACA ST.', 'CWD', NULL, '12400001018873', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(26, 'DIANNA JAZZETTE', 'DELGADO', 'CENTILLO', NULL, '1986-09-24', NULL, 'female', '106 UNION CIVICA ST.', 'PWD', NULL, '12400000437294', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(27, 'ANTHONY ALEZER', 'T.', 'CHICA', NULL, NULL, NULL, 'male', '6-B MINDANAO ST.', 'PWD', NULL, '109-591', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(28, 'REYNALDO', NULL, 'CORTEZ', NULL, NULL, NULL, 'male', '30 LIBERATION ST.', 'PWD', NULL, '12400000098039', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(29, 'ROMMEL', 'LLAMOSO', 'CRISTAL', NULL, '1984-10-06', NULL, 'male', '114 BUSTAMANTE ST.', 'PWD', NULL, '12400000192431', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(30, 'DARWIN', 'V', 'CRUZ', NULL, '1992-04-28', NULL, 'male', '153 BATANES ST.', 'PWD', NULL, '109-605', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(31, 'JOHN RANDOLF', 'E', 'CRUZ', NULL, '2013-01-06', NULL, 'male', '81 CUATRO DE JULIO ST.', 'CWD', NULL, '109-500', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(32, 'KURT REY', 'REYES', 'CRUZ', NULL, '2001-09-21', NULL, 'male', '7 MADIAS-AS ST.', 'PWD', NULL, '1135-929', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(33, 'ALLAN', 'P', 'DAMES', NULL, NULL, NULL, 'male', '112 LIBERATION ST.', 'PWD', NULL, '109-030', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(34, 'CHRISTIE', 'RAMOS', 'DANGANAN', NULL, '1974-06-04', NULL, 'female', '71B SAN ISIDRO ST.', 'PWD', NULL, '10900000274205', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(35, 'JOSE', NULL, 'DAYO JR.', NULL, NULL, NULL, 'female', '82 BAGONG BUHAY ST', 'PWD', NULL, '109-466', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(36, 'RAUL', 'G', 'DE CASTRO JR.', NULL, NULL, NULL, 'male', '115 BAGONG BUHAY ST.', 'PWD', NULL, '109-420', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(37, 'ROGEL', 'G', 'DE CASTRO', NULL, NULL, NULL, 'male', '114 BAGONG BUHAY ST.', 'PWD', NULL, '109-509', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(38, 'FERNANDO', 'FRIAS', 'DE GUZMAN', NULL, '1979-12-24', NULL, 'male', '20 VISAYAN LIBERATION', 'PWD', NULL, '138570', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(39, 'MANUEL', 'GUEVARRA', 'DE GUZMAN', NULL, NULL, NULL, 'male', '82 BAGONG BUHAY ST', 'PWD', NULL, '109-116', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(40, 'CATALINA', 'DIZON', 'DE JESUS', NULL, NULL, NULL, 'female', '66 CUATRO DE JULIO ST.', 'PWD', NULL, '109-389', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(41, 'TAGUMPAY', 'DIZON', 'DE JESUS', NULL, NULL, NULL, 'female', '66 CUATRO DE JULIO ST.', 'PWD', NULL, '109-388', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(42, 'ELISA', 'A', 'DE LEON', NULL, '1975-09-16', NULL, 'female', '75 WOMEN\'S CLUB ST.', 'PWD', NULL, '109-647', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(43, 'FELICITY MHAE', 'M', 'DELA VEGA', NULL, '2018-01-05', NULL, 'female', '65 UNANG HAKBANG ST.', 'CWD', NULL, '109-600', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(44, 'ARNOLD', 'S', 'DELGADO', NULL, '1968-04-20', NULL, 'male', '79 LIBERATION ST.', 'PWD', NULL, '109-604', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(45, 'MARIBETH', 'TRINIDAD', 'DIEZ', NULL, '1970-08-19', NULL, 'female', '64 SAN ISIDRO ST.', 'PWD', NULL, '12400001339920', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(46, 'EDWIN', NULL, 'DIOCTON', NULL, NULL, NULL, 'male', '64 SAN ISIDRO ST.', 'PWD', NULL, '109-109', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(47, 'ARIEN', 'CAMPO', 'DIVINA', NULL, NULL, NULL, 'female', '93 LIBERATION ST.', 'PWD', NULL, '109-539', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(48, 'AARON GABRIEL', 'DC', 'DOMONDON', NULL, NULL, NULL, 'male', '3 P.D. TAVERA ST.', 'PWD', NULL, '109-418', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(49, 'AEON STEFAN', 'U', 'DORNIDON', NULL, NULL, NULL, 'male', '16 SAN CRISTOBAL ST.', 'PWD', NULL, '109-382', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(50, 'MICHAEL LOUIS', 'NIEVERA', 'DUCUSIN', NULL, '1992-01-28', NULL, 'male', '9-B MINDANAO AVE.', 'PWD', NULL, '104-344', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(51, 'JOHN MICHAEL', 'SANTOS', 'DUMANIG', NULL, '1986-12-28', NULL, 'male', '68 WOMEN\'S CLUB ST.', 'PWD', NULL, '656906', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(52, 'MARIA ESTELA', 'SANTOS', 'DUMANIG', NULL, NULL, NULL, 'female', '68 WOMEN\'S CLUB ST.', 'PWD', NULL, '109-533', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(53, 'ANALYN', 'O', 'EISMA', NULL, '1972-05-28', NULL, 'female', '23-A SAN ISIDRO EXT.', 'PWD', NULL, '098-174', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(54, 'ARIEL', NULL, 'ELIQUEN', NULL, NULL, NULL, 'male', '', 'PWD', NULL, '109-081', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(55, 'JOHN CYREL', 'I', 'ENRIQUEZ', NULL, NULL, NULL, 'male', '38 MINDANAO AVE.', 'PWD', NULL, NULL, NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(56, 'DANICA', 'SISON', 'ESGUERRA', NULL, NULL, NULL, 'female', '89 UNION CIVICA ST.', 'PWD', NULL, '124000026627', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(57, 'DIANA', 'SISON', 'ESGUERRA', NULL, NULL, NULL, 'female', '86 BUSTAMANTE ST.', 'PWD', NULL, '137404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(58, 'DEJAN KALJEVIC', 'B', 'ESPINOSA', NULL, '2005-09-18', NULL, 'male', '24 SANCIANGCO ST.', 'PWD', NULL, '109-552', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(59, 'SOPHIA ALEXA', 'B', 'ESPINOSA', NULL, '2013-04-15', NULL, 'female', '24 SANCIANGCO ST.', 'CWD', NULL, '109-563', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(60, 'SETH FAVIO', 'MENDEZ', 'ESTOY', NULL, '2020-06-11', NULL, 'male', '65 UNANG HAKBANG ST.', 'CWD', NULL, '124000018115111', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(61, 'JOSHUA REN DE', 'CASTRO', 'FAGARAGAN', NULL, NULL, NULL, 'male', '7 SAN ISIDRO ST.', 'PWD', NULL, '109-469', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(62, 'EVA MARICRIS CATHERINE', 'DOCTOR', 'FAMA', NULL, NULL, NULL, 'female', '4 MINDANAO AVE.', 'PWD', NULL, '109-508', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(63, 'GLADYS', 'BENITEZ', 'FULGENCIO', NULL, '1966-07-04', NULL, 'female', '93 WOMEN\'S CLUB ST.', 'PWD', NULL, '562-551', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(64, 'JONATHAN', 'BENITEZ', 'FULGENCIO', NULL, '1990-06-30', NULL, 'male', '93 WOMEN\'S CLUB ST.', 'PWD', NULL, '562-552', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(65, 'JOHN ULAP MALAIAH', 'SANTOS', 'FULGENCIO', NULL, '2020-02-14', NULL, 'male', '90 BUSTAMANTE ST.', 'CWD', NULL, '12400000816098', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(66, 'LUCIAN', NULL, 'FULGENCIO', NULL, '2017-09-11', NULL, 'male', '93 WOMEN\'S CLUB ST.', 'CWD', NULL, '01662079', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(67, 'LANI', 'SIMPORIOS', 'GALAPIN', NULL, NULL, NULL, 'female', '65 WOMEN\'S CLUB ST.', 'PWD', NULL, '090-181', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(68, 'ALMIRA MIGEL', 'ALATEIT', 'GALERA', NULL, '2020-09-13', NULL, 'female', '74 WOMEN\'S CLUB ST.', 'CWD', NULL, '1402979', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(69, 'FERNANDEZ', 'LAGROSA', 'GALVEZ', NULL, NULL, NULL, 'male', '37 TOMAS PINPIN ST.', 'PWD', NULL, '109-129', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(70, 'ERICSON', 'LUSTADO', 'GATDULA', NULL, '1965-09-21', NULL, 'male', '90 BAGONG BUHAY ST.', 'PWD', NULL, '12400000137404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(71, 'MA. THERESA', 'V', 'GUANIZO', NULL, NULL, NULL, 'female', '59 CUATRO DE JULIO ST.', 'PWD', NULL, '109-533', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(72, 'ELAIJAH JADE', 'M', 'HATI', NULL, NULL, NULL, 'male', '18 G. SANCIANGCO ST.', 'PWD', NULL, '109-095', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(73, 'ANNE BERNADETTE', NULL, 'HUAB', NULL, NULL, NULL, 'female', '89 CUATRO DE JULIO ST.', 'PWD', NULL, '109-490', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(74, 'RUDY', 'G', 'HUAB', NULL, NULL, NULL, 'male', '89 CUATRO DE JULIO ST.', 'PWD', NULL, '109-565', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(75, 'JOHN MICHAEL', NULL, 'JINDANI', NULL, NULL, NULL, 'male', '25 G. SANCIANGCO ST.', 'PWD', NULL, '109-402', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(76, 'SALVE REGINA', 'LUCERO', 'JUMAWAN', NULL, '1991-05-21', NULL, 'female', '758 CUATRO DE JULIO ST.', 'PWD', NULL, '553229', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(77, 'MARIA', 'GUSI', 'JUNIO', NULL, '1966-12-09', NULL, 'female', '108 BAGONG BUHAY ST.', 'PWD', NULL, '1240000502151', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(78, 'HONEY FAYE', NULL, 'LAXAMANA', NULL, NULL, NULL, 'female', '8 SAN CRISTOBAL ST.', 'PWD', NULL, '109-428', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(79, 'SHEIAN IZABEL', 'ANTESCO', 'MAALIW', NULL, '2017-03-22', NULL, 'female', '99C -BAGONG BUHAY ST.', 'CWD', NULL, '137-404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(80, 'JUAN GARCIA', NULL, 'MAGALONG III', NULL, '2013-10-22', NULL, 'male', '98-A CUATRO DE JULIO ST.', 'CWD', NULL, '12400001020497', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(81, 'AILEEN ELEONOR', 'GARCIA', 'MAGALONG', NULL, '1991-07-24', NULL, 'female', '98-A CUATRO DE JULIO ST.', 'PWD', NULL, '124000001100213', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(82, 'JACKLYN', 'J', 'MANABAT', NULL, NULL, NULL, 'female', '82 BAGONG BUHAY ST.', 'PWD', NULL, '109-078', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(83, 'CHRISTIAN PAU', 'PLATON', 'MANGILAYA', NULL, '1984-05-17', NULL, 'male', '103 BAGONG BUHAY ST.', 'PWD', NULL, '109-616', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(84, 'CHRISTEL', 'M', 'MANIPOL', NULL, NULL, NULL, 'female', '72 LIBERATION ST.', 'PWD', NULL, '109-036', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(85, 'CHRIAN', 'M', 'MANIPOL', NULL, NULL, NULL, 'male', '72 LIBERATION ST.', 'PWD', NULL, '109-014', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(86, 'EXEQUIEL IVAN', 'URIEL', 'MARIÑAS', NULL, '1994-09-17', NULL, 'male', '114 BAGONG BUHAY ST.', 'PWD', NULL, '109-491', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(87, 'DAVID JOSIAH', 'F', 'MARQUEZ', NULL, '2016-06-01', NULL, 'male', '6 SAN CRISTOBAL ST.', 'CWD', NULL, '0950000574119', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(88, 'MELISSA RIVERA', NULL, 'MATIAS', NULL, '2010-01-19', NULL, 'male', '76-E BAYANI ST.', 'CWD', NULL, '12400000624704', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(89, 'GIL ANTHONY', 'GUEVARRA', 'MEDEL', NULL, '1977-06-06', NULL, 'male', '11 BIAK N BATO ST.', 'PWD', NULL, '12400000654198', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(90, 'JEAN AUSTIN', 'JOCSON', 'MEDEL', NULL, '1998-09-13', NULL, 'male', '11 BIAK N BATO ST.', 'PWD', NULL, '12400000903116', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(91, 'JONATHAN', 'N', 'MELO', NULL, NULL, NULL, 'male', '82 LIBERATION ST.', 'PWD', NULL, '109-432', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(92, 'JAMES', 'ABELLAR', 'MENDOZA', NULL, NULL, NULL, 'male', '34-D MINDANAO AVE.', 'PWD', NULL, '109-442', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(93, 'OSCAR', 'MORAN', 'MESIAS JR.', NULL, '1965-12-28', NULL, 'male', '78 WOMEN\'S CLUB ST.', 'PWD', NULL, '678-989', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(94, 'STEPHEN DAVID', 'C', 'MESIAS', NULL, '1995-03-18', NULL, 'male', '78 WOMEN\'S CLUB ST.', 'PWD', NULL, '12400000678914', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(95, 'FRANCIS DAVID', 'SISON', 'MOSQUEDA', NULL, '2019-07-31', NULL, 'male', '25 G. SANCIANGCO ST.', 'CWD', NULL, '998623', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(96, 'BENEDICT', 'MANGHIRANG', 'MUYONG', NULL, '1992-06-01', NULL, 'male', '69 BUSTAMANTE ST.', 'PWD', NULL, '12400000987895', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(97, 'ERIC', 'BIO', 'NUADA', NULL, NULL, NULL, 'male', '10-A MADIAS-AS ST', 'PWD', NULL, '109-386', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(98, 'ENRICO', NULL, 'ORTIZ', NULL, NULL, NULL, 'male', '16 VISAYAN AVE.', 'PWD', NULL, '109-479', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(99, 'YUAN', 'ROA', 'PADILLA', NULL, NULL, NULL, 'male', '85-8 LIBERATION ST.', 'PWD', NULL, '109-050', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(100, 'EDWIN', 'ESPINOSA', 'PADUA', NULL, '1978-04-17', NULL, 'male', '83 LIBERATION ST.', 'PWD', NULL, '12400000137404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(101, 'JOSHUA', NULL, 'PAGARAGAN', NULL, NULL, NULL, 'male', '7 SAN ISIDRO ST', 'PWD', NULL, '109-399', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(102, 'DAN AEDHEN', 'A', 'PAJARILLO', NULL, NULL, NULL, 'male', '91 LIBERATION ST.', 'PWD', NULL, '109-089', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(103, 'MARLON', 'T', 'PAMEL', NULL, '1980-05-31', NULL, 'male', '46 TOMAS PINPIN ST.', 'PWD', NULL, '109-387', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(104, 'MARVIN', 'TORRES', 'PAMEL', NULL, '1978-07-21', NULL, 'male', '27 G. SANCIANGCO ST.', 'PWD', NULL, '12400000748540', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(105, 'MICHAEL', 'TORRES', 'PAMEL', NULL, '1974-11-21', NULL, 'male', '114 BAGONG BUHAY ST.', 'PWD', NULL, '12400001128672', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(106, 'KATRINA', 'IDA', 'PANGAN', NULL, NULL, NULL, 'female', '82 LIBERATION ST.', 'PWD', NULL, '109-481', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(107, 'ROWENA', 'AGUILERA', 'PASCUAL', NULL, NULL, NULL, 'female', 'AGUILERA', 'PWD', NULL, '109-103', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(108, 'VIRGILIO', 'ORTEGA', 'PETALLO JR.', NULL, '1983-08-22', NULL, 'male', '75 BUSTAMANTE ST.', 'PWD', NULL, '12400000503600', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(109, 'DEAN RYLLE', 'GONZALES', 'QUIAMBAO', NULL, '2015-01-05', NULL, 'male', '71-C BAGONG BUHAY ST.', 'CWD', NULL, '12400000926293', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(110, 'EMMANUEL', 'L', 'RAMOS', NULL, NULL, NULL, 'male', '71 SAN ISIDRO ST.', 'PWD', NULL, '109-386', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(111, 'DWAYNE MATTHEW', 'SANTOS', 'REYES', NULL, '2017-01-27', NULL, 'male', '96 BAGONG BUHAY ST.', 'CWD', NULL, '12400001029444', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(112, 'JOYCE', 'GUILLERMO', 'REYES', NULL, NULL, NULL, 'female', '38 MINDANAO AVE.', 'PWD', NULL, '12400000109537', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(113, 'IVANNA', 'C', 'RODRIGUEZ', NULL, NULL, NULL, 'female', '112 UNION CIVICA ST', 'PWD', NULL, '109-125', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(114, 'HENRY', 'LETRUDO', 'SAJORDA', NULL, '1981-08-15', NULL, 'male', '76 BAYANI ST.', 'PWD', NULL, '1093830', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(115, 'JODERIC', 'LETRUDO', 'SAJORDA', NULL, '1980-10-01', NULL, 'male', '76-F BAYANI ST...', 'PWD', NULL, '12400008590432', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(116, 'ALEXEUZ JOSIAH', 'LAYUG', 'SALAZAR', NULL, '2019-03-12', NULL, 'male', '96 BAGONG BUHAY ST.', 'CWD', NULL, '124000000214606', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(117, 'DAMIEN ELEAZAR', 'B', 'SALVADOR', NULL, '2016-09-22', NULL, 'male', '111 UNION CIVICA ST.', 'CWD', NULL, '01320062', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(118, 'LOUISSE DANE', 'B', 'SALVADOR', NULL, '2003-01-01', NULL, 'female', '111 UNION CIVICA ST.', 'PWD', NULL, '545282', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(119, 'SHANE MARINETH', 'GONZALVO', 'SAMSON', NULL, '2004-10-11', NULL, 'female', '65 SANTOL ST', 'PWD', NULL, '12400000109106', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(120, 'SHENNA', 'GONZALVO', 'SAMSON', NULL, NULL, NULL, 'female', '65 SANTOL ST', 'PWD', NULL, NULL, NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(121, 'MARCO SANTHINO', 'GONZALVO', 'SAMSON', NULL, '2009-02-08', NULL, 'male', '65 SANTOL ST.', 'CWD', NULL, '12400000099118', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(122, 'MARCUS SHAWN FRANCIS', 'GONZALVO', 'SAMSON', NULL, '2013-03-14', NULL, 'male', '65 SANTOL ST.', 'CWD', NULL, '124100000109422', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(123, 'ANGEL', 'B', 'SANTIAGO JR.', NULL, NULL, NULL, 'male', '88 WOMEN\'S CLUB ST.', 'PWD', NULL, '109-454', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(124, 'ALEXANDER', 'MANGALUS', 'SAQUING', NULL, '1980-07-24', NULL, 'male', '92 LIBERATION ST.', 'PWD', NULL, '303813', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(125, 'ANA LIZA', 'V', 'SARSALIJO', NULL, NULL, NULL, 'female', '57 SAN ISIDRO ST.', 'PWD', NULL, '109-594', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(126, 'KHEANE ANGELO', 'G', 'SIOSON', NULL, NULL, NULL, 'male', '117-C MADIAS-AS ST.', 'PWD', NULL, '109-384', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(127, 'CANDY', 'SIO', 'SIU', NULL, '1980-10-19', NULL, 'female', '118 UNION CIVICA ST', 'PWD', NULL, '12400000610828', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(128, 'MARINA', 'A', 'SY', NULL, '1975-03-01', NULL, 'female', '114 UNION CIVICA ST', 'PWD', NULL, '109-638', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(129, 'HIROMI', 'UMALI', 'TAKANO', NULL, '2014-07-02', NULL, 'female', '76 SAN ISIDRO ST.', 'CWD', NULL, '12400000553396', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(130, 'LANS', NULL, 'TAMAYO', NULL, '2000-02-16', NULL, 'male', '6-B BAGONG BUHAY ST.', 'PWD', NULL, '137-404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(131, 'JUAN', 'TORCUATOR', 'TEVAR', NULL, '1955-07-04', NULL, 'male', '64 WOMEN\'S CLUB ST.', 'PWD', NULL, '124000007748294', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(132, 'CHARINA', 'CORTEZ', 'TOLENTINO', NULL, '1976-09-10', NULL, 'female', '37 SAN ISIDRO ST.', 'PWD', NULL, '12400000702565', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(133, 'KERBY', 'E', 'TORNILLA', NULL, NULL, NULL, 'male', '118 LIBERATIONS ST.', 'PWD', NULL, '110-220', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(134, 'RYAN', 'VERANO', 'TORRALBA', NULL, '1979-12-12', NULL, 'male', '62 SAN ISIDRO ST.', 'PWD', NULL, '12400001241736', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(135, 'JENALYNE', 'C', 'TRINIDAD', NULL, NULL, NULL, 'female', '75 CUATRO DE JULIO ST.', 'PWD', NULL, '109-483', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(136, 'ALVIN', 'DEXTER', 'TUGAY', NULL, NULL, NULL, 'male', '27 G. SANCIANGCO ST.', 'PWD', NULL, '109-421', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(137, 'AMERIZZA', 'L', 'TUGAY', NULL, NULL, NULL, 'female', '27 G. SANČIANGCO ST.', 'PWD', NULL, '109-406', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(138, 'APRILYN', 'L', 'TUGAY', NULL, NULL, NULL, 'female', '27 G. SANCIANGCO ST.', 'PWD', NULL, '109-390', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(139, 'JOSEFINA', 'GENEROSO', 'VELASCO', NULL, '1973-01-10', NULL, 'female', '84 UNION CIVICA ST.', 'PWD', NULL, '12400000802728', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(140, 'MARCO', 'S', 'VILLACORTA', NULL, '2006-12-12', NULL, 'male', '114 UNION CIVICA ST', 'PWD', NULL, '337-404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(141, 'SOJIRO', 'DE GUZMAN', 'VILLENA', NULL, '2012-09-18', NULL, 'male', '82 BAGONG BUHAY ST.', 'CWD', NULL, '12400001320024', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(142, 'EIJAY', 'C', 'DIVINA', NULL, NULL, NULL, 'male', '93 LIBERATION ST.', 'PWD', NULL, '109-060', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
+(143, 'test', 'test', 'gasdga', 'Single', '2022-02-12', 'gdasgas', 'male', 'gasdgasd', 'CWD', 'sadgdasgsa', 'asdgasdgasg', '2026-05-06', '2026-05-06', 'uploads/profiles/1778785457_profile.jpg', 'approved', 'expired', 'uploads/medical_certificates/1778785457_medcert.pdf', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resident_contacts`
+--
+
+CREATE TABLE `resident_contacts` (
+  `ID` int(11) NOT NULL,
+  `resident_id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `contact_num` varchar(255) DEFAULT NULL,
+  `socials` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `resident_contacts`
+--
+
+INSERT INTO `resident_contacts` (`ID`, `resident_id`, `name`, `contact_num`, `socials`) VALUES
+(1, 1, 'PERLITA R ABELLERA', '09472622313', NULL),
+(3, 3, 'ARLENE ALFILER AGUINALDO', '09215751865', NULL),
+(4, 4, 'ALLAN HILANTAGAAN ALABANZA', '09457821893', NULL),
+(5, 5, 'NORMA B ALCUINO', '09291019040', NULL),
+(6, 6, 'IISHA KARMEL ULIT ALDAY', '09273242992', NULL),
+(7, 7, 'EDGILINE DENOFRA AQUINO', '09171749249', NULL),
+(8, 8, 'LIZA ARAGON BACSAL', '09158935460', NULL),
+(9, 9, 'LAN\'S TAMAYO BARTOLATA', '09555432325', NULL),
+(10, 10, 'HARVEIAME JUMAWAN BARRACA', '09274220847', NULL),
+(11, 11, 'NYMPHA PANIZARES BASCONES', NULL, NULL),
+(12, 12, 'ADRIAN DEXTER ESTEVES BELLA', '09074101145', NULL),
+(13, 13, 'ALEC JOSHUA J BERNARDO', '09758566752', NULL),
+(14, 14, 'VLADY B BORILLO', '09281357524', NULL),
+(15, 15, 'HENRY MANRIQUE BORNALES III', '09956337288', NULL),
+(16, 16, 'JONALYN DIEGA BUCASAS', '09383706780', NULL),
+(17, 17, 'LEICESTER MICHAEL ASIS CADANO', '09174967964', NULL),
+(18, 18, 'KRISTOFFHERSON JUAN CARLOS BATICBATIC CAGUIWA', '091760082223', NULL),
+(19, 19, 'ALIHUR P CALEZAR', '09212715147', NULL),
+(20, 20, 'ROSEMARIE CALING', NULL, NULL),
+(21, 21, 'JONATHAN NAKPIL CANDADO', '09669764920', NULL),
+(22, 22, 'MA. MELISSA MANGALUS CANDADO', NULL, NULL),
+(23, 23, 'BONIFACIO CANLAS', '09453292998', NULL),
+(24, 24, 'RIZZA JONE EVASCO CASIO', '09360389313', NULL),
+(25, 25, 'KATHLEEN ROSE JOCSON CASTILLO', '9360389313', NULL),
+(26, 26, 'DIANNA JAZZETTE DELGADO CENTILLO', NULL, NULL),
+(27, 27, 'ANTHONY ALEZER T. CHICA', '09178573537', NULL),
+(28, 28, 'REYNALDO CORTEZ', '09166942002', NULL),
+(29, 29, 'ROMMEL LLAMOSO CRISTAL', '09755481852', NULL),
+(30, 30, 'DARWIN V CRUZ', NULL, NULL),
+(31, 31, 'JOHN RANDOLF E CRUZ', '09357421813', NULL),
+(32, 32, 'KURT REY REYES CRUZ', '09501370574', NULL),
+(33, 33, 'ALLAN P DAMES', '09950270700', NULL),
+(34, 34, 'CHRISTIE RAMOS DANGANAN', NULL, NULL),
+(35, 35, 'JOSE DAYO JR.', '09153411583', NULL),
+(36, 36, 'RAUL G DE CASTRO JR.', '09061683132', NULL),
+(37, 37, 'ROGEL G DE CASTRO', '09475803830', NULL),
+(38, 38, 'FERNANDO FRIAS DE GUZMAN', NULL, NULL),
+(39, 39, 'MANUEL GUEVARRA DE GUZMAN', '09269903907', NULL),
+(40, 40, 'CATALINA DIZON DE JESUS', '09497455168', NULL),
+(41, 41, 'TAGUMPAY DIZON DE JESUS', '09497455168', NULL),
+(42, 42, 'ELISA A DE LEON', NULL, NULL),
+(43, 43, 'FELICITY MHAE M DELA VEGA', NULL, NULL),
+(44, 44, 'ARNOLD S DELGADO', '09074830015', NULL),
+(45, 45, 'MARIBETH TRINIDAD DIEZ', '09958251845', NULL),
+(46, 46, 'EDWIN DIOCTON', '09984469990', NULL),
+(47, 47, 'ARIEN CAMPO DIVINA', '0917874819', NULL),
+(48, 48, 'AARON GABRIEL DC DOMONDON', NULL, NULL),
+(49, 49, 'AEON STEFAN U DORNIDON', '09173263984', NULL),
+(50, 50, 'MICHAEL LOUIS NIEVERA DUCUSIN', '0918429960', NULL),
+(51, 51, 'JOHN MICHAEL SANTOS DUMANIG', '09057008025', NULL),
+(52, 52, 'MARIA ESTELA SANTOS DUMANIG', '09323274574', NULL),
+(53, 53, 'ANALYN O EISMA', '09955427384', NULL),
+(54, 54, 'ARIEL ELIQUEN', '09561578008', NULL),
+(55, 55, 'JOHN CYREL I ENRIQUEZ', '09561578008', NULL),
+(56, 56, 'DANICA SISON ESGUERRA', '09178724747', NULL),
+(57, 57, 'DIANA SISON ESGUERRA', '09185836268', NULL),
+(58, 58, 'DEJAN KALJEVIC B ESPINOSA', '09398508515', NULL),
+(59, 59, 'SOPHIA ALEXA B ESPINOSA', '09398508515', NULL),
+(60, 60, 'SETH FAVIO MENDEZ ESTOY', '09275817962', NULL),
+(61, 61, 'JOSHUA REN DE CASTRO FAGARAGAN', '09956920902', NULL),
+(62, 62, 'EVA MARICRIS CATHERINE DOCTOR FAMA', '09165138474', NULL),
+(63, 63, 'GLADYS BENITEZ FULGENCIO', '09184180284', NULL),
+(64, 64, 'JONATHAN BENITEZ FULGENCIO', NULL, NULL),
+(65, 65, 'JOHN ULAP MALAIAH SANTOS FULGENCIO', '09562533877', NULL),
+(66, 66, 'LUCIAN FULGENCIO', '09184180284', NULL),
+(67, 67, 'LANI SIMPORIOS GALAPIN', '9230902949', NULL),
+(68, 68, 'ALMIRA MIGEL ALATEIT GALERA', NULL, NULL),
+(69, 69, 'FERNANDEZ LAGROSA GALVEZ', '09276036854', NULL),
+(70, 70, 'ERICSON LUSTADO GATDULA', NULL, NULL),
+(71, 71, 'MA. THERESA V GUANIZO', '09293776666', NULL),
+(72, 72, 'ELAIJAH JADE M HATI', '09777785504', NULL),
+(73, 73, 'ANNE BERNADETTE HUAB', '09392261464', NULL),
+(74, 74, 'RUDY G HUAB', '09994167734', NULL),
+(75, 75, 'JOHN MICHAEL JINDANI', '09166179589', NULL),
+(76, 76, 'SALVE REGINA LUCERO JUMAWAN', '09244220847', NULL),
+(77, 77, 'MARIA GUSI JUNIO', '09297466853', NULL),
+(78, 78, 'HONEY FAYE LAXAMANA', '09560636227', NULL),
+(79, 79, 'SHEIAN IZABEL ANTESCO MAALIW', NULL, NULL),
+(80, 80, 'JUAN GARCIA MAGALONG III', NULL, NULL),
+(81, 81, 'AILEEN ELEONOR GARCIA MAGALONG', '09274019686', NULL),
+(82, 82, 'JACKLYN J MANABAT', '09561081835', NULL),
+(83, 83, 'CHRISTIAN PAU PLATON MANGILAYA', NULL, NULL),
+(84, 84, 'CHRISTEL M MANIPOL', '09569431517', NULL),
+(85, 85, 'CHRIAN M MANIPOL', '09260645577', NULL),
+(86, 86, 'EXEQUIEL IVAN URIEL MARIÑAS', '09485216800', NULL),
+(87, 87, 'DAVID JOSIAH F MARQUEZ', '09156423670', NULL),
+(88, 88, 'MELISSA RIVERA MATIAS', '092734700159', NULL),
+(89, 89, 'GIL ANTHONY GUEVARRA MEDEL', '09982030099', NULL),
+(90, 90, 'JEAN AUSTIN JOCSON MEDEL', '09269588600', NULL),
+(91, 91, 'JONATHAN N MELO', '09216365356', NULL),
+(92, 92, 'JAMES ABELLAR MENDOZA', NULL, NULL),
+(93, 93, 'OSCAR MORAN MESIAS JR.', NULL, NULL),
+(94, 94, 'STEPHEN DAVID C MESIAS', NULL, NULL),
+(95, 95, 'FRANCIS DAVID SISON MOSQUEDA', '09663303899', NULL),
+(96, 96, 'BENEDICT MANGHIRANG MUYONG', '090634822667', NULL),
+(97, 97, 'ERIC BIO NUADA', '09228846605', NULL),
+(98, 98, 'ENRICO ORTIZ', '0945345594', NULL),
+(99, 99, 'YUAN ROA PADILLA', '09656221956', NULL),
+(100, 100, 'EDWIN ESPINOSA PADUA', '09561578029', NULL),
+(101, 101, 'JOSHUA PAGARAGAN', '09956920902', NULL),
+(102, 102, 'DAN AEDHEN A PAJARILLO', '09219292642', NULL),
+(103, 103, 'MARLON T PAMEL', '09982796255', NULL),
+(104, 104, 'MARVIN TORRES PAMEL', '09958700496', NULL),
+(105, 105, 'MICHAEL TORRES PAMEL', '09913158053', NULL),
+(106, 106, 'KATRINA IDA PANGAN', '09178675026', NULL),
+(107, 107, 'ROWENA AGUILERA PASCUAL', '09334719604', NULL),
+(108, 108, 'VIRGILIO ORTEGA PETALLO JR.', NULL, NULL),
+(109, 109, 'DEAN RYLLE GONZALES QUIAMBAO', '09273611693', NULL),
+(110, 110, 'EMMANUEL L RAMOS', '09955427384', NULL),
+(111, 111, 'DWAYNE MATTHEW SANTOS REYES', '09477145183', NULL),
+(112, 112, 'JOYCE GUILLERMO REYES', '09982278335', NULL),
+(113, 113, 'IVANNA C RODRIGUEZ', '09206881276', NULL),
+(114, 114, 'HENRY LETRUDO SAJORDA', '09205909595', NULL),
+(115, 115, 'JODERIC LETRUDO SAJORDA', '09067191026', NULL),
+(116, 116, 'ALEXEUZ JOSIAH LAYUG SALAZAR', '09230675795', NULL),
+(117, 117, 'DAMIEN ELEAZAR B SALVADOR', '09773585087', NULL),
+(118, 118, 'LOUISSE DANE B SALVADOR', '09773585087', NULL),
+(119, 119, 'SHANE MARINETH GONZALVO SAMSON', '09175228891', NULL),
+(120, 120, 'SHENNA GONZALVO SAMSON', NULL, NULL),
+(121, 121, 'MARCO SANTHINO GONZALVO SAMSON', '09175228891', NULL),
+(122, 122, 'MARCUS SHAWN FRANCIS GONZALVO SAMSON', '09175228891', NULL),
+(123, 123, 'ANGEL B SANTIAGO JR.', '09982030099', NULL),
+(124, 124, 'ALEXANDER MANGALUS SAQUING', '09979176520', NULL),
+(125, 125, 'ANA LIZA V SARSALIJO', '09984985385', NULL),
+(126, 126, 'KHEANE ANGELO G SIOSON', '09326281495', NULL),
+(127, 127, 'CANDY SIO SIU', '09176745845', NULL),
+(128, 128, 'MARINA A SY', '09157423993', NULL),
+(129, 129, 'HIROMI UMALI TAKANO', '09515217676', NULL),
+(130, 130, 'LANS TAMAYO', NULL, NULL),
+(131, 131, 'JUAN TORCUATOR TEVAR', '09169628676', NULL),
+(132, 132, 'CHARINA CORTEZ TOLENTINO', '09218650621', NULL),
+(133, 133, 'KERBY E TORNILLA', '09164940046', NULL),
+(134, 134, 'RYAN VERANO TORRALBA', '09277880489', NULL),
+(135, 135, 'JENALYNE C TRINIDAD', '09487092827', NULL),
+(136, 136, 'ALVIN DEXTER TUGAY', '09359343180', NULL),
+(137, 137, 'AMERIZZA L TUGAY', '09155963303', NULL),
+(138, 138, 'APRILYN L TUGAY', '09164908709', NULL),
+(139, 139, 'JOSEFINA GENEROSO VELASCO', '09067191129', NULL),
+(140, 140, 'MARCO S VILLACORTA', NULL, NULL),
+(141, 141, 'SOJIRO DE GUZMAN VILLENA', '09537803625', NULL),
+(142, 142, 'EIJAY C DIVINA', '0917874819', NULL),
+(147, 2, 'Primary Contact', '09158828474', ''),
+(150, 143, 'Primary Contact', 'gasdgasd', 'gasdgsa');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resident_disabilities`
+--
+
+CREATE TABLE `resident_disabilities` (
+  `ID` int(11) NOT NULL,
+  `resident_id` int(11) NOT NULL,
+  `disability_type` enum('Physical','Visual','Auditory','Speech','Cognitive','Psychosocial','Others') DEFAULT NULL,
+  `notes` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `resident_disabilities`
+--
+
+INSERT INTO `resident_disabilities` (`ID`, `resident_id`, `disability_type`, `notes`) VALUES
+(1, 1, 'Physical', NULL),
+(4, 4, 'Visual', NULL),
+(6, 6, 'Auditory', NULL),
+(7, 7, 'Others', 'Cancer'),
+(8, 8, 'Speech', NULL),
+(9, 9, 'Psychosocial', NULL),
+(10, 10, 'Speech', NULL),
+(11, 11, 'Others', 'Cancer'),
+(12, 12, 'Auditory', NULL),
+(15, 15, 'Cognitive', NULL),
+(16, 16, 'Auditory', NULL),
+(17, 17, 'Visual', NULL),
+(18, 18, 'Psychosocial', NULL),
+(20, 20, 'Visual', NULL),
+(21, 21, 'Psychosocial', NULL),
+(22, 22, 'Psychosocial', NULL),
+(24, 24, 'Psychosocial', NULL),
+(25, 25, 'Physical', NULL),
+(26, 26, 'Physical', NULL),
+(29, 29, 'Physical', NULL),
+(32, 32, 'Auditory', NULL),
+(34, 34, 'Physical', NULL),
+(38, 38, 'Others', 'CANCER'),
+(39, 39, 'Physical', NULL),
+(40, 40, 'Psychosocial', NULL),
+(41, 41, 'Cognitive', NULL),
+(44, 44, 'Others', NULL),
+(45, 45, 'Physical', NULL),
+(47, 47, 'Physical', NULL),
+(50, 50, 'Cognitive', NULL),
+(51, 51, 'Physical', NULL),
+(52, 52, 'Auditory', NULL),
+(53, 53, 'Others', 'N/A'),
+(54, 54, 'Others', 'N/A'),
+(56, 56, 'Physical', NULL),
+(57, 57, 'Psychosocial', NULL),
+(60, 60, 'Physical', NULL),
+(61, 61, 'Cognitive', NULL),
+(62, 62, 'Physical', NULL),
+(63, 63, 'Physical', 'ORTHOPEDIC'),
+(64, 64, 'Physical', 'ORTHOPEDIC'),
+(65, 65, 'Psychosocial', NULL),
+(66, 66, 'Speech', NULL),
+(67, 67, 'Speech', NULL),
+(68, 68, 'Speech', NULL),
+(69, 69, 'Physical', NULL),
+(70, 70, 'Physical', NULL),
+(72, 72, 'Others', 'N/A'),
+(76, 76, 'Psychosocial', NULL),
+(77, 77, 'Physical', NULL),
+(79, 79, 'Speech', NULL),
+(80, 80, 'Cognitive', NULL),
+(81, 81, 'Physical', NULL),
+(83, 83, 'Psychosocial', NULL),
+(88, 88, 'Cognitive', NULL),
+(89, 89, 'Cognitive', 'MENTAL'),
+(90, 90, 'Psychosocial', NULL),
+(92, 92, 'Physical', NULL),
+(93, 93, 'Physical', NULL),
+(94, 94, 'Cognitive', 'LEARNING'),
+(95, 95, 'Physical', NULL),
+(96, 96, 'Auditory', NULL),
+(97, 97, 'Auditory', NULL),
+(99, 99, 'Cognitive', NULL),
+(100, 100, 'Physical', NULL),
+(104, 104, 'Physical', NULL),
+(105, 105, 'Physical', NULL),
+(107, 107, 'Physical', NULL),
+(108, 108, 'Physical', 'ORTHOPEDIC'),
+(109, 109, 'Cognitive', NULL),
+(111, 111, 'Speech', NULL),
+(112, 112, 'Others', 'CANCER'),
+(114, 114, 'Physical', NULL),
+(115, 115, 'Physical', NULL),
+(116, 116, 'Speech', NULL),
+(117, 117, 'Speech', NULL),
+(118, 118, 'Psychosocial', NULL),
+(119, 119, 'Visual', NULL),
+(120, 120, 'Visual', NULL),
+(121, 121, 'Cognitive', NULL),
+(122, 122, 'Cognitive', NULL),
+(124, 124, 'Visual', NULL),
+(127, 127, 'Physical', NULL),
+(128, 128, 'Physical', NULL),
+(129, 129, 'Visual', NULL),
+(131, 131, 'Physical', NULL),
+(132, 132, 'Psychosocial', NULL),
+(133, 133, 'Others', 'N/A'),
+(134, 134, 'Physical', NULL),
+(135, 135, 'Others', NULL),
+(139, 139, 'Physical', NULL),
+(140, 140, 'Physical', NULL),
+(141, 141, 'Cognitive', NULL),
+(145, 2, 'Cognitive', ''),
+(148, 143, 'Others', 'gdasgasd');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resident_emergency_contacts`
+--
+
+CREATE TABLE `resident_emergency_contacts` (
+  `ID` int(11) NOT NULL,
+  `resident_id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `contact_num` varchar(255) DEFAULT NULL,
+  `relationship` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `resident_emergency_contacts`
+--
+
+INSERT INTO `resident_emergency_contacts` (`ID`, `resident_id`, `name`, `contact_num`, `relationship`) VALUES
+(5, 2, '', '', ''),
+(8, 143, 'gasdgasd', 'gasdgsdag', 'sdagsadgas');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resident_family_members`
+--
+
+CREATE TABLE `resident_family_members` (
+  `ID` int(11) NOT NULL,
+  `resident_id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `relationship` enum('Guardian','Father','Mother','Spouse') DEFAULT NULL,
+  `contact_num` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `resident_family_members`
+--
+
+INSERT INTO `resident_family_members` (`ID`, `resident_id`, `name`, `relationship`, `contact_num`) VALUES
+(1, 1, 'MAGCAWAS, JESSIELEN', 'Guardian', NULL),
+(5, 5, 'SANTIAGO JR., CARLOS', 'Guardian', NULL),
+(6, 6, 'ALDAY, ALLANDALE M.', 'Guardian', NULL),
+(7, 7, 'AQUINO, GILDA', 'Guardian', NULL),
+(8, 8, 'HOMBREBUENO, DOLORES', 'Guardian', NULL),
+(9, 9, 'BARTOLATA, MARYANNE', 'Guardian', NULL),
+(10, 10, 'JUMAWAN, SALVE REGINA', 'Guardian', NULL),
+(11, 11, 'BASCONES JR., GUILLERMO', 'Guardian', NULL),
+(12, 12, 'BELLA, ANNALY', 'Guardian', NULL),
+(14, 14, 'BORILLO, ROLLIE', 'Guardian', NULL),
+(17, 17, 'CADANO, ARABELLE MICHELLE', 'Guardian', NULL),
+(22, 22, 'CANDADO, JONATHAN N.', 'Guardian', NULL),
+(23, 23, 'CANLAS, MARY JANE', 'Guardian', NULL),
+(26, 26, 'NIMIA CENTILLO', 'Guardian', NULL),
+(29, 29, 'LUNA, REBECCA L.', 'Guardian', NULL),
+(32, 32, 'CRUZ, RAQUEL R.', 'Guardian', NULL),
+(33, 33, 'DAMES, MAGDALENA', 'Guardian', NULL),
+(34, 34, 'DANGANAN, JOSELITO', 'Guardian', NULL),
+(35, 35, 'DAYO, BABY', 'Guardian', NULL),
+(36, 36, 'DE CASTRO, RAQUEL', 'Guardian', NULL),
+(39, 39, 'DE GUZMAN, TERESITA', 'Guardian', NULL),
+(40, 40, 'DE JESUS, RODOLFO', 'Guardian', NULL),
+(41, 41, 'DE JESUS, RODOLFO', 'Guardian', NULL),
+(44, 44, 'DELGADO, ALLAN', 'Guardian', NULL),
+(47, 47, 'DIVINA, MA. EURNE BETH CAMPO', 'Guardian', NULL),
+(48, 48, 'DELA CRUZ, ELIZABETH', 'Guardian', NULL),
+(51, 51, 'NGO, MARY ANN G.', 'Guardian', NULL),
+(55, 55, 'ENRIQUEZ, ARNILO D.', 'Guardian', NULL),
+(57, 57, 'ESGUERRA, DANILO B.', 'Guardian', NULL),
+(58, 58, 'ESPINOSA, TERESA', 'Guardian', NULL),
+(59, 59, 'ESPINOSA, TERESA', 'Guardian', NULL),
+(60, 60, 'ESTOY, ARLENE M.', 'Guardian', NULL),
+(61, 61, 'FAGARAGAN, ANGELITA', 'Guardian', NULL),
+(63, 63, 'FULGENCIO, NEIL', 'Guardian', NULL),
+(65, 65, 'FULGENCIO, JOHN TEDEN', 'Guardian', NULL),
+(66, 66, 'FULGENCIO, GLADYS', 'Guardian', NULL),
+(68, 68, 'GALERA, MICHELLE', 'Guardian', NULL),
+(70, 70, 'MERCADO, MA. LOURDES', 'Guardian', NULL),
+(71, 71, 'LOZA, EDWIN', 'Guardian', NULL),
+(72, 72, 'HATI, ELAINE', 'Guardian', NULL),
+(73, 73, 'HUAB, ROSITA', 'Guardian', NULL),
+(74, 74, 'HUAB, ROSITA', 'Guardian', NULL),
+(75, 75, 'JINDANI, ALIIN', 'Guardian', NULL),
+(76, 76, 'BARRACA, JAMES', 'Guardian', NULL),
+(78, 78, 'LAXAMANA, ROLANDO', 'Guardian', NULL),
+(85, 85, 'MANIPOL, LETICIA', 'Guardian', NULL),
+(86, 86, 'ELIQUEN, ARIEL', 'Guardian', NULL),
+(87, 87, 'FLORES, RUSHELLE', 'Guardian', NULL),
+(88, 88, 'MATIAS, JHON JOSEPH', 'Guardian', NULL),
+(89, 89, 'MEDEL, GIL ANTONIO', 'Guardian', NULL),
+(91, 91, 'PANGAN, KATRINA', 'Guardian', NULL),
+(94, 94, 'MESIAS, OSCAR', 'Guardian', NULL),
+(95, 95, 'MOSQUEDA, MICHELLE S.', 'Guardian', NULL),
+(97, 97, 'NUADA, ROSALIE', 'Guardian', NULL),
+(99, 99, 'PADILLA, MICHELLE', 'Guardian', NULL),
+(102, 102, 'PAJARILLOLEAH,', 'Guardian', NULL),
+(103, 103, 'TUGAY, APRILYN', 'Guardian', NULL),
+(104, 104, 'PAMEL, ANNALYN S.', 'Guardian', NULL),
+(106, 106, 'PANGAN, MILDRED', 'Guardian', NULL),
+(109, 109, 'GONZALES, RAQUEL C.', 'Guardian', NULL),
+(111, 111, 'MAGLENTE, SHIRYL-LYN S.', 'Guardian', NULL),
+(112, 112, 'REYES, VICTORIA', 'Guardian', NULL),
+(116, 116, 'SALAZAR, JACQUIELYN', 'Guardian', NULL),
+(117, 117, 'SALVADOR, ELYLOU BALA', 'Guardian', NULL),
+(118, 118, 'SALVADOR, ELYLOU BALA', 'Guardian', NULL),
+(119, 119, 'SAMSON, SHENNA', 'Guardian', NULL),
+(120, 120, 'GONZALVO, SERGIO C', 'Guardian', NULL),
+(121, 121, 'SAMSON, SHENNA', 'Guardian', NULL),
+(122, 122, 'SAMSON, SHENNA', 'Guardian', NULL),
+(124, 124, 'SAQUING, MICHAEL', 'Guardian', NULL),
+(125, 125, 'TABLIGAN, MARY ANN S.', 'Guardian', NULL),
+(126, 126, 'AUSTRIA, YOLANDA', 'Guardian', NULL),
+(129, 129, 'UMALI, CAREN JOY A.', 'Guardian', NULL),
+(131, 131, 'TEVAR, JEFFREY', 'Guardian', NULL),
+(132, 132, 'TOLENTINO, ROSARIO C.', 'Guardian', NULL),
+(135, 135, 'CARINO JR., GUILLERMO', 'Guardian', NULL),
+(136, 136, 'TUGAY, APRILYN', 'Guardian', NULL),
+(139, 139, 'VELASCO, MENCHITA', 'Guardian', NULL),
+(140, 140, 'SY, MARINA', 'Guardian', NULL),
+(141, 141, 'VILLENA, CRISELDA', 'Guardian', NULL),
+(148, 2, 'AGUILLERA, LYN ROSE P.', 'Guardian', NULL),
+(157, 143, 'gasdgasd', 'Father', ''),
+(158, 143, 'gasgdas', 'Mother', ''),
+(159, 143, 'gasdgas', 'Spouse', ''),
+(160, 143, 'wgeegwe', 'Guardian', NULL);
 
 --
 -- Indexes for dumped tables
@@ -356,28 +791,46 @@ ALTER TABLE `admincreds`
   ADD UNIQUE KEY `username_unique` (`username`);
 
 --
--- Indexes for table `archive`
---
-ALTER TABLE `archive`
-  ADD PRIMARY KEY (`ID`);
-
---
 -- Indexes for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `rejected`
---
-ALTER TABLE `rejected`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `audit_logs_admin_id_idx` (`admin_id`),
+  ADD KEY `audit_logs_resident_id_idx` (`resident_id`);
 
 --
 -- Indexes for table `residents`
 --
 ALTER TABLE `residents`
   ADD PRIMARY KEY (`ID`);
+
+--
+-- Indexes for table `resident_contacts`
+--
+ALTER TABLE `resident_contacts`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `resident_contacts_resident_id_idx` (`resident_id`);
+
+--
+-- Indexes for table `resident_disabilities`
+--
+ALTER TABLE `resident_disabilities`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `resident_disabilities_resident_id_idx` (`resident_id`);
+
+--
+-- Indexes for table `resident_emergency_contacts`
+--
+ALTER TABLE `resident_emergency_contacts`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `resident_emergency_contacts_resident_id_idx` (`resident_id`);
+
+--
+-- Indexes for table `resident_family_members`
+--
+ALTER TABLE `resident_family_members`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `resident_family_members_resident_id_idx` (`resident_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -390,28 +843,75 @@ ALTER TABLE `admincreds`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT for table `archive`
---
-ALTER TABLE `archive`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
-
---
--- AUTO_INCREMENT for table `rejected`
---
-ALTER TABLE `rejected`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `residents`
 --
 ALTER TABLE `residents`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+
+--
+-- AUTO_INCREMENT for table `resident_contacts`
+--
+ALTER TABLE `resident_contacts`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+
+--
+-- AUTO_INCREMENT for table `resident_disabilities`
+--
+ALTER TABLE `resident_disabilities`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+
+--
+-- AUTO_INCREMENT for table `resident_emergency_contacts`
+--
+ALTER TABLE `resident_emergency_contacts`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `resident_family_members`
+--
+ALTER TABLE `resident_family_members`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `audit_logs`
+--
+ALTER TABLE `audit_logs`
+  ADD CONSTRAINT `audit_logs_admin_fk` FOREIGN KEY (`admin_id`) REFERENCES `admincreds` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `audit_logs_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `resident_contacts`
+--
+ALTER TABLE `resident_contacts`
+  ADD CONSTRAINT `resident_contacts_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `resident_disabilities`
+--
+ALTER TABLE `resident_disabilities`
+  ADD CONSTRAINT `resident_disabilities_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `resident_emergency_contacts`
+--
+ALTER TABLE `resident_emergency_contacts`
+  ADD CONSTRAINT `resident_emergency_contacts_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `resident_family_members`
+--
+ALTER TABLE `resident_family_members`
+  ADD CONSTRAINT `resident_family_members_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
