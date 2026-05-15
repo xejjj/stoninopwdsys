@@ -8,10 +8,11 @@ CREATE TABLE `admincreds` (
   `role` enum('admin','encoder') NOT NULL,
   PRIMARY KEY (`ID`),
   UNIQUE KEY `username_unique` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `admincreds` (`ID`,`username`,`full_name`,`password`,`role`) VALUES ('1','test','Test Creds','test','admin');
-INSERT INTO `admincreds` (`ID`,`username`,`full_name`,`password`,`role`) VALUES ('10','teste','Test Creds 2','$2y$10$1JBWrkD/KcxO2L7NOTBjX.Z2M6r2ML2Vb4z0M57AB77KFysxs6Uz.','encoder');
+INSERT INTO `admincreds` (`ID`,`username`,`full_name`,`password`,`role`) VALUES ('1','test','Test Creds','$2y$10$8.YlYO3uPamtHsr2N/i5Ze4h41.LvQYt1p/Q63H8Ac5ER8LXb0Maq','admin');
+INSERT INTO `admincreds` (`ID`,`username`,`full_name`,`password`,`role`) VALUES ('12','testt','testtt','$2y$10$qaLVMGN5407enU4Ox5hSp.nReE0nmUIjQ6toczbzfix0m37HE1Idy','encoder');
+INSERT INTO `admincreds` (`ID`,`username`,`full_name`,`password`,`role`) VALUES ('19','testttt','test','test','admin');
 
 
 DROP TABLE IF EXISTS `residents`;
@@ -36,9 +37,9 @@ CREATE TABLE `residents` (
   `med_cert` varchar(255) DEFAULT NULL,
   `correction_remarks` text DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=146 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('1','PERLITA','R','ABELLERA',NULL,NULL,NULL,'female','63-C SANTOL ST.','PWD',NULL,'109-525',NULL,NULL,NULL,'approved','archived',NULL,NULL);
+INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('1','PERLITA','R','ABELLERA',NULL,NULL,NULL,'female','63-C SANTOL ST.','PWD',NULL,'109-525',NULL,NULL,NULL,'approved','active',NULL,NULL);
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('2','BRENT NYLSEN','PABLICO','AGUILLERA','','2008-10-03','','male','68 WOMEN\'S CLUB ST.','CWD','','899-217','0000-00-00','0000-00-00','','approved','active','',NULL);
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('3','ARLENE','ALFILER','AGUINALDO',NULL,'1972-05-12',NULL,'female','65 SANTOL ST.','PWD',NULL,'12400000204300',NULL,NULL,NULL,'approved','active',NULL,NULL);
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('4','ALLAN','HILANTAGAAN','ALABANZA',NULL,'1975-12-31',NULL,'male','18 BIAK N BATO ST.','PWD',NULL,'12400000974777',NULL,NULL,NULL,'approved','active',NULL,NULL);
@@ -180,9 +181,6 @@ INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_stat
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('140','MARCO','S','VILLACORTA',NULL,'2006-12-12',NULL,'male','114 UNION CIVICA ST','PWD',NULL,'337-404',NULL,NULL,NULL,'approved','active',NULL,NULL);
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('141','SOJIRO','DE GUZMAN','VILLENA',NULL,'2012-09-18',NULL,'male','82 BAGONG BUHAY ST.','CWD',NULL,'12400001320024',NULL,NULL,NULL,'approved','active',NULL,NULL);
 INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('142','EIJAY','C','DIVINA',NULL,NULL,NULL,'male','93 LIBERATION ST.','PWD',NULL,'109-060',NULL,NULL,NULL,'approved','active',NULL,NULL);
-INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('143','test','test','gasdga','Single','2022-02-12','gdasgas','male','gasdgasd','CWD','sadgdasgsa','asdgasdgasg','2026-05-06','2026-05-06','uploads/profiles/1778785457_profile.jpg','approved','expired','uploads/medical_certificates/1778785457_medcert.pdf',NULL);
-INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('144','gdsagads','gsdagsag','dsagasgas','Single','0000-00-00','dsagdsagdsag','male','dsagsda','CWD','','','0000-00-00','0000-00-00','','approved','active','',NULL);
-INSERT INTO `residents` (`ID`,`first_name`,`middle_name`,`last_name`,`civil_status`,`birthdate`,`birthplace`,`sex`,`address`,`resident_type`,`control_num`,`pwdid_num`,`idissue_date`,`idexpiration_date`,`profile`,`application_status`,`record_status`,`med_cert`,`correction_remarks`) VALUES ('145','gdsagads','gsdagsag','dsagasgas','Single','0000-00-00','dsagdsagdsag','male','dsagsda','CWD','','','2026-05-08','2026-05-08','','approved','expired','',NULL);
 
 
 DROP TABLE IF EXISTS `resident_contacts`;
@@ -195,7 +193,7 @@ CREATE TABLE `resident_contacts` (
   PRIMARY KEY (`ID`),
   KEY `resident_contacts_resident_id_idx` (`resident_id`),
   CONSTRAINT `resident_contacts_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('1','1','PERLITA R ABELLERA','09472622313',NULL);
 INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('3','3','ARLENE ALFILER AGUINALDO','09215751865',NULL);
@@ -339,8 +337,6 @@ INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`social
 INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('141','141','SOJIRO DE GUZMAN VILLENA','09537803625',NULL);
 INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('142','142','EIJAY C DIVINA','0917874819',NULL);
 INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('147','2','Primary Contact','09158828474','');
-INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('152','143','Primary Contact','gasdgasd','gasdgsa');
-INSERT INTO `resident_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`socials`) VALUES ('154','145','Primary Contact','gsadgasg','sadgasg');
 
 
 DROP TABLE IF EXISTS `resident_emergency_contacts`;
@@ -353,11 +349,9 @@ CREATE TABLE `resident_emergency_contacts` (
   PRIMARY KEY (`ID`),
   KEY `resident_emergency_contacts_resident_id_idx` (`resident_id`),
   CONSTRAINT `resident_emergency_contacts_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `resident_emergency_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`relationship`) VALUES ('5','2','','','');
-INSERT INTO `resident_emergency_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`relationship`) VALUES ('10','143','gasdgasd','gasdgsdag','sdagsadgas');
-INSERT INTO `resident_emergency_contacts` (`ID`,`resident_id`,`name`,`contact_num`,`relationship`) VALUES ('12','145','gasdgasd','sdadgadsgas','gsadgas');
 
 
 DROP TABLE IF EXISTS `resident_disabilities`;
@@ -369,7 +363,7 @@ CREATE TABLE `resident_disabilities` (
   PRIMARY KEY (`ID`),
   KEY `resident_disabilities_resident_id_idx` (`resident_id`),
   CONSTRAINT `resident_disabilities_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=153 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('1','1','Physical',NULL);
 INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('4','4','Visual',NULL);
@@ -465,8 +459,6 @@ INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes
 INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('140','140','Physical',NULL);
 INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('141','141','Cognitive',NULL);
 INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('145','2','Cognitive','');
-INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('150','143','Others','gdasgasd');
-INSERT INTO `resident_disabilities` (`ID`,`resident_id`,`disability_type`,`notes`) VALUES ('152','145','Others','gadsgasdgdas');
 
 
 DROP TABLE IF EXISTS `resident_family_members`;
@@ -479,7 +471,7 @@ CREATE TABLE `resident_family_members` (
   PRIMARY KEY (`ID`),
   KEY `resident_family_members_resident_id_idx` (`resident_id`),
   CONSTRAINT `resident_family_members_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=177 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('1','1','MAGCAWAS, JESSIELEN','Guardian',NULL);
 INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('5','5','SANTIAGO JR., CARLOS','Guardian',NULL);
@@ -562,14 +554,6 @@ INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,
 INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('140','140','SY, MARINA','Guardian',NULL);
 INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('141','141','VILLENA, CRISELDA','Guardian',NULL);
 INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('148','2','AGUILLERA, LYN ROSE P.','Guardian',NULL);
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('165','143','gasdgasd','Father','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('166','143','gasgdas','Mother','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('167','143','gasdgas','Spouse','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('168','143','wgeegwe','Guardian','gggg');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('173','145','gdsagdasg','Father','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('174','145','asdgsagas','Mother','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('175','145','412dgasdg','Spouse','');
-INSERT INTO `resident_family_members` (`ID`,`resident_id`,`name`,`relationship`,`contact_num`) VALUES ('176','145','421412','421412','412412');
 
 
 DROP TABLE IF EXISTS `audit_logs`;
@@ -588,7 +572,7 @@ CREATE TABLE `audit_logs` (
   KEY `audit_logs_resident_id_idx` (`resident_id`),
   CONSTRAINT `audit_logs_admin_fk` FOREIGN KEY (`admin_id`) REFERENCES `admincreds` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `audit_logs_resident_fk` FOREIGN KEY (`resident_id`) REFERENCES `residents` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('5','1','','',NULL,'LOGIN','','logged in','2026-05-14 02:04:19');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('6','1','','',NULL,'ARCHIVE','','Archived resident: RYAN CARLO SESE','2026-05-14 02:06:52');
@@ -601,7 +585,7 @@ INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`act
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('13','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 03:10:21');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('14','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 03:25:38');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('15','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 11:11:28');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('16','10','','',NULL,'LOGIN','','Test Creds 2 logged in','2026-05-14 11:11:44');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('16',NULL,'','',NULL,'LOGIN','','Test Creds 2 logged in','2026-05-14 11:11:44');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('17','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 11:11:48');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('18','1','','',NULL,'CREATE','','Registered new resident: expired test','2026-05-14 11:14:34');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('19','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 11:18:12');
@@ -615,7 +599,7 @@ INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`act
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('27','1','','',NULL,'DELETE','','Permanently deleted archived resident: test','2026-05-14 11:55:58');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('28','1','','',NULL,'ARCHIVE','','Archived resident: test test','2026-05-14 11:56:21');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('29','1','','',NULL,'ARCHIVE','','Archived resident: test test','2026-05-14 11:57:51');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('30','10','','',NULL,'LOGIN','','Test Creds 2 logged in','2026-05-14 12:29:29');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('30',NULL,'','',NULL,'LOGIN','','Test Creds 2 logged in','2026-05-14 12:29:29');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('31','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-14 12:53:29');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('32','1','','','3','UPDATE','','Updated resident profile: ARLENE AGUINALDO','2026-05-14 13:49:59');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('33','1','','','4','UPDATE','','Updated resident profile: ALLAN ALABANZA','2026-05-14 13:52:27');
@@ -708,23 +692,110 @@ INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`act
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('120','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-15 00:33:33');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('121','1','','',NULL,'LOGIN','','Test Creds logged in','2026-05-15 00:35:46');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('122','1','','','1','ARCHIVE','','Archived resident ID: 1','2026-05-15 00:50:45');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('123','1','','','143','CREATE','','Registered new resident','2026-05-15 01:07:17');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('124','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 02:03:43');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('123','1','','',NULL,'CREATE','','Registered new resident','2026-05-15 01:07:17');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('124','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 02:03:43');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('125','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 02:48:42');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('126','10','Test Creds 2','encoder',NULL,'LOGIN','Authentication','Test Creds 2 logged in','2026-05-15 02:50:35');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('127','10','Test Creds 2','encoder','143','UPDATE','Residents','Updated resident profile','2026-05-15 03:04:17');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('128','10','Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:04');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('129','10','Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:21');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('130','10','Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:32');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('131','10','Test Creds 2','encoder',NULL,'LOGOUT','Authentication','Test Creds 2 logged out','2026-05-15 03:49:35');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('126',NULL,'Test Creds 2','encoder',NULL,'LOGIN','Authentication','Test Creds 2 logged in','2026-05-15 02:50:35');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('127',NULL,'Test Creds 2','encoder',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 03:04:17');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('128',NULL,'Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:04');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('129',NULL,'Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:21');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('130',NULL,'Test Creds 2','encoder','2','UPDATE','Residents','Updated resident profile','2026-05-15 03:46:32');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('131',NULL,'Test Creds 2','encoder',NULL,'LOGOUT','Authentication','Test Creds 2 logged out','2026-05-15 03:49:35');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('132','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 03:50:10');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('133','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 05:46:39');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('134','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 05:49:25');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('135','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 05:59:02');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('136','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 06:04:39');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('137','1','Test Creds','admin','143','UPDATE','Residents','Updated resident profile','2026-05-15 06:07:09');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('138','1','Test Creds','admin','145','CREATE','Registration','Registered new resident','2026-05-15 06:14:55');
-INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('139','1','Test Creds','admin','145','UPDATE','Residents','Updated resident profile','2026-05-15 06:15:11');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('133','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 05:46:39');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('134','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 05:49:25');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('135','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 05:59:02');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('136','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:04:39');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('137','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:07:09');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('138','1','Test Creds','admin',NULL,'CREATE','Registration','Registered new resident','2026-05-15 06:14:55');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('139','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:15:11');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('140','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:16:51');
 INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('141','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:19:18');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('142','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:19:19');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('143','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:19:27');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('144','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:19:31');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('145','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:19:37');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('146','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:19:48');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('147','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:19:57');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('148','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:26:36');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('149','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:26:54');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('150','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:29:48');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('151','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 06:29:55');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('152','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:44:24');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('153','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:48:48');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('154','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:48:52');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('155','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:49:08');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('156','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:49:09');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('157','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:51:15');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('158','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:51:41');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('159','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:51:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('160','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:52:41');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('161','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:52:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('162','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:52:51');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('163','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 06:53:33');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('164','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:53:36');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('165',NULL,'Test Creds 2','encoder',NULL,'LOGIN','Authentication','Test Creds 2 logged in','2026-05-15 06:53:39');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('166',NULL,'Test Creds 2','encoder',NULL,'LOGOUT','Authentication','Test Creds 2 logged out','2026-05-15 06:53:48');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('167','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 06:53:50');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('168','1','Test Creds','admin','1','RESTORE','Archive','Resident restored from archive','2026-05-15 07:20:25');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('169','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 143','2026-05-15 07:20:47');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('171','1','Test Creds','admin',NULL,'CREATE','Registration','Registered new resident','2026-05-15 07:21:09');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('172','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 146','2026-05-15 07:21:17');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('174','1','Test Creds','admin',NULL,'CREATE','Registration','Registered new resident','2026-05-15 07:24:23');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('175','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 147','2026-05-15 07:24:29');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('176','1','Test Creds','admin',NULL,'DELETE','Archive','Deleted archived resident permanently. Former resident ID: 147','2026-05-15 07:24:32');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('177','1','Test Creds','admin',NULL,'UPDATE','Residents','Updated resident profile','2026-05-15 07:25:00');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('178','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 145','2026-05-15 07:25:07');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('179','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder','2026-05-15 07:37:24');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('180','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed','2026-05-15 07:37:30');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('181','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed','2026-05-15 07:45:07');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('182','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds (test) to Test Creds (test), role: admin, password changed','2026-05-15 07:45:15');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('183','1','Test Creds','admin',NULL,'CREATE','Accounts','Added account: Test Creds 3 (testt) as admin','2026-05-15 07:45:26');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('184','1','Test Creds','admin',NULL,'DELETE','Accounts','Deleted account: Test Creds 3 (testt), role: admin','2026-05-15 07:50:24');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('185','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed','2026-05-15 07:50:28');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('186','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed','2026-05-15 07:51:04');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('187','1','Test Creds','admin',NULL,'DELETE','Accounts','Deleted account: Test Creds 2 (teste), role: encoder','2026-05-15 07:51:09');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('188','1','Test Creds','admin',NULL,'CREATE','Accounts','Added account: testtt (testt) as encoder','2026-05-15 07:59:58');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('189','1','Test Creds','admin',NULL,'UPDATE','Accounts','Updated account: testtt (testt) to testtt (testt), role: encoder, password changed','2026-05-15 08:00:03');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('190','1','Test Creds','admin',NULL,'CREATE','Accounts','Added account: testt (testtt) as admin','2026-05-15 08:00:25');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('191','1','Test Creds','admin',NULL,'DELETE','Accounts','Deleted account: testt (testtt), role: admin','2026-05-15 08:00:29');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('192','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:27:46');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('193','19','test','admin',NULL,'LOGIN','Authentication','test logged in','2026-05-15 08:38:36');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('194','19','test','admin',NULL,'DELETE','Accounts','Deleted account: test (testtt), role: admin','2026-05-15 08:38:49');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('195','19','test','admin',NULL,'UPDATE','Accounts','Updated account: testtt (testt) to testtt (testt), role: encoder, password changed','2026-05-15 08:39:14');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('196','19','test','admin',NULL,'UPDATE','Accounts','Updated account: Test Creds (test) to Test Creds (test), role: admin, password changed','2026-05-15 08:39:22');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('197','19','test','admin',NULL,'LOGOUT','Authentication','test logged out','2026-05-15 08:41:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('198','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:41:58');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('199','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:42:00');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('200','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:42:08');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('201','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:43:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('202','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:43:48');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('203','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:43:51');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('204','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:43:58');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('205','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:44:06');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('206','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:44:10');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('207','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:44:15');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('208','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:44:17');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('209','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:49:00');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('210','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:49:16');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('211','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:49:18');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('212','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:49:22');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('213','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:49:26');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('214','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:49:29');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('215','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:49:54');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('216','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:49:57');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('217','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:50:00');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('218','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:50:06');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('219','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:50:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('220','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:50:44');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('221','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:50:50');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('222','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:50:52');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('223','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:51:01');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('224','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:51:04');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('225','1','Test Creds','admin',NULL,'LOGOUT','Authentication','Test Creds logged out','2026-05-15 08:51:27');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('226','1','Test Creds','admin',NULL,'LOGIN','Authentication','Test Creds logged in','2026-05-15 08:51:42');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('227','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 145','2026-05-15 08:51:53');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('228','1','Test Creds','admin',NULL,'DELETE','Archive','Deleted archived resident permanently. Former resident ID: 145','2026-05-15 08:52:01');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('229','1','Test Creds','admin',NULL,'ARCHIVE','Residents','Archived resident ID: 144','2026-05-15 08:52:10');
+INSERT INTO `audit_logs` (`ID`,`admin_id`,`admin_name`,`role`,`resident_id`,`action`,`module`,`description`,`created_at`) VALUES ('230','1','Test Creds','admin',NULL,'DELETE','Archive','Deleted archived resident permanently. Former resident ID: 144','2026-05-15 08:52:20');
 

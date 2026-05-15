@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2026 at 12:00 AM
+-- Generation Time: May 15, 2026 at 03:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -40,8 +40,9 @@ CREATE TABLE `admincreds` (
 --
 
 INSERT INTO `admincreds` (`ID`, `username`, `full_name`, `password`, `role`) VALUES
-(1, 'test', 'Test Creds', 'test', 'admin'),
-(10, 'teste', 'Test Creds 2', '$2y$10$1JBWrkD/KcxO2L7NOTBjX.Z2M6r2ML2Vb4z0M57AB77KFysxs6Uz.', 'encoder');
+(1, 'test', 'Test Creds', '$2y$10$8.YlYO3uPamtHsr2N/i5Ze4h41.LvQYt1p/Q63H8Ac5ER8LXb0Maq', 'admin'),
+(12, 'testt', 'testtt', '$2y$10$qaLVMGN5407enU4Ox5hSp.nReE0nmUIjQ6toczbzfix0m37HE1Idy', 'encoder'),
+(19, 'testttt', 'test', 'test', 'admin');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,7 @@ INSERT INTO `audit_logs` (`ID`, `admin_id`, `admin_name`, `role`, `resident_id`,
 (13, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-13 19:10:21'),
 (14, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-13 19:25:38'),
 (15, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:11:28'),
-(16, 10, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 03:11:44'),
+(16, NULL, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 03:11:44'),
 (17, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:11:48'),
 (18, 1, '', '', NULL, 'CREATE', '', 'Registered new resident: expired test', '2026-05-14 03:14:34'),
 (19, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 03:18:12'),
@@ -91,7 +92,7 @@ INSERT INTO `audit_logs` (`ID`, `admin_id`, `admin_name`, `role`, `resident_id`,
 (27, 1, '', '', NULL, 'DELETE', '', 'Permanently deleted archived resident: test', '2026-05-14 03:55:58'),
 (28, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test test', '2026-05-14 03:56:21'),
 (29, 1, '', '', NULL, 'ARCHIVE', '', 'Archived resident: test test', '2026-05-14 03:57:51'),
-(30, 10, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 04:29:29'),
+(30, NULL, '', '', NULL, 'LOGIN', '', 'Test Creds 2 logged in', '2026-05-14 04:29:29'),
 (31, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 04:53:29'),
 (32, 1, '', '', 3, 'UPDATE', '', 'Updated resident profile: ARLENE AGUINALDO', '2026-05-14 05:49:59'),
 (33, 1, '', '', 4, 'UPDATE', '', 'Updated resident profile: ALLAN ALABANZA', '2026-05-14 05:52:27'),
@@ -184,19 +185,112 @@ INSERT INTO `audit_logs` (`ID`, `admin_id`, `admin_name`, `role`, `resident_id`,
 (120, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 16:33:33'),
 (121, 1, '', '', NULL, 'LOGIN', '', 'Test Creds logged in', '2026-05-14 16:35:46'),
 (122, 1, '', '', 1, 'ARCHIVE', '', 'Archived resident ID: 1', '2026-05-14 16:50:45'),
-(123, 1, '', '', 143, 'CREATE', '', 'Registered new resident', '2026-05-14 17:07:17'),
-(124, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 18:03:43'),
+(123, 1, '', '', NULL, 'CREATE', '', 'Registered new resident', '2026-05-14 17:07:17'),
+(124, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 18:03:43'),
 (125, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 18:48:42'),
-(126, 10, 'Test Creds 2', 'encoder', NULL, 'LOGIN', 'Authentication', 'Test Creds 2 logged in', '2026-05-14 18:50:35'),
-(127, 10, 'Test Creds 2', 'encoder', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:04:17'),
-(128, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:04'),
-(129, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:21'),
-(130, 10, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:32'),
-(131, 10, 'Test Creds 2', 'encoder', NULL, 'LOGOUT', 'Authentication', 'Test Creds 2 logged out', '2026-05-14 19:49:35'),
+(126, NULL, 'Test Creds 2', 'encoder', NULL, 'LOGIN', 'Authentication', 'Test Creds 2 logged in', '2026-05-14 18:50:35'),
+(127, NULL, 'Test Creds 2', 'encoder', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:04:17'),
+(128, NULL, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:04'),
+(129, NULL, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:21'),
+(130, NULL, 'Test Creds 2', 'encoder', 2, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 19:46:32'),
+(131, NULL, 'Test Creds 2', 'encoder', NULL, 'LOGOUT', 'Authentication', 'Test Creds 2 logged out', '2026-05-14 19:49:35'),
 (132, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 19:50:10'),
-(133, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:46:39'),
-(134, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:49:25'),
-(135, 1, 'Test Creds', 'admin', 143, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:59:02');
+(133, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:46:39'),
+(134, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:49:25'),
+(135, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 21:59:02'),
+(136, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:04:39'),
+(137, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:07:09'),
+(138, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Registration', 'Registered new resident', '2026-05-14 22:14:55'),
+(139, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:15:11'),
+(140, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:16:51'),
+(141, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:19:18'),
+(142, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:19:19'),
+(143, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:19:27'),
+(144, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:19:31'),
+(145, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:19:37'),
+(146, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:19:48'),
+(147, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:19:57'),
+(148, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:26:36'),
+(149, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:26:54'),
+(150, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:29:48'),
+(151, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 22:29:55'),
+(152, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:44:24'),
+(153, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:48:48'),
+(154, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:48:52'),
+(155, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:49:08'),
+(156, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:49:09'),
+(157, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:51:15'),
+(158, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:51:41'),
+(159, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:51:42'),
+(160, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:52:41'),
+(161, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:52:42'),
+(162, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:52:51'),
+(163, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-14 22:53:33'),
+(164, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:53:36'),
+(165, NULL, 'Test Creds 2', 'encoder', NULL, 'LOGIN', 'Authentication', 'Test Creds 2 logged in', '2026-05-14 22:53:39'),
+(166, NULL, 'Test Creds 2', 'encoder', NULL, 'LOGOUT', 'Authentication', 'Test Creds 2 logged out', '2026-05-14 22:53:48'),
+(167, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-14 22:53:50'),
+(168, 1, 'Test Creds', 'admin', 1, 'RESTORE', 'Archive', 'Resident restored from archive', '2026-05-14 23:20:25'),
+(169, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 143', '2026-05-14 23:20:47'),
+(171, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Registration', 'Registered new resident', '2026-05-14 23:21:09'),
+(172, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 146', '2026-05-14 23:21:17'),
+(174, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Registration', 'Registered new resident', '2026-05-14 23:24:23'),
+(175, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 147', '2026-05-14 23:24:29'),
+(176, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Archive', 'Deleted archived resident permanently. Former resident ID: 147', '2026-05-14 23:24:32'),
+(177, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Residents', 'Updated resident profile', '2026-05-14 23:25:00'),
+(178, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 145', '2026-05-14 23:25:07'),
+(179, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder', '2026-05-14 23:37:24'),
+(180, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed', '2026-05-14 23:37:30'),
+(181, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed', '2026-05-14 23:45:07'),
+(182, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds (test) to Test Creds (test), role: admin, password changed', '2026-05-14 23:45:15'),
+(183, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Accounts', 'Added account: Test Creds 3 (testt) as admin', '2026-05-14 23:45:26'),
+(184, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Accounts', 'Deleted account: Test Creds 3 (testt), role: admin', '2026-05-14 23:50:24'),
+(185, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed', '2026-05-14 23:50:28'),
+(186, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds 2 (teste) to Test Creds 2 (teste), role: encoder, password changed', '2026-05-14 23:51:04'),
+(187, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Accounts', 'Deleted account: Test Creds 2 (teste), role: encoder', '2026-05-14 23:51:09'),
+(188, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Accounts', 'Added account: testtt (testt) as encoder', '2026-05-14 23:59:58'),
+(189, 1, 'Test Creds', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: testtt (testt) to testtt (testt), role: encoder, password changed', '2026-05-15 00:00:03'),
+(190, 1, 'Test Creds', 'admin', NULL, 'CREATE', 'Accounts', 'Added account: testt (testtt) as admin', '2026-05-15 00:00:25'),
+(191, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Accounts', 'Deleted account: testt (testtt), role: admin', '2026-05-15 00:00:29'),
+(192, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:27:46'),
+(193, 19, 'test', 'admin', NULL, 'LOGIN', 'Authentication', 'test logged in', '2026-05-15 00:38:36'),
+(194, 19, 'test', 'admin', NULL, 'DELETE', 'Accounts', 'Deleted account: test (testtt), role: admin', '2026-05-15 00:38:49'),
+(195, 19, 'test', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: testtt (testt) to testtt (testt), role: encoder, password changed', '2026-05-15 00:39:14'),
+(196, 19, 'test', 'admin', NULL, 'UPDATE', 'Accounts', 'Updated account: Test Creds (test) to Test Creds (test), role: admin, password changed', '2026-05-15 00:39:22'),
+(197, 19, 'test', 'admin', NULL, 'LOGOUT', 'Authentication', 'test logged out', '2026-05-15 00:41:42'),
+(198, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:41:58'),
+(199, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:42:00'),
+(200, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:42:08'),
+(201, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:43:42'),
+(202, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:43:48'),
+(203, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:43:51'),
+(204, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:43:58'),
+(205, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:44:06'),
+(206, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:44:10'),
+(207, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:44:15'),
+(208, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:44:17'),
+(209, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:49:00'),
+(210, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:49:16'),
+(211, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:49:18'),
+(212, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:49:22'),
+(213, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:49:26'),
+(214, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:49:29'),
+(215, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:49:54'),
+(216, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:49:57'),
+(217, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:50:00'),
+(218, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:50:06'),
+(219, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:50:42'),
+(220, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:50:44'),
+(221, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:50:50'),
+(222, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:50:52'),
+(223, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:51:01'),
+(224, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:51:04'),
+(225, 1, 'Test Creds', 'admin', NULL, 'LOGOUT', 'Authentication', 'Test Creds logged out', '2026-05-15 00:51:27'),
+(226, 1, 'Test Creds', 'admin', NULL, 'LOGIN', 'Authentication', 'Test Creds logged in', '2026-05-15 00:51:42'),
+(227, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 145', '2026-05-15 00:51:53'),
+(228, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Archive', 'Deleted archived resident permanently. Former resident ID: 145', '2026-05-15 00:52:01'),
+(229, 1, 'Test Creds', 'admin', NULL, 'ARCHIVE', 'Residents', 'Archived resident ID: 144', '2026-05-15 00:52:10'),
+(230, 1, 'Test Creds', 'admin', NULL, 'DELETE', 'Archive', 'Deleted archived resident permanently. Former resident ID: 144', '2026-05-15 00:52:20');
 
 -- --------------------------------------------------------
 
@@ -231,7 +325,7 @@ CREATE TABLE `residents` (
 --
 
 INSERT INTO `residents` (`ID`, `first_name`, `middle_name`, `last_name`, `civil_status`, `birthdate`, `birthplace`, `sex`, `address`, `resident_type`, `control_num`, `pwdid_num`, `idissue_date`, `idexpiration_date`, `profile`, `application_status`, `record_status`, `med_cert`, `correction_remarks`) VALUES
-(1, 'PERLITA', 'R', 'ABELLERA', NULL, NULL, NULL, 'female', '63-C SANTOL ST.', 'PWD', NULL, '109-525', NULL, NULL, NULL, 'approved', 'archived', NULL, NULL),
+(1, 'PERLITA', 'R', 'ABELLERA', NULL, NULL, NULL, 'female', '63-C SANTOL ST.', 'PWD', NULL, '109-525', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
 (2, 'BRENT NYLSEN', 'PABLICO', 'AGUILLERA', '', '2008-10-03', '', 'male', '68 WOMEN\'S CLUB ST.', 'CWD', '', '899-217', '0000-00-00', '0000-00-00', '', 'approved', 'active', '', NULL),
 (3, 'ARLENE', 'ALFILER', 'AGUINALDO', NULL, '1972-05-12', NULL, 'female', '65 SANTOL ST.', 'PWD', NULL, '12400000204300', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
 (4, 'ALLAN', 'HILANTAGAAN', 'ALABANZA', NULL, '1975-12-31', NULL, 'male', '18 BIAK N BATO ST.', 'PWD', NULL, '12400000974777', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
@@ -372,8 +466,7 @@ INSERT INTO `residents` (`ID`, `first_name`, `middle_name`, `last_name`, `civil_
 (139, 'JOSEFINA', 'GENEROSO', 'VELASCO', NULL, '1973-01-10', NULL, 'female', '84 UNION CIVICA ST.', 'PWD', NULL, '12400000802728', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
 (140, 'MARCO', 'S', 'VILLACORTA', NULL, '2006-12-12', NULL, 'male', '114 UNION CIVICA ST', 'PWD', NULL, '337-404', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
 (141, 'SOJIRO', 'DE GUZMAN', 'VILLENA', NULL, '2012-09-18', NULL, 'male', '82 BAGONG BUHAY ST.', 'CWD', NULL, '12400001320024', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
-(142, 'EIJAY', 'C', 'DIVINA', NULL, NULL, NULL, 'male', '93 LIBERATION ST.', 'PWD', NULL, '109-060', NULL, NULL, NULL, 'approved', 'active', NULL, NULL),
-(143, 'test', 'test', 'gasdga', 'Single', '2022-02-12', 'gdasgas', 'male', 'gasdgasd', 'CWD', 'sadgdasgsa', 'asdgasdgasg', '2026-05-06', '2026-05-06', 'uploads/profiles/1778785457_profile.jpg', 'approved', 'expired', 'uploads/medical_certificates/1778785457_medcert.pdf', NULL);
+(142, 'EIJAY', 'C', 'DIVINA', NULL, NULL, NULL, 'male', '93 LIBERATION ST.', 'PWD', NULL, '109-060', NULL, NULL, NULL, 'approved', 'active', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -535,8 +628,7 @@ INSERT INTO `resident_contacts` (`ID`, `resident_id`, `name`, `contact_num`, `so
 (140, 140, 'MARCO S VILLACORTA', NULL, NULL),
 (141, 141, 'SOJIRO DE GUZMAN VILLENA', '09537803625', NULL),
 (142, 142, 'EIJAY C DIVINA', '0917874819', NULL),
-(147, 2, 'Primary Contact', '09158828474', ''),
-(150, 143, 'Primary Contact', 'gasdgasd', 'gasdgsa');
+(147, 2, 'Primary Contact', '09158828474', '');
 
 -- --------------------------------------------------------
 
@@ -649,8 +741,7 @@ INSERT INTO `resident_disabilities` (`ID`, `resident_id`, `disability_type`, `no
 (139, 139, 'Physical', NULL),
 (140, 140, 'Physical', NULL),
 (141, 141, 'Cognitive', NULL),
-(145, 2, 'Cognitive', ''),
-(148, 143, 'Others', 'gdasgasd');
+(145, 2, 'Cognitive', '');
 
 -- --------------------------------------------------------
 
@@ -671,8 +762,7 @@ CREATE TABLE `resident_emergency_contacts` (
 --
 
 INSERT INTO `resident_emergency_contacts` (`ID`, `resident_id`, `name`, `contact_num`, `relationship`) VALUES
-(5, 2, '', '', ''),
-(8, 143, 'gasdgasd', 'gasdgsdag', 'sdagsadgas');
+(5, 2, '', '', '');
 
 -- --------------------------------------------------------
 
@@ -684,7 +774,7 @@ CREATE TABLE `resident_family_members` (
   `ID` int(11) NOT NULL,
   `resident_id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `relationship` enum('Guardian','Father','Mother','Spouse') DEFAULT NULL,
+  `relationship` varchar(100) DEFAULT NULL,
   `contact_num` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -773,11 +863,7 @@ INSERT INTO `resident_family_members` (`ID`, `resident_id`, `name`, `relationshi
 (139, 139, 'VELASCO, MENCHITA', 'Guardian', NULL),
 (140, 140, 'SY, MARINA', 'Guardian', NULL),
 (141, 141, 'VILLENA, CRISELDA', 'Guardian', NULL),
-(148, 2, 'AGUILLERA, LYN ROSE P.', 'Guardian', NULL),
-(157, 143, 'gasdgasd', 'Father', ''),
-(158, 143, 'gasgdas', 'Mother', ''),
-(159, 143, 'gasdgas', 'Spouse', ''),
-(160, 143, 'wgeegwe', 'Guardian', NULL);
+(148, 2, 'AGUILLERA, LYN ROSE P.', 'Guardian', NULL);
 
 --
 -- Indexes for dumped tables
@@ -840,43 +926,43 @@ ALTER TABLE `resident_family_members`
 -- AUTO_INCREMENT for table `admincreds`
 --
 ALTER TABLE `admincreds`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=231;
 
 --
 -- AUTO_INCREMENT for table `residents`
 --
 ALTER TABLE `residents`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=148;
 
 --
 -- AUTO_INCREMENT for table `resident_contacts`
 --
 ALTER TABLE `resident_contacts`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 
 --
 -- AUTO_INCREMENT for table `resident_disabilities`
 --
 ALTER TABLE `resident_disabilities`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=160;
 
 --
 -- AUTO_INCREMENT for table `resident_emergency_contacts`
 --
 ALTER TABLE `resident_emergency_contacts`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `resident_family_members`
 --
 ALTER TABLE `resident_family_members`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=161;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=197;
 
 --
 -- Constraints for dumped tables
