@@ -138,19 +138,22 @@ SELECT
     END) AS spouse_name,
 
     MAX(CASE
-        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-        THEN resident_family_members.name
-    END) AS guardian_name,
+    WHEN LOWER(TRIM(resident_family_members.relationship))
+    NOT IN ('father', 'mother', 'spouse')
+    THEN resident_family_members.name
+END) AS guardian_name,
 
-    MAX(CASE
-        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-        THEN resident_family_members.relationship
-    END) AS guardian_rel,
+MAX(CASE
+    WHEN LOWER(TRIM(resident_family_members.relationship))
+    NOT IN ('father', 'mother', 'spouse')
+    THEN resident_family_members.relationship
+END) AS guardian_rel,
 
-    MAX(CASE
-        WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse')
-        THEN resident_family_members.contact_num
-    END) AS guardian_number
+MAX(CASE
+    WHEN LOWER(TRIM(resident_family_members.relationship))
+    NOT IN ('father', 'mother', 'spouse')
+    THEN resident_family_members.contact_num
+END) AS guardian_number
 
 FROM residents
 

@@ -29,10 +29,19 @@ $idexpiration_date = trim($_POST["expiration_date"] ?? "");
 
 $guardian_name   = trim($_POST["guardian_name"] ?? "");
 $guardian_number = trim($_POST["guardian_number"] ?? "");
-$guardian_rel    = trim($_POST["child_relation"] ?? "");
+$guardian_rel =
+    trim(
+        $_POST["guardian_relation"]
+        ?? $_POST["child_relation"]
+        ?? ""
+    );
 
 $resident_type =
-    !empty($guardian_name)
+    (
+        !empty($guardian_name)
+        || !empty($guardian_number)
+        || !empty($guardian_rel)
+    )
     ? "CWD"
     : "PWD";
 
@@ -70,6 +79,54 @@ if (empty($disabilities)) {
     $_SESSION["form_data"] = $_POST;
 
     header("Location: ../selfregistration.php");
+    exit();
+}
+
+/* =========================
+   DUPLICATE CHECK
+========================= */
+
+$dup_stmt = mysqli_prepare(
+    $conn,
+    "SELECT ID
+     FROM residents
+     WHERE LOWER(first_name) = LOWER(?)
+     AND LOWER(middle_name) = LOWER(?)
+     AND LOWER(last_name) = LOWER(?)
+     AND birthdate = ?
+     LIMIT 1"
+);
+
+mysqli_stmt_bind_param(
+    $dup_stmt,
+    "ssss",
+    $first_name,
+    $middle_name,
+    $last_name,
+    $birthdate
+);
+
+mysqli_stmt_execute($dup_stmt);
+
+$dup_result =
+    mysqli_stmt_get_result($dup_stmt);
+
+if (mysqli_num_rows($dup_result) > 0) {
+
+    $_SESSION["duplicate_error"] =
+    "A resident with the same name and birthdate already exists in the system.";
+
+    $_SESSION["form_data"] = $_POST;
+
+    header(
+        "Location: " .
+        (
+            basename(__FILE__) === "processSelfReg.php"
+            ? "../selfregistration.php"
+            : "../registration.php"
+        )
+    );
+
     exit();
 }
 
@@ -229,6 +286,44 @@ if (
     $med_cert =
         "uploads/medical_certificates/" .
         $safe_name;
+}
+
+
+/* =========================
+   CONTACT VALIDATION
+========================= */
+
+$phone_fields = [
+    "Contact Number"   => $contact_number,
+    "Emergency Number" => $emergency_number
+];
+
+if (!empty($guardian_number)) {
+    $phone_fields["Guardian Number"] =
+        $guardian_number;
+}
+
+foreach ($phone_fields as $label => $number) {
+
+    if (
+        !preg_match(
+            '/^09\d{9}$/',
+            $number
+        )
+    ) {
+
+        $_SESSION["reg_error"] =
+            "$label must be a valid 11-digit mobile number.";
+
+        $_SESSION["form_data"] =
+            $_POST;
+
+        header(
+            "Location: ../selfregistration.php"
+        );
+
+        exit();
+    }
 }
 
 /* =========================

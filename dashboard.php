@@ -411,7 +411,7 @@ require_once("func/getNotifications.php");
         <?php 
         $display_count = 0;
         // Show up to 20 results if searching, otherwise show 5 recent
-        $limit = !empty($search) ? 20 : 5; 
+        $limit = !empty($search) ? 5 : 5; 
 
         if (mysqli_num_rows($residents_result) === 0): ?>
           <tr>

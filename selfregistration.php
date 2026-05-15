@@ -15,6 +15,17 @@ unset($_SESSION['form_data']);
 <link rel="stylesheet" href="css/selfregistration.css" />
 </head>
 <script>
+  function closeDuplicateModal() {
+
+    const modal =
+        document.getElementById(
+            "duplicateModal"
+        );
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
 function previewProfile(input) {
   const label = document.getElementById("profileFileLabel");
   const preview = document.getElementById("profilePreview");
@@ -82,6 +93,45 @@ function previewProfile(input) {
       </div>
     <?php unset($_SESSION["reg_error"]); ?>
     <?php endif; ?>
+
+    <?php if (isset($_SESSION["duplicate_error"])): ?>
+
+<div class="modal-overlay" id="duplicateModal">
+
+    <div class="modal-box">
+
+        <div class="modal-icon delete">
+            !
+        </div>
+
+        <h2 class="modal-title">
+            Duplicate Resident Detected
+        </h2>
+
+        <p class="modal-description">
+            <?= htmlspecialchars(
+                $_SESSION["duplicate_error"]
+            ) ?>
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="modal-btn delete"
+                onclick="closeDuplicateModal()"
+            >
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php unset($_SESSION["duplicate_error"]); ?>
+<?php endif; ?>
 
     <div class="card">
       <div class="card-title">Personal Information</div>
@@ -159,7 +209,16 @@ function previewProfile(input) {
       <div class="form-grid cols-4">
         <div class="field">
           <label>Contact Number <span class="req">*</span></label>
-          <input type="text" name="contact_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>">
+          <input
+  type="text"
+  name="contact_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
         </div>
         <div class="field">
           <label>Emergency Contact Name <span class="req">*</span></label>
@@ -167,7 +226,16 @@ function previewProfile(input) {
         </div>
         <div class="field">
           <label>Emergency Contact Number <span class="req">*</span></label>
-          <input type="text" name="emergency_number" placeholder="09XX XXX XXXX" value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>">
+          <input
+  type="text"
+  name="emergency_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
         </div>
         <div class="field">
           <label>Relationship with Emergency Contact <span class="req">*</span></label>
@@ -242,7 +310,16 @@ function previewProfile(input) {
 
     <div class="field">
       <label>Guardian Relationship</label>
-      <input type="text" name="child_relation" placeholder="e.g. Brother, Mother, Aunt" value="<?= htmlspecialchars($form_data['child_relation'] ?? '') ?>">
+      <input
+  type="text"
+  name="guardian_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
     </div>
 
     <div class="field">

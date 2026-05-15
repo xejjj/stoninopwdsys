@@ -95,6 +95,45 @@ require_once("func/auth.php"); ?>
       <?php unset($_SESSION["reg_error"]); ?>
     <?php endif; ?>
 
+    <?php if (isset($_SESSION["duplicate_error"])): ?>
+
+<div class="modal-overlay" id="duplicateModal">
+
+    <div class="modal-box">
+
+        <div class="modal-icon delete">
+            !
+        </div>
+
+        <h2 class="modal-title">
+            Duplicate Resident Detected
+        </h2>
+
+        <p class="modal-description">
+            <?= htmlspecialchars(
+                $_SESSION["duplicate_error"]
+            ) ?>
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                type="button"
+                class="modal-btn delete"
+                onclick="closeDuplicateModal()"
+            >
+                OK
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php unset($_SESSION["duplicate_error"]); ?>
+<?php endif; ?>
+
     <form action="func/processRegistration.php" method="POST" enctype="multipart/form-data" id="regForm">
 
       <!-- Personal Information -->
@@ -160,7 +199,16 @@ require_once("func/auth.php"); ?>
         <div class="form-grid">
           <div class="field">
             <label>Contact Number</label>
-            <input type="tel" name="contact_number" placeholder="09XX XXX XXXX">
+            <input
+  type="text"
+  name="contact_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
           </div>
           <div class="field">
             <label>Emergency Contact Name</label>
@@ -168,7 +216,16 @@ require_once("func/auth.php"); ?>
           </div>
           <div class="field">
             <label>Emergency Contact Number</label>
-            <input type="tel" name="emergency_number" placeholder="09XX XXX XXXX">
+            <input
+  type="text"
+  name="emergency_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
           </div>
           <div class="field">
             <label>Relationship with Emergency Contact</label>
@@ -247,7 +304,16 @@ require_once("func/auth.php"); ?>
 
     <div class="field">
       <label>Guardian Number</label>
-      <input type="tel" name="guardian_number" placeholder="09XX XXX XXXX">
+      <input
+  type="text"
+  name="guardian_number"
+  maxlength="11"
+  pattern="^09\d{9}$"
+  inputmode="numeric"
+  placeholder="09XXXXXXXXX"
+  value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>"
+  oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+>
     </div>
   </div>
 </div>
@@ -309,6 +375,17 @@ require_once("func/auth.php"); ?>
 <?php endif; ?>
 
 <script>
+  function closeDuplicateModal() {
+
+    const modal =
+        document.getElementById(
+            "duplicateModal"
+        );
+
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
 function toggleMenu(event, id) {
   event.preventDefault();
   event.currentTarget.classList.toggle("open");

@@ -193,11 +193,23 @@ GROUP BY residents.ID
 
 ORDER BY
 
+/* EXPIRED FIRST */
 CASE
     WHEN record_status = 'expired'
     THEN 0
-    ELSE 1
+
+    /* EXPIRING SOON SECOND */
+    WHEN idexpiration_date IS NOT NULL
+    AND DATE(idexpiration_date)
+        BETWEEN CURDATE()
+        AND DATE_ADD(CURDATE(), INTERVAL 1 MONTH)
+    THEN 1
+
+    /* EVERYTHING ELSE */
+    ELSE 2
 END,
+
+idexpiration_date ASC,
 
 last_name ASC
 
