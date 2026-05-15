@@ -40,7 +40,7 @@ foreach ($tables as $table) {
     $createTable = mysqli_query($conn, "SHOW CREATE TABLE `$table`");
 
     if (!$createTable) {
-        $_SESSION["error"] = "Backup failed while reading table: $table";
+        $_SESSION["system_error"] = "Backup failed while reading table: $table";
         header("Location: ../system.php");
         exit();
     }
@@ -79,7 +79,7 @@ foreach ($tables as $table) {
 $sqlScript .= "SET FOREIGN_KEY_CHECKS=1;\n\n";
 
 if (file_put_contents($backupPath, $sqlScript) === false) {
-    $_SESSION["error"] = "Backup failed. Cannot save file to backups folder.";
+    $_SESSION["system_error"] = "Backup failed. Cannot save file to backups folder.";
     header("Location: ../system.php");
     exit();
 }
@@ -92,7 +92,7 @@ auditLog(
     "Created database backup: $backupName"
 );
 
-$_SESSION["success"] = "Database backup created successfully!";
+$_SESSION["system_success"] = "Database backup created successfully!";
 
 header("Location: ../system.php");
 exit();

@@ -11,7 +11,7 @@ $role = $_SESSION["role"] ?? "";
 /* BLOCK ENCODERS */
 if ($role !== "admin") {
 
-    $_SESSION["error"] =
+    $_SESSION["system_error"] =
         "You cannot access this module.";
 
     header("Location: dashboard.php");
@@ -232,7 +232,7 @@ if ($role !== "admin") {
 
 </div>
 
-<?php if (isset($_SESSION['success'])) : ?>
+<?php if (isset($_SESSION['system_success'])) : ?>
 
 <div class="popup-success show-popup">
 
@@ -242,8 +242,8 @@ if ($role !== "admin") {
 
         <p>
             <?php
-                echo $_SESSION['success'];
-                unset($_SESSION['success']);
+                echo $_SESSION['system_success'];
+                unset($_SESSION['system_success']);
             ?>
         </p>
 
@@ -258,7 +258,7 @@ if ($role !== "admin") {
 <?php endif; ?>
 
 
-<?php if (isset($_SESSION['error'])) : ?>
+<?php if (isset($_SESSION['system_error'])) : ?>
 
 <div class="popup-error show-popup">
 
@@ -268,8 +268,8 @@ if ($role !== "admin") {
 
         <p>
             <?php
-                echo $_SESSION['error'];
-                unset($_SESSION['error']);
+                echo $_SESSION['system_error'];
+                unset($_SESSION['system_error']);
             ?>
         </p>
 
@@ -365,7 +365,23 @@ function submitRestoreForm() {
     document.getElementById("realRestoreSubmit").click();
 }
 
+function closePopup() {
 
+    document.querySelectorAll(
+        ".popup-success, .popup-error"
+    ).forEach(el => {
+
+        el.classList.remove("show-popup");
+    });
+}function closePopup() {
+
+    document.querySelectorAll(
+        ".popup-success, .popup-error"
+    ).forEach(el => {
+
+        el.classList.remove("show-popup");
+    });
+}
 </script>
 </body>
 </html>

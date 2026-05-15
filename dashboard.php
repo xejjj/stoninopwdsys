@@ -1,8 +1,10 @@
 <?php
+require_once("func/auth.php");
 require_once("func/db.php");
 require_once("func/getDashboardData.php");
 require_once("func/processDailyBackup.php");
 require_once("func/getNotifications.php");
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

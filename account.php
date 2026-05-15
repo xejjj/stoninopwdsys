@@ -14,8 +14,7 @@ $role = $_SESSION["role"] ?? "";
 /* BLOCK ENCODERS */
 if ($role !== "admin") {
 
-    $_SESSION["error"] =
-        "You cannot access this module.";
+    $_SESSION["account_error"] = "You cannot access this module.";
 
     header("Location: dashboard.php");
     exit();
@@ -192,6 +191,37 @@ if ($role !== "admin") {
       </tbody>
     </table>
   </div>
+  <?php if (isset($_SESSION["account_success"])): ?>
+<div class="modal-overlay" style="display:flex;">
+  <div class="modal-box">
+    <div class="modal-icon add">✓</div>
+    <h2 class="modal-title">Success</h2>
+    <p class="modal-description">
+      <?= htmlspecialchars($_SESSION["account_success"]) ?>
+    </p>
+    <div class="modal-actions">
+      <button class="modal-btn add" onclick="closeAccountPopup()">OK</button>
+    </div>
+  </div>
+</div>
+<?php unset($_SESSION["account_success"]); ?>
+<?php endif; ?>
+
+<?php if (isset($_SESSION["account_error"])): ?>
+<div class="modal-overlay" style="display:flex;">
+  <div class="modal-box">
+    <div class="modal-icon delete">!</div>
+    <h2 class="modal-title">Error</h2>
+    <p class="modal-description">
+      <?= htmlspecialchars($_SESSION["account_error"]) ?>
+    </p>
+    <div class="modal-actions">
+      <button class="modal-btn delete" onclick="closeAccountPopup()">OK</button>
+    </div>
+  </div>
+</div>
+<?php unset($_SESSION["account_error"]); ?>
+<?php endif; ?>
 </main>
 
 <div id="addModal" class="modal-overlay">
@@ -387,6 +417,12 @@ function validateEditPassword() {
   }
 
   return true;
+}
+
+function closeAccountPopup() {
+  document.querySelectorAll(".modal-overlay").forEach(modal => {
+    modal.style.display = "none";
+  });
 }
 </script>
 

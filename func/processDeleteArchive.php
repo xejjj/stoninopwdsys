@@ -98,11 +98,11 @@ if (mysqli_stmt_execute($del)) {
     }
 
     auditLog(
-        $conn,
-        "DELETE",
-        "Archive",
-        $id,
-        "Deleted archived resident permanently"
+    $conn,
+    "DELETE",
+    "Archive",
+    null,
+    "Deleted archived resident permanently. Former resident ID: " . $id
     );
 
     $_SESSION["arch_success"] =

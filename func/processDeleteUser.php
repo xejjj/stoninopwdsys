@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = intval($_POST["user_id"] ?? 0);
 
     if ($id == ($_SESSION["admin_id"] ?? 0)) {
-        $_SESSION["error"] = "You cannot delete your own account.";
+        $_SESSION["account_error"] = "You cannot delete your own account.";
         header("Location: ../account.php");
         exit();
     }
@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     "Deleted account: {$user['full_name']} ({$user['username']}), role: {$user['role']}"
                 );
 
-                $_SESSION["success"] = "Account deleted successfully.";
+                $_SESSION["account_success"] = "Account deleted successfully.";
             }
         }
     }
