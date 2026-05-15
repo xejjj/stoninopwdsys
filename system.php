@@ -1,22 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION["admin_id"])) {
-    header("Location: login.php");
-    exit();
-}
-
-$role = $_SESSION["role"] ?? "";
-
-/* BLOCK ENCODERS */
-if ($role !== "admin") {
-
-    $_SESSION["system_error"] =
-        "You cannot access this module.";
-
-    header("Location: dashboard.php");
-    exit();
-}
+require_once("func/auth.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">

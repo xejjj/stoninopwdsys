@@ -1,4 +1,7 @@
-<?php require_once("func/getResidents.php"); ?>
+<?php 
+require_once("func/auth.php");
+require_once("func/getResidents.php"); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

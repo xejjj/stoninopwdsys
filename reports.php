@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php require_once("func/auth.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

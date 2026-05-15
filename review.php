@@ -1,4 +1,6 @@
-<?php require_once("func/getReviewData.php"); ?>
+<?php 
+require_once("func/auth.php");
+require_once("func/getReviewData.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

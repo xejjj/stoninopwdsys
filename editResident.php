@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once("func/auth.php");
 require_once("func/db.php");
 
 $id = isset($_GET["id"]) ? intval($_GET["id"]) : 0;

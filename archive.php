@@ -1,4 +1,5 @@
 <?php
+require_once("func/auth.php");
 require_once("func/getArchive.php");
 
 if (!isset($_SESSION["admin_id"])) {
