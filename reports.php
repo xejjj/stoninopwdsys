@@ -10,7 +10,6 @@
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
 <aside class="sidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
@@ -27,14 +26,14 @@
 
     <div class="nav-group">
       <a class="nav-item" href="dashboard.php">
-        <img src = "assets/overviewicon.png" width="20">
+        <img src="assets/overviewicon.png" width="20">
         Overview
       </a>
     </div>
 
     <div class="nav-group">
       <a class="nav-item open" href="#" onclick="toggleMenu(event,'mgmt-sub')">
-        <img src = "assets/users.png" width="20" >
+        <img src="assets/users.png" width="20">
         Management
         <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
       </a>
@@ -47,7 +46,7 @@
 
     <div class="nav-group">
       <a class="nav-item active" href="reports.php">
-        <img src = "assets/reporticon.png" width="20" >
+        <img src="assets/reporticon.png" width="20">
         Reports
       </a>
     </div>
@@ -56,20 +55,20 @@
     $isAdmin = ($_SESSION["role"] ?? "") === "admin";
     $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
     if ($isAdmin): ?>
-<div class="nav-group">
-  <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
-    <img src="assets/settingicon.png" width="20">
-    System
-    <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
-  </a>
-  <div class="nav-sub" id="system-sub">
-    <a class="nav-sub-item" href="system.php">System Tools</a>
-    <a class="nav-sub-item" href="account.php">Accounts</a>
-    <a class="nav-sub-item" href="archive.php">Archive</a>
-    <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
-  </div>
-</div>
-<?php endif; ?>
+    <div class="nav-group">
+      <a class="nav-item open" href="#" onclick="toggleMenu(event,'system-sub')">
+        <img src="assets/settingicon.png" width="20">
+        System
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 15 12 9 18 15"/></svg>
+      </a>
+      <div class="nav-sub" id="system-sub">
+        <a class="nav-sub-item" href="system.php">System Tools</a>
+        <a class="nav-sub-item" href="account.php">Accounts</a>
+        <a class="nav-sub-item" href="archive.php">Archive</a>
+        <a class="nav-sub-item" href="auditlogs.php">Audit Logs</a>
+      </div>
+    </div>
+    <?php endif; ?>
   </nav>
 
   <div class="sidebar-footer">
@@ -80,116 +79,98 @@
   </div>
 </aside>
 
-<!--  MAIN  -->
 <main class="main-content">
     <div class="page-title">
-        <img src = "assets/leftchevron.png" width="12" onclick="toDashboard()">
+        <img src="assets/leftchevron.png" width="12" onclick="toDashboard()">
         <h1>Reports</h1>
       </div>
   <div class="content-card">
     
     <div class="card-header">
-        <div class = "page-title">
+        <div class="page-title">
             <div class="report-icon">
-                <img src = "assets/reporticon2.png" width="20" >
+                <img src="assets/reporticon2.png" width="20">
             </div>
-            <h1> Generate Reports </h1>
+            <h1>Generate Reports</h1>
         </div>
     </div>
 
-    <div class = "card-content">
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> Master List </h2> 
-                        <p> Complete list of all registered PWDs and CWDs</p>
+    <div class="card-content">
+        <div class="card-item">
+            <div class="card-item-text">
+                <h2>Master List</h2> 
+                <p>Complete list of all registered PWDs and CWDs</p>
+            </div>
+            <div class="card-item-actions">
+                <div class="dropdown">
+                    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'masterMenu')">
+                        <img src="assets/printicon.png" width="16"> Print
+                    </button>
+                    <div class="dropdown-menu" id="masterMenu" style="max-height: 250px; overflow-y: auto;">
+                        <a href="func/processPrintReports.php?type=master&category=All" target="_blank">All</a>
+                        <a href="func/processPrintReports.php?type=master&category=PWD" target="_blank">PWD Only</a>
+                        <a href="func/processPrintReports.php?type=master&category=CWD" target="_blank">CWD Only</a>
+                        <a href="func/processPrintReports.php?type=master&category=Cognitive" target="_blank">Disability: Cognitive</a>
+                        <a href="func/processPrintReports.php?type=master&category=Visual" target="_blank">Disability: Visual</a>
+                        <a href="func/processPrintReports.php?type=master&category=Physical" target="_blank">Disability: Physical</a>
+                        <a href="func/processPrintReports.php?type=master&category=Auditory" target="_blank">Disability: Auditory</a>
+                        <a href="func/processPrintReports.php?type=master&category=Speech" target="_blank">Disability: Speech</a>
+                        <a href="func/processPrintReports.php?type=master&category=Psychosocial" target="_blank">Disability: Psychosocial</a>
+                        <a href="func/processPrintReports.php?type=master&category=Others" target="_blank">Disability: Others</a>
                     </div>
-                    <div class = "card-item-actions">
-                        <button class="btn-print" onclick="window.open('func/processPrintReports.php?type=master', '_blank')"> 
-    <img src="assets/printicon.png" width="16"> Print
-</button>
-                    </div>
-                </div>
-
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> PWD/CWD Summary </h2> 
-                        <p> Aggregated statistics by age</p>
-                    </div>
-                    <div class = "card-item-actions">
-                    
-                        <div class="dropdown">
-    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'pwdCwdMenu')">
-        <img src="assets/printicon.png" width="16"> Print
-    </button>
-
-    <div class="dropdown-menu" id="pwdCwdMenu">
-        <a href="func/processPrintReports.php?type=pwdcwd&category=PWD" target="_blank">Print PWD Summary</a>
-        <a href="func/processPrintReports.php?type=pwdcwd&category=CWD" target="_blank">Print CWD Summary</a>
-    </div>
-</div>
-                        
-                    </div>
-                </div>
-
-                <div class = "card-item">
-                    <div class = "card-item-text">
-                        <h2> Disability Classification Summary </h2> 
-                        <p> Distribution of PWDs and CWDs across different disability types</p>
-                    </div>
-                    <div class="card-item-actions">
-                      
-                    <div class="dropdown">
-    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'disabilityMenu')">
-        <img src="assets/printicon.png" width="16"> Print
-    </button>
-
-    <div class="dropdown-menu" id="disabilityMenu">
-
-    <a href="func/processPrintReports.php?type=disability&category=Cognitive" target="_blank">
-        Cognitive
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Visual" target="_blank">
-        Visual
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Physical" target="_blank">
-        Physical
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Auditory" target="_blank">
-        Auditory
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Speech" target="_blank">
-        Speech
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Psychosocial" target="_blank">
-        Psychosocial
-    </a>
-
-    <a href="func/processPrintReports.php?type=disability&category=Others" target="_blank">
-        Others
-    </a>
-
-</div>
-</div>
-                  </div>
                 </div>
             </div>
         </div>
+
+        <div class="card-item">
+            <div class="card-item-text">
+                <h2>PWD/CWD Summary</h2> 
+                <p>Aggregated statistics by age</p>
+            </div>
+            <div class="card-item-actions">
+                <div class="dropdown">
+                    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'pwdCwdMenu')">
+                        <img src="assets/printicon.png" width="16"> Print
+                    </button>
+                    <div class="dropdown-menu" id="pwdCwdMenu">
+                        <a href="func/processPrintReports.php?type=pwdcwd&category=PWD" target="_blank">Print PWD Summary</a>
+                        <a href="func/processPrintReports.php?type=pwdcwd&category=CWD" target="_blank">Print CWD Summary</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-item">
+            <div class="card-item-text">
+                <h2>Disability Classification Summary</h2> 
+                <p>Distribution of PWDs and CWDs across different disability types</p>
+            </div>
+            <div class="card-item-actions">
+                <div class="dropdown">
+                    <button class="btn-print dropdown-toggle" onclick="toggleReportDropdown(event, 'disabilityMenu')">
+                        <img src="assets/printicon.png" width="16"> Print
+                    </button>
+                    <div class="dropdown-menu" id="disabilityMenu">
+                        <a href="func/processPrintReports.php?type=disability&category=Cognitive" target="_blank">Cognitive</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Visual" target="_blank">Visual</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Physical" target="_blank">Physical</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Auditory" target="_blank">Auditory</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Speech" target="_blank">Speech</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Psychosocial" target="_blank">Psychosocial</a>
+                        <a href="func/processPrintReports.php?type=disability&category=Others" target="_blank">Others</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </main>
-
 
 <script>
 function toggleMenu(event, id) {
     event.preventDefault();
-
     const trigger = event.currentTarget;
     const submenu = document.getElementById(id);
-
     trigger.classList.toggle("open");
     submenu.classList.toggle("open");
 }
@@ -200,13 +181,11 @@ function toDashboard() {
 
 function toggleReportDropdown(event, menuId) {
     event.stopPropagation();
-
     document.querySelectorAll(".dropdown-menu").forEach(menu => {
         if (menu.id !== menuId) {
             menu.classList.remove("show");
         }
     });
-
     document.getElementById(menuId).classList.toggle("show");
 }
 

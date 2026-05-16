@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once("db.php");
 
 if (!isset($_SESSION["admin_id"])) {
@@ -21,23 +24,31 @@ $current_page =
 $offset = ($current_page - 1) * $per_page;
 
 /* =========================
+   SESSION FILTERS (PERSISTENCE)
+========================= */
+
+if (isset($_GET['clear_filters'])) {
+    unset($_SESSION['res_filters']);
+} 
+elseif (isset($_GET['search']) || isset($_GET['category']) || isset($_GET['sex']) || isset($_GET['status']) || isset($_GET['disability'])) {
+    $_SESSION['res_filters'] = [
+        'search' => $_GET['search'] ?? '',
+        'category' => $_GET['category'] ?? '',
+        'sex' => $_GET['sex'] ?? '',
+        'status' => $_GET['status'] ?? '',
+        'disability' => $_GET['disability'] ?? ''
+    ];
+}
+
+/* =========================
    FILTERS
 ========================= */
 
-$search =
-    trim($_GET["search"] ?? "");
-
-$filter_cat =
-    trim($_GET["category"] ?? "");
-
-$filter_sex =
-    trim($_GET["sex"] ?? "");
-
-$filter_status =
-    trim($_GET["status"] ?? "");
-
-$filter_disab =
-    trim($_GET["disability"] ?? "");
+$search = trim($_GET["search"] ?? $_SESSION['res_filters']['search'] ?? "");
+$filter_cat = trim($_GET["category"] ?? $_SESSION['res_filters']['category'] ?? "");
+$filter_sex = trim($_GET["sex"] ?? $_SESSION['res_filters']['sex'] ?? "");
+$filter_status = trim($_GET["status"] ?? $_SESSION['res_filters']['status'] ?? "");
+$filter_disab = trim($_GET["disability"] ?? $_SESSION['res_filters']['disability'] ?? "");
 
 /* =========================
    BASE QUERY
@@ -45,9 +56,10 @@ $filter_disab =
 
 $base_query = "
 FROM residents
-
-LEFT JOIN resident_disabilities
-ON residents.ID = resident_disabilities.resident_id
+LEFT JOIN resident_contacts ON residents.ID = resident_contacts.resident_id
+LEFT JOIN resident_disabilities ON residents.ID = resident_disabilities.resident_id
+LEFT JOIN resident_emergency_contacts ON residents.ID = resident_emergency_contacts.resident_id
+LEFT JOIN resident_family_members ON residents.ID = resident_family_members.resident_id
 ";
 
 /* =========================
@@ -57,120 +69,45 @@ ON residents.ID = resident_disabilities.resident_id
 $where = [];
 
 if (!empty($search)) {
-
-    $safe =
-        mysqli_real_escape_string(
-            $conn,
-            $search
-        );
-
-    $where[] = "
-    (
-        first_name LIKE '%$safe%'
-        OR middle_name LIKE '%$safe%'
-        OR last_name LIKE '%$safe%'
-    )";
+    $safe = mysqli_real_escape_string($conn, $search);
+    $where[] = "(residents.first_name LIKE '%$safe%' OR residents.middle_name LIKE '%$safe%' OR residents.last_name LIKE '%$safe%')";
 }
 
 if (!empty($filter_cat)) {
-
-    $safe =
-        mysqli_real_escape_string(
-            $conn,
-            $filter_cat
-        );
-
-    $where[] =
-        "resident_type = '$safe'";
+    $safe = mysqli_real_escape_string($conn, $filter_cat);
+    $where[] = "residents.resident_type = '$safe'";
 }
 
 if (!empty($filter_sex)) {
-
-    $safe =
-        mysqli_real_escape_string(
-            $conn,
-            strtolower($filter_sex)
-        );
-
-    $where[] =
-        "sex = '$safe'";
+    $safe = mysqli_real_escape_string($conn, strtolower($filter_sex));
+    $where[] = "residents.sex = '$safe'";
 }
 
 if (!empty($filter_disab)) {
-
-    $safe =
-        mysqli_real_escape_string(
-            $conn,
-            $filter_disab
-        );
-
-    $where[] = "
-    resident_disabilities.disability_type
-    = '$safe'
-    ";
+    $safe = mysqli_real_escape_string($conn, $filter_disab);
+    $where[] = "resident_disabilities.disability_type = '$safe'";
 }
-
-/* STATUS FILTER */
 
 if (!empty($filter_status)) {
-
-    if ($filter_status === "Active") {
-
-        $where[] =
-            "record_status = 'active'";
-
-    } elseif ($filter_status === "Expired") {
-
-        $where[] =
-            "record_status = 'expired'";
-
-    } elseif ($filter_status === "Rejected") {
-
-        $where[] =
-            "application_status = 'rejected'";
-
-    } elseif ($filter_status === "Under Review") {
-
-        $where[] =
-            "application_status = 'under review'";
-
-    } elseif ($filter_status === "Needs Correction") {
-
-        $where[] =
-            "application_status = 'needs correction'";
-    }
+    if ($filter_status === "Active") $where[] = "residents.record_status = 'active'";
+    elseif ($filter_status === "Expired") $where[] = "residents.record_status = 'expired'";
+    elseif ($filter_status === "Rejected") $where[] = "residents.application_status = 'rejected'";
+    elseif ($filter_status === "Under Review") $where[] = "residents.application_status = 'under review'";
+    elseif ($filter_status === "Needs Correction") $where[] = "residents.application_status = 'needs correction'";
 }
 
-/* HIDE ARCHIVED */
+$where[] = "residents.record_status != 'archived'";
 
-$where[] =
-    "record_status != 'archived'";
-
-$where_sql =
-    count($where) > 0
-    ? "WHERE " . implode(" AND ", $where)
-    : "";
+$where_sql = count($where) > 0 ? "WHERE " . implode(" AND ", $where) : "";
 
 /* =========================
    COUNT QUERY
 ========================= */
 
-$count_sql = "
-SELECT COUNT(DISTINCT residents.ID)
-AS total
-
-$base_query
-$where_sql
-";
-
-$count_result =
-    mysqli_query($conn, $count_sql);
-
-$total_rows =
-    mysqli_fetch_assoc($count_result)["total"];
-
-$total_pages =
-    max(1, ceil($total_rows / $per_page));
+$count_sql = "SELECT COUNT(DISTINCT residents.ID) AS total $base_query $where_sql";
+$count_result = mysqli_query($conn, $count_sql);
+$total_rows = mysqli_fetch_assoc($count_result)["total"];
+$total_pages = max(1, ceil($total_rows / $per_page));
 
 /* =========================
    DATA QUERY
@@ -179,52 +116,47 @@ $total_pages =
 $data_sql = "
 SELECT
     residents.*,
+    
+    MAX(resident_contacts.contact_num) AS contact_num,
+    MAX(resident_contacts.socials) AS socials,
 
-    GROUP_CONCAT(
-        resident_disabilities.disability_type
-        SEPARATOR ', '
-    ) AS disability_type
+    MAX(resident_emergency_contacts.name) AS emergency_name,
+    MAX(resident_emergency_contacts.contact_num) AS emergency_number,
+    MAX(resident_emergency_contacts.relationship) AS emergency_relation,
+
+    GROUP_CONCAT(DISTINCT resident_disabilities.disability_type SEPARATOR ', ') AS disability_type,
+    MAX(resident_disabilities.notes) AS disability_remarks,
+
+    MAX(CASE WHEN resident_family_members.relationship = 'Father' THEN resident_family_members.name END) AS father_name,
+    MAX(CASE WHEN resident_family_members.relationship = 'Mother' THEN resident_family_members.name END) AS mother_name,
+    MAX(CASE WHEN resident_family_members.relationship = 'Spouse' THEN resident_family_members.name END) AS spouse_name,
+    MAX(CASE WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse') THEN resident_family_members.name END) AS guardian_name,
+    MAX(CASE WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse') THEN resident_family_members.relationship END) AS guardian_rel,
+    MAX(CASE WHEN resident_family_members.relationship NOT IN ('Father', 'Mother', 'Spouse') THEN resident_family_members.contact_num END) AS guardian_number
 
 $base_query
-
 $where_sql
-
 GROUP BY residents.ID
 
 ORDER BY
-
-/* EXPIRED FIRST */
 CASE
-    WHEN record_status = 'expired'
-    THEN 0
-
-    /* EXPIRING SOON SECOND */
-    WHEN idexpiration_date IS NOT NULL
-    AND DATE(idexpiration_date)
-        BETWEEN CURDATE()
-        AND DATE_ADD(CURDATE(), INTERVAL 1 MONTH)
-    THEN 1
-
-    /* EVERYTHING ELSE */
+    WHEN residents.record_status = 'expired' THEN 0
+    WHEN residents.idexpiration_date IS NOT NULL AND DATE(residents.idexpiration_date) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 1 MONTH) THEN 1
     ELSE 2
 END,
-
-idexpiration_date ASC,
-
-last_name ASC
+residents.idexpiration_date ASC,
+residents.last_name ASC
 
 LIMIT $per_page OFFSET $offset
 ";
 
-$residents_result =
-    mysqli_query($conn, $data_sql);
+$residents_result = mysqli_query($conn, $data_sql);
 
 /* =========================
    BADGE CLASS
 ========================= */
 
 function badgeClass($type) {
-
     $map = [
         "cognitive"    => "badge-cognitive",
         "visual"       => "badge-visual",
@@ -234,10 +166,7 @@ function badgeClass($type) {
         "psychosocial" => "badge-psycho",
         "others"       => "badge-others",
     ];
-
-    return $map[
-        strtolower(trim($type))
-    ] ?? "badge-physical";
+    return $map[strtolower(trim($type))] ?? "badge-physical";
 }
 
 /* =========================
@@ -245,14 +174,7 @@ function badgeClass($type) {
 ========================= */
 
 function buildQuery($page, $extra = []) {
-
-    $params =
-        array_merge(
-            $_GET,
-            ["page" => $page],
-            $extra
-        );
-
+    $params = array_merge($_GET, ["page" => $page], $extra);
     return "?" . http_build_query($params);
 }
 ?>

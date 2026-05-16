@@ -1,151 +1,184 @@
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #b69d98 0%, #e9d9a6 50%, #e78d8c 100%);
-            background-attachment: fixed;
-            color: #3b322d; 
-            line-height: 1.5;
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(135deg, #b69d98 0%, #e9d9a6 50%, #e78d8c 100%);
+    background-attachment: fixed;
+    color: #3b322d; 
+    line-height: 1.5;
+    box-sizing: border-box;
+}
 
-        .page-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        header {
-            width: 100%;
-            background-color: #ffffff;
-            padding: 25px 25px; 
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #eae6e1;
-            position: fixed;
-        }
+header {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 25px 25px; 
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eae6e1;
+    position: fixed;
+    box-sizing: border-box;
+}
 
-        .header-branding {
-            display: flex;
-            align-items: center;
-            gap: 12px; 
-        }
+.header-admin-btn {
+    margin-left: auto; 
+    background-color: #ffffff;
+    border: 1px solid #ddd6d0;
+    color: #3b322d;
+    padding: 10px 12px; 
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
 
-        .header-text {
-            font-weight: 700;
-            font-size: 20px; 
-            color: #3b322d;
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
+.header-admin-btn svg {
+    transition: stroke 0.2s ease;
+}
 
-        .header-text .hub-text {
-            color: #d15653;
-        }
+.header-admin-btn:hover {
+    border-color: #b0a8a2;
+    background-color: #faf9f8;
+}
 
-        /* ilalim ng pwd header */
-        .system-text {
-            font-size: 15px; 
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #8c827a;
-            margin-top: 2px;
-        }
+.header-admin-btn:hover svg {
+    stroke: #d15653; 
+}
 
-        main {
-            flex-grow: 1;
-            padding: 150px 2px 3px; 
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-        }
+.header-admin-btn:active {
+    transform: scale(0.95);
+}
 
-        .main-container {
-            max-width: 1200px;
-            text-align: center;
-            margin-top: 32px; 
-        }
+.header-branding {
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+}
 
-        /* style ng middle top texts */
-        .welcome-message h1 {
-            font-size: 70px;
-            font-weight: 700; 
-            margin-bottom: 19px; 
-            line-height: 1.2;
-            color: #3b322d;
-        }
+.header-text {
+    font-weight: 700;
+    font-size: 20px; 
+    color: #3b322d;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
 
-        .welcome-message p {
-            font-size: 17px;
-            font-weight: 500;
-            margin-bottom: 48px; 
-            color: #6a615a;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+.header-text .hub-text {
+    color: #d15653;
+}
 
-        .portal-cards-grid {
-            display: flex;
-            justify-content: center;
-            gap: 32px; 
-        }
+/* ilalim ng pwd header */
+.system-text {
+    font-size: 15px; 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8c827a;
+    margin-top: 2px;
+}
 
-        /* mismong frame ng dalawa sa baba */
-        .portal-card {
-            background-color: #ffffff;
-            border-radius: 19px; 
-            padding: 40px 32px;
-            flex: 1;
-            max-width: 340px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-        }
+main {
+    flex-grow: 1;
+    padding: 150px 2px 3px; 
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
 
-        .portal-card h2 {
-            font-size: 25px;
-            font-weight: 700;
-            margin: 19px 0 13px; 
-            color: #3b322d;
-        }
+.main-container {
+    max-width: 1200px;
+    text-align: center;
+    margin-top: 32px; 
+}
 
-        .portal-card p {
-            font-size: 14px; 
-            margin-bottom: 32px;
-            color: #7a716a;
-            line-height: 1.6;
-            flex-grow: 1;
-        }
+/* style ng middle top texts */
+.welcome-message h1 {
+    font-size: 70px;
+    font-weight: 700; 
+    margin-bottom: 19px; 
+    line-height: 1.2;
+    color: #3b322d;
+}
 
-        /* clicky button sa baba */
-        .card-button {
-            background-color: #ffffff; 
-            border: 1px solid #ddd6d0;
-            color: #3b322d;
-            padding: 11px 24px; 
-            font-size: 14px; 
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-        }
+.welcome-message p {
+    font-size: 17px;
+    font-weight: 500;
+    margin-bottom: 48px; 
+    color: #6a615a;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        .card-button:hover {
-            border-color: #b0a8a2;
-            background-color: #faf9f8;
-        }
-        
-        .card-button:active{
-            transform: scale(0.95);
-        }
+.portal-cards-grid {
+    display: flex;
+    justify-content: center;
+    gap: 32px; 
+}
 
-        .icon-note {
-            display: block;
-            margin-top: 13px;
-            font-size: 12px;
-            color: #a8a09a;
-            font-style: italic;
-        }
+/* mismong frame ng dalawa sa baba */
+.portal-card {
+    background-color: #ffffff;
+    border-radius: 19px; 
+    padding: 40px 32px;
+    flex: 1;
+    max-width: 340px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.portal-card h2 {
+    font-size: 25px;
+    font-weight: 700;
+    margin: 19px 0 13px; 
+    color: #3b322d;
+}
+
+.portal-card p {
+    font-size: 14px; 
+    margin-bottom: 32px;
+    color: #7a716a;
+    line-height: 1.6;
+    flex-grow: 1;
+}
+
+/* clicky button sa baba */
+.card-button {
+    background-color: #ffffff; 
+    border: 1px solid #ddd6d0;
+    color: #3b322d;
+    padding: 11px 24px; 
+    font-size: 14px; 
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+}
+
+.card-button:hover {
+    border-color: #b0a8a2;
+    background-color: #faf9f8;
+}
+
+.card-button:active{
+    transform: scale(0.95);
+}
+
+.icon-note {
+    display: block;
+    margin-top: 13px;
+    font-size: 12px;
+    color: #a8a09a;
+    font-style: italic;
+}

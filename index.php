@@ -10,15 +10,19 @@
     <div class="page-container">
         <header>
             <div class="header-branding">
-
                <img src="assets/barangay-logo.png" alt="Company Logo" width="50">
-                        <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
                  
                 <div class="header-text">
                     <div>PWD/CWD <span class="hub-text">Hub</span></div>
                     <span class="system-text">Sto. Nino System</span>
                 </div>
             </div>
+            
+            <button class="header-admin-btn" onclick="toAdminLogin()" title="Admin Login" aria-label="Admin Login">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                </svg>
+            </button>
         </header>
 
         <main>
@@ -28,39 +32,16 @@
                     <p>This portal is designed to make barangay services more accessible, <br> organized, and efficient for everyone. <br>Choose a portal below to get started.</p>
                 </div>
 
-                <div class="portal-cards-grid">
-                    <div class="portal-card">
-                           <img src="assets/users.png" alt="Company Logo" width="40">
-                        <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
-                        <h2>Resident Registration</h2>
-                        <p>Apply for your PWD ID or update <br> your existing records online.<br> Quick, easy, and accessible to <br>everyone.</p>
-                        <button class="card-button" onclick = "toSelfReg()">
-                            Start Registration
-                        </button>
-                    </div>
-
-                    <div class="portal-card">
-                        <img src="assets/users.png" alt="Company Logo" width="40">
-                        <!-- papalitan nalang yung laman ng icon sa taas nito (placeholder icon lng muna) -->
-                        <h2>Administrator Portal</h2>
-                        <p>Secure access for barangay<br> officials to review submissions,<br> manage records, and view<br> analytical reports.</p>
-                        <button class="card-button" onclick = "toLogin()"> 
-                         
-                                Admin Login
-                          
-                        </button>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
 </body>
 <script>
-
     function toSelfReg() {
         window.location.href = "selfregistration.php";
     }
-    function toLogin() {
+
+    function toAdminLogin() {
         window.location.href = "login.php";
     }
 </script>
