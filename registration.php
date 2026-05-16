@@ -175,9 +175,9 @@ require_once("func/auth.php"); ?>
             <input type="number" name="age" placeholder="0" min="0" max="130">
           </div>
           <div class="field">
-            <label>Sex</label>
-            <select name="sex">
-              <option value="">Select sex</option>
+            <label>Gender</label>
+            <select name="Gender">
+              <option value="">Select Gender</option>
               <option>Male</option>
               <option>Female</option>
             </select>
@@ -211,6 +211,11 @@ require_once("func/auth.php"); ?>
 >
           </div>
           <div class="field">
+            <label>Email/Facebook Account</label>
+            <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com">
+          </div>
+          <div class="field span-all" style="margin-top:1px;"></div>
+          <div class="field">
             <label>Emergency Contact Name</label>
             <input type="text" name="emergency_name" placeholder="Full name">
           </div>
@@ -231,12 +236,9 @@ require_once("func/auth.php"); ?>
             <label>Relationship with Emergency Contact</label>
             <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling">
           </div>
-          <div class="field">
-            <label>Email/Facebook Account</label>
-            <input type="text" name="account_name" placeholder="e.g. kevincalon123@gmail.com">
-          </div>
+          <div class="field span-all" style="margin-top:1px;"></div>
           <div class="field span-2">
-            <label>House No. and Street</label>
+            <label>Full Address (House No. and Street)</label>
             <input type="text" name="address" placeholder="e.g. 12 Sampaguita St.">
           </div>
         </div>
@@ -298,11 +300,6 @@ require_once("func/auth.php"); ?>
     </div>
 
     <div class="field">
-      <label>Guardian Relationship</label>
-      <input type="text" name="child_relation" placeholder="e.g. Brother, Mother, Aunt">
-    </div>
-
-    <div class="field">
       <label>Guardian Number</label>
       <input
   type="text"
@@ -314,6 +311,22 @@ require_once("func/auth.php"); ?>
   value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
+    </div>
+
+    <div class="field">
+      <label>Guardian Relationship</label>
+      <select name="child_relation" onchange="toggleRelativeSpecify(this)">
+        <option value="">Select relationship</option>
+        <option>Father</option>
+        <option>Mother</option>
+        <option>Partner</option>
+        <option>Relative</option>
+        <option>Others</option>
+      </select>
+    </div>
+    <div class="field" id="relativeSpecifyField" style="display:none;">
+      <label>Specify Relationship</label>
+      <input type="text" name="child_relation_specify" placeholder="e.g. Aunt, Uncle, Cousin">
     </div>
   </div>
 </div>
@@ -385,6 +398,19 @@ require_once("func/auth.php"); ?>
     if (modal) {
         modal.style.display = "none";
     }
+}
+function toggleRelativeSpecify(select) {
+  const field = document.getElementById('relativeSpecifyField');
+  const input = field.querySelector('input');
+  if (select.value === 'Relative') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
+  } else if (select.value === 'Others') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Legal Guardian, Foster Parent, Step Parent';
+  } else {
+    field.style.display = 'none';
+  }
 }
 function toggleMenu(event, id) {
   event.preventDefault();
