@@ -370,3 +370,52 @@
   cursor: pointer;
   accent-color: var(--primary);
 }
+
+/* ── VALIDATION ── */
+.input-error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+  background: #fff5f5 !important;
+}
+.field-error {
+  font-size: 11px;
+  font-weight: 700;
+  color: #dc2626;
+  margin-top: 3px;
+  display: block;
+}
+
+/* ── DISABLED INPUT (spouse on Single) ── */
+input:disabled,
+input[disabled] {
+  background: #e8e8e8 !important;
+  cursor: not-allowed !important;
+  color: rgba(28,2,2,0.3) !important;
+  border-color: rgba(138,138,138,0.15) !important;
+}
+
+/* ── ALERT ── */
+.alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.alert-error {
+  background: #fff5f5;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+}
+
+/* ── FORM FOOTER (archive button sits left, save/cancel right) ── */
+.btn-archive {
+  background: #fff;
+  color: #c06020;
+  border: 1.5px solid #f5d9c0;
+  margin-right: auto;
+}
+.btn-archive:hover {
+  background: #FFF8F0;
+  border-color: #f0b070;
+}

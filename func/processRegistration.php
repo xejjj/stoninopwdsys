@@ -21,7 +21,11 @@ $civil_status = trim($_POST["civil_status"] ?? "");
 $birthdate    = trim($_POST["dob"] ?? "");
 $birthplace   = trim($_POST["pob"] ?? "");
 $sex          = strtolower(trim($_POST["sex"] ?? ""));
-$address      = trim($_POST["address"] ?? "");
+$house_no  = trim($_POST["house_no"]  ?? "");
+$street    = trim($_POST["street"]    ?? "");
+$city      = trim($_POST["city"]      ?? "");
+$province  = trim($_POST["province"]  ?? "");
+$address   = implode(", ", array_filter([$house_no, $street, $city, $province]));
 
 $pwdid_num         = trim($_POST["pwd_id"] ?? "");
 $control_num       = trim($_POST["control_id"] ?? "");
@@ -128,6 +132,21 @@ if (isset($_FILES["med_cert"]) && $_FILES["med_cert"]["error"] === 0) {
     $med_cert = "uploads/medical_certificates/" . $safe_name;
 }
 
+/* =========================
+   PWD ID CARD
+========================= */
+$pwd_id_card = "";
+if (isset($_FILES["pwd_id_card"]) && $_FILES["pwd_id_card"]["error"] === 0) {
+    $upload_dir = "../uploads/pwd_id_cards/";
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+    $ext = strtolower(pathinfo($_FILES["pwd_id_card"]["name"], PATHINFO_EXTENSION));
+    $safe_name = time() . "_pwdcard." . $ext;
+    move_uploaded_file($_FILES["pwd_id_card"]["tmp_name"], $upload_dir . $safe_name);
+    $pwd_id_card = "uploads/pwd_id_cards/" . $safe_name;
+}
+
 
 /* =========================
    CONTACT VALIDATION
@@ -188,14 +207,15 @@ $stmt = mysqli_prepare(
         idexpiration_date,
         profile,
         med_cert,
+        pwd_id_card,
         application_status,
         record_status
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
 );
 
 mysqli_stmt_bind_param(
     $stmt,
-    "sssssssssssssssss",
+    "ssssssssssssssssss",
     $first_name,
     $middle_name,
     $last_name,
@@ -211,6 +231,7 @@ mysqli_stmt_bind_param(
     $idexpiration_date,
     $profile,
     $med_cert,
+    $pwd_id_card,
     $application_status,
     $record_status
 );
@@ -262,6 +283,9 @@ if (!empty($contact_num) || !empty($socials)) {
 $emergency_name = trim($_POST["emergency_name"] ?? "");
 $emergency_number = trim($_POST["emergency_number"] ?? "");
 $emergency_relation = trim($_POST["emergency_relation"] ?? "");
+if ($emergency_relation === "Others" || $emergency_relation === "Relative") {
+    $emergency_relation = trim($_POST["emergency_relation_specify"] ?? $emergency_relation);
+}
 
 if (!empty($emergency_name)) {
     $stmt = mysqli_prepare(
@@ -329,6 +353,9 @@ $mother_name = trim($_POST["mother_name"] ?? "");
 $spouse_name = trim($_POST["spouse_name"] ?? "");
 $guardian_name = trim($_POST["guardian_name"] ?? "");
 $guardian_rel = trim($_POST["child_relation"] ?? "");
+if ($guardian_rel === "Others" || $guardian_rel === "Relative") {
+    $guardian_rel = trim($_POST["child_relation_specify"] ?? $guardian_rel);
+}
 $guardian_number = trim($_POST["guardian_number"] ?? "");
 
 $family_members = [

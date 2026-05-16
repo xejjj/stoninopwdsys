@@ -234,8 +234,19 @@ require_once("func/auth.php"); ?>
           </div>
           <div class="field">
             <label>Relationship with Emergency Contact</label>
-            <input type="text" name="emergency_relation" placeholder="e.g. Parent, Sibling">
+            <select name="emergency_relation" onchange="toggleEmergencySpecify(this)">
+            <option value="">Select relationship</option>
+            <option value="Father">Father</option>
+            <option value="Mother">Mother</option>
+            <option value="Partner">Partner</option>
+            <option value="Relative">Relative</option>
+            <option value="Others">Others (Please specify)</option>
+            </select>
           </div>
+<div class="field" id="emergencySpecifyField" style="display:none;">
+  <label>Specify Relationship</label>
+  <input type="text" name="emergency_relation_specify" placeholder="e.g. Aunt, Uncle, Friend">
+</div>
           <div class="field span-all" style="margin-top:1px;"></div>
           <div class="field span-2">
             <label>Full Address (House No. and Street)</label>
@@ -314,20 +325,20 @@ require_once("func/auth.php"); ?>
     </div>
 
     <div class="field">
-      <label>Guardian Relationship</label>
-      <select name="child_relation" onchange="toggleRelativeSpecify(this)">
-        <option value="">Select relationship</option>
-        <option>Father</option>
-        <option>Mother</option>
-        <option>Partner</option>
-        <option>Relative</option>
-        <option>Others</option>
-      </select>
-    </div>
-    <div class="field" id="relativeSpecifyField" style="display:none;">
-      <label>Specify Relationship</label>
-      <input type="text" name="child_relation_specify" placeholder="e.g. Aunt, Uncle, Cousin">
-    </div>
+  <label>Guardian Relationship</label>
+  <select name="child_relation" onchange="toggleRelativeSpecify(this)">
+  <option value="">Select relationship</option>
+  <option value="Father">Father</option>
+  <option value="Mother">Mother</option>
+  <option value="Partner">Partner</option>
+  <option value="Relative">Relative</option>
+  <option value="Others">Others (Please specify)</option>
+</select>
+  </div>
+<div class="field" id="relativeSpecifyField" style="display:none;">
+  <label>Specify Relationship</label>
+  <input type="text" name="child_relation_specify" placeholder="e.g. Aunt, Uncle, Legal Guardian">
+</div>
   </div>
 </div>
 
@@ -351,6 +362,15 @@ require_once("func/auth.php"); ?>
             <label>Expiration Date</label>
             <input type="date" name="expiration_date">
           </div>
+          <div class="field">
+            <label>PWD ID Card</label>
+            <label class="file-input-wrap">
+            <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            <span id="pwdCardLabel">Upload PWD ID Card</span>
+            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png"
+            onchange="document.getElementById('pwdCardLabel').textContent = this.files[0]?.name || 'Upload PWD ID Card'">
+  </label>
+</div>
         </div>
       </div>
 
@@ -388,6 +408,118 @@ require_once("func/auth.php"); ?>
 <?php endif; ?>
 
 <script>
+  // ── AUTO-COMPUTE AGE ──────────────────────────────────────────────────
+document.querySelector('input[name="dob"]').addEventListener('change', function () {
+  const dob = new Date(this.value);
+  if (isNaN(dob)) return;
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  document.querySelector('input[name="age"]').value = age >= 0 ? age : '';
+});
+
+// ── CIVIL STATUS → DISABLE SPOUSE ─────────────────────────────────────
+document.querySelector('select[name="civil_status"]').addEventListener('change', function () {
+  toggleSpouse(this.value);
+});
+function toggleSpouse(val) {
+  const spouseInput = document.querySelector('input[name="spouse_name"]');
+  if (!spouseInput) return;
+  if (val === 'Single') {
+    spouseInput.disabled = true;
+    spouseInput.value = '';
+    spouseInput.style.background = '#e8e8e8';
+    spouseInput.style.cursor = 'not-allowed';
+    spouseInput.style.color = 'rgba(28,2,2,0.3)';
+  } else {
+    spouseInput.disabled = false;
+    spouseInput.style.background = '';
+    spouseInput.style.cursor = '';
+    spouseInput.style.color = '';
+  }
+}
+// Run on load in case the page reloads with civil_status pre-selected
+toggleSpouse(document.querySelector('select[name="civil_status"]').value);
+
+// ── GUARDIAN RELATIONSHIP DROPDOWN ────────────────────────────────────
+function toggleRelativeSpecify(select) {
+  const field = document.getElementById('relativeSpecifyField');
+  const input = field.querySelector('input');
+  if (select.value === 'Relative') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
+    input.focus();
+  } else if (select.value === 'Others') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Legal Guardian, Foster Parent, Step Parent';
+    input.focus();
+  } else {
+    field.style.display = 'none';
+    input.value = '';
+  }
+}
+
+function toggleEmergencySpecify(select) {
+  const field = document.getElementById('emergencySpecifyField');
+  const input = field.querySelector('input');
+  if (select.value === 'Relative') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
+    input.focus();
+  } else if (select.value === 'Others') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Friend, Neighbor, Caregiver';
+    input.focus();
+  } else {
+    field.style.display = 'none';
+    input.value = '';
+  }
+}
+// ── FORM VALIDATION ───────────────────────────────────────────────────
+document.getElementById('regForm').addEventListener('submit', function (e) {
+  // Clear old errors
+  document.querySelectorAll('.field-error').forEach(el => el.remove());
+  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+  const required = [
+    { name: 'first_name',    label: 'First Name' },
+    { name: 'last_name',     label: 'Last Name' },
+    { name: 'civil_status',  label: 'Civil Status' },
+    { name: 'dob',           label: 'Date of Birth' },
+    { name: 'Gender',        label: 'Gender' },
+    { name: 'contact_number',label: 'Contact Number' },
+    { name: 'address',       label: 'Full Address' },
+  ];
+
+  let hasError = false;
+  required.forEach(function (f) {
+    const el = document.querySelector('[name="' + f.name + '"]');
+    if (!el) return;
+    const val = el.value.trim();
+    if (!val) {
+      hasError = true;
+      el.classList.add('input-error');
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent = '* ' + f.label + ' is required';
+      el.parentNode.appendChild(msg);
+    }
+  });
+
+  // At least one disability
+  const disabilityChecked = document.querySelectorAll('input[name="disability_type[]"]:checked').length > 0;
+  if (!disabilityChecked) {
+    hasError = true;
+    const grid = document.querySelector('.checkbox-grid');
+    const msg = document.createElement('span');
+    msg.className = 'field-error';
+    msg.textContent = '* Please select at least one disability type';
+    grid.parentNode.appendChild(msg);
+  }
+
+  if (hasError) e.preventDefault();
+});
   function closeDuplicateModal() {
 
     const modal =
@@ -399,19 +531,7 @@ require_once("func/auth.php"); ?>
         modal.style.display = "none";
     }
 }
-function toggleRelativeSpecify(select) {
-  const field = document.getElementById('relativeSpecifyField');
-  const input = field.querySelector('input');
-  if (select.value === 'Relative') {
-    field.style.display = '';
-    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
-  } else if (select.value === 'Others') {
-    field.style.display = '';
-    input.placeholder = 'e.g. Legal Guardian, Foster Parent, Step Parent';
-  } else {
-    field.style.display = 'none';
-  }
-}
+
 function toggleMenu(event, id) {
   event.preventDefault();
   event.currentTarget.classList.toggle("open");

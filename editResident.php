@@ -220,7 +220,7 @@ if ($edit_error) {
           </div>
           <div class="field">
             <label>Civil Status</label>
-            <select name="civil_status">
+            <select name="civil_status" onchange="toggleSpouse(this.value)">
               <option value="">Select status</option>
               <?php foreach (["Single", "Married", "Widowed", "Separated"] as $cs): ?>
                 <option value="<?= $cs ?>" <?= ($r['civil_status'] ?? '') === $cs ? "selected" : "" ?>><?= $cs ?></option>
@@ -229,7 +229,7 @@ if ($edit_error) {
           </div>
           <div class="field">
             <label>Date of Birth</label>
-            <input type="date" name="dob" value="<?= htmlspecialchars($r['birthdate'] ?? '') ?>">
+            <input type="date" name="dob" id="dobField" value="<?= htmlspecialchars($r['birthdate'] ?? '') ?>">
           </div>
           <div class="field">
             <label>Place of Birth</label>
@@ -237,7 +237,7 @@ if ($edit_error) {
           </div>
           <div class="field">
             <label>Age</label>
-            <input type="number" value="<?= !empty($r['birthdate']) ? htmlspecialchars(date_diff(date_create($r['birthdate']), date_create('today'))->y) : '' ?>" min="0" max="130" readonly>
+            <input type="number" id="ageField" value="<?= !empty($r['birthdate']) ? htmlspecialchars(date_diff(date_create($r['birthdate']), date_create('today'))->y) : '' ?>" min="0" max="130" readonly>
           </div>
           <div class="field">
             <label>Sex</label>
@@ -276,10 +276,30 @@ if ($edit_error) {
             <label>Emergency Contact Number</label>
             <input type="tel" name="emergency_number" value="<?= htmlspecialchars($r['emergency_number'] ?? '') ?>" placeholder="09XX XXX XXXX">
           </div>
+         <?php $knownEmergencyRels = ['', 'Father', 'Mother', 'Partner', 'Relative']; ?>
           <div class="field">
             <label>Relationship with Emergency Contact</label>
-            <input type="text" name="emergency_relation" value="<?= htmlspecialchars($r['emergency_relation'] ?? '') ?>" placeholder="e.g. Parent, Sibling">
+            <select name="emergency_relation" onchange="toggleEmergencySpecify(this)">
+            <option value="">Select relationship</option>
+            <option value="Father"   <?= ($r['emergency_relation'] ?? '') === 'Father'   ? 'selected' : '' ?>>Father</option>
+            <option value="Mother"   <?= ($r['emergency_relation'] ?? '') === 'Mother'   ? 'selected' : '' ?>>Mother</option>
+            <option value="Partner"  <?= ($r['emergency_relation'] ?? '') === 'Partner'  ? 'selected' : '' ?>>Partner</option>
+            <option value="Relative" <?= ($r['emergency_relation'] ?? '') === 'Relative' ? 'selected' : '' ?>>Relative</option>
+            <option value="Others"   <?= (!in_array($r['emergency_relation'] ?? '', $knownEmergencyRels)) ? 'selected' : '' ?>>Others (Please specify)</option>
+          </select>
           </div>
+<div class="field" id="emergencySpecifyField" style="display:<?= (!in_array($r['emergency_relation'] ?? '', $knownEmergencyRels)) ? 'flex' : 'none' ?>;">
+  <label>Specify Relationship</label>
+  <input type="text" name="emergency_relation_specify"
+    value="<?= (!in_array($r['emergency_relation'] ?? '', $knownEmergencyRels)) ? htmlspecialchars($r['emergency_relation']) : '' ?>"
+    placeholder="e.g. Aunt, Uncle, Friend">
+</div>
+        <div class="field" id="emergencySpecifyField" style="display:<?= (!in_array($r['emergency_relation'] ?? '', ['', 'Parent', 'Sibling'])) ? 'flex' : 'none' ?>;">
+          <label>Specify Relationship</label>
+          <input type="text" name="emergency_relation_specify"
+          value="<?= (!in_array($r['emergency_relation'] ?? '', ['', 'Parent', 'Sibling'])) ? htmlspecialchars($r['emergency_relation']) : '' ?>"
+          placeholder="e.g. Aunt, Uncle, Friend">
+        </div>
           <div class="field">
             <label>Email/Facebook Account</label>
             <input type="text" name="account_name" value="<?= htmlspecialchars($r['socials'] ?? '') ?>">
@@ -339,7 +359,9 @@ if ($edit_error) {
           </div>
           <div class="field">
             <label>Spouse Name</label>
-            <input type="text" name="spouse_name" value="<?= htmlspecialchars($r['spouse_name'] ?? '') ?>">
+            <input type="text" name="spouse_name" id="spouseField"
+            value="<?= htmlspecialchars($r['spouse_name'] ?? '') ?>"
+            <?= ($r['civil_status'] ?? '') === 'Single' ? 'disabled' : '' ?>>
           </div>
           <div class="field span-all" style="margin-top:1px;"></div>
           <div class="field">
@@ -347,8 +369,22 @@ if ($edit_error) {
             <input type="text" name="guardian_name" value="<?= htmlspecialchars($r['guardian_name'] ?? '') ?>" placeholder="Full name">
           </div>
           <div class="field">
-            <label>Relationship</label>
-            <input type="text" name="child_relation" value="<?= htmlspecialchars($r['guardian_rel'] ?? '') ?>" placeholder="e.g. Mother, Father">
+            <label>Guardian Relationship</label>
+              <select name="child_relation" id="guardianRelSelect" onchange="toggleGuardianSpecify(this)">
+                <option value="">Select relationship</option>
+                <option value="Father"  <?= ($r['guardian_rel'] ?? '') === 'Father'  ? 'selected' : '' ?>>Father</option>
+                <option value="Mother"  <?= ($r['guardian_rel'] ?? '') === 'Mother'  ? 'selected' : '' ?>>Mother</option>
+                <option value="Partner" <?= ($r['guardian_rel'] ?? '') === 'Partner' ? 'selected' : '' ?>>Partner</option>
+                <option value="Relative" <?= ($r['guardian_rel'] ?? '') === 'Relative' ? 'selected' : '' ?>>Relative</option>
+                <option value="Others"  <?= (!in_array($r['guardian_rel'] ?? '', ['', 'Father', 'Mother', 'Partner', 'Relative'])) ? 'selected' : '' ?>>Others (Please specify)</option>
+            </select>
+          </div>
+          <?php $knownGuardianRels = ['', 'Father', 'Mother', 'Partner', 'Relative']; ?>
+          <div class="field" id="guardianSpecifyField" style="display:<?= (!in_array($r['guardian_rel'] ?? '', $knownGuardianRels)) ? 'flex' : 'none' ?>;">
+          <label>Specify Relationship</label>
+          <input type="text" name="child_relation_specify"
+          value="<?= (!in_array($r['guardian_rel'] ?? '', $knownGuardianRels)) ? htmlspecialchars($r['guardian_rel']) : '' ?>"
+          placeholder="e.g. Aunt, Uncle, Legal Guardian">
           </div>
           <div class="field">
             <label>Guardian Number</label>
@@ -383,6 +419,21 @@ if ($edit_error) {
             <label>Expiration Date</label>
             <input type="date" name="expiration_date" value="<?= htmlspecialchars($r['idexpiration_date'] ?? '') ?>">
           </div>
+          <div class="field">
+            <label>PWD ID Card</label>
+            <?php if (!empty($r['pwd_id_card'])): ?>
+            <a href="<?= htmlspecialchars($r['pwd_id_card']) ?>" target="_blank"
+            style="display:inline-block;margin-bottom:8px;color:#A84040;font-weight:700;font-size:12px;text-decoration:none;">
+            View Current PWD ID Card
+            </a>
+            <?php endif; ?>
+            <label class="file-input-wrap">
+            <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            <span id="pwdCardLabel">Upload PWD ID Card…</span>
+            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png"
+            onchange="document.getElementById('pwdCardLabel').textContent = this.files[0]?.name || 'Upload PWD ID Card…'">
+          </label>
+        </div>
         </div>
       </div>
 
@@ -431,6 +482,74 @@ if ($edit_error) {
 </div>
 
 <script>
+// ── AGE AUTO-COMPUTE ──────────────────────────────────────────────────
+document.getElementById('dobField').addEventListener('change', function () {
+  const dob = new Date(this.value);
+  if (isNaN(dob)) return;
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  document.getElementById('ageField').value = age >= 0 ? age : '';
+});
+
+// ── CIVIL STATUS → DISABLE SPOUSE ────────────────────────────────────
+function toggleSpouse(val) {
+  const spouseInput = document.getElementById('spouseField');
+  if (!spouseInput) return;
+  if (val === 'Single') {
+    spouseInput.disabled = true;
+    spouseInput.value = '';
+    spouseInput.style.background = '#e8e8e8';
+    spouseInput.style.cursor = 'not-allowed';
+    spouseInput.style.color = 'rgba(28,2,2,0.3)';
+  } else {
+    spouseInput.disabled = false;
+    spouseInput.style.background = '';
+    spouseInput.style.cursor = '';
+    spouseInput.style.color = '';
+  }
+}
+// Run on load in case civil_status is already Single
+toggleSpouse(document.querySelector('select[name="civil_status"]').value);
+
+// ── GUARDIAN RELATIONSHIP ─────────────────────────────────────────────
+function toggleGuardianSpecify(select) {
+  const field = document.getElementById('guardianSpecifyField');
+  const input = field.querySelector('input');
+  if (select.value === 'Relative') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
+    input.focus();
+  } else if (select.value === 'Others') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Legal Guardian, Foster Parent, Step Parent';
+    input.focus();
+  } else {
+    field.style.display = 'none';
+    input.value = '';
+  }
+}
+
+function toggleEmergencySpecify(select) {
+  const field = document.getElementById('emergencySpecifyField');
+  const input = field.querySelector('input');
+  if (select.value === 'Relative') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Aunt, Uncle, Cousin';
+    input.focus();
+  } else if (select.value === 'Others') {
+    field.style.display = '';
+    input.placeholder = 'e.g. Friend, Neighbor, Caregiver';
+    input.focus();
+  } else {
+    field.style.display = 'none';
+    input.value = '';
+  }
+}
+
+// ── FORM VALIDATION ───────────────────────────────────────────────────
+
 function toggleMenu(event, id) {
   event.preventDefault();
   event.currentTarget.classList.toggle("open");

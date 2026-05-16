@@ -57,6 +57,10 @@ $emergency_number =
 
 $emergency_relation =
     trim($_POST["emergency_relation"] ?? "");
+if ($emergency_relation === "Others" || $emergency_relation === "Relative") {
+    $emergency_relation =
+        trim($_POST["emergency_relation_specify"] ?? $emergency_relation);
+}
 
 /* =========================
    DISABILITY
@@ -84,8 +88,10 @@ $spouse_name =
 $guardian_name =
     trim($_POST["guardian_name"] ?? "");
 
-$guardian_rel =
-    trim($_POST["child_relation"] ?? "");
+$guardian_rel = trim($_POST["child_relation"] ?? "");
+if ($guardian_rel === "Others" || $guardian_rel === "Relative") {
+    $guardian_rel = trim($_POST["child_relation_specify"] ?? $guardian_rel);
+}
 
     $guardian_number =
     trim($_POST["guardian_number"] ?? "");
@@ -113,7 +119,7 @@ $idexpiration_date =
 $current =
     mysqli_query(
         $conn,
-        "SELECT profile, med_cert
+        "SELECT profile, med_cert, pwd_id_card
          FROM residents
          WHERE ID = $id"
     );
@@ -126,6 +132,9 @@ $profile =
 
 $med_cert =
     $current_data["med_cert"] ?? "";
+
+$pwd_id_card =
+    $current_data["pwd_id_card"] ?? "";
 
 /* =========================
    PROFILE UPLOAD
@@ -216,6 +225,51 @@ if (
             $safe_name;
     }
 }
+    /* =========================
+   PWD ID CARD UPLOAD
+========================= */
+
+if (
+    isset($_FILES["pwd_id_card"])
+    && $_FILES["pwd_id_card"]["error"] === 0
+) {
+
+    $upload_dir =
+        "../uploads/pwd_id_cards/";
+
+    if (!is_dir($upload_dir)) {
+        mkdir($upload_dir, 0755, true);
+    }
+
+    $ext =
+        strtolower(
+            pathinfo(
+                $_FILES["pwd_id_card"]["name"],
+                PATHINFO_EXTENSION
+            )
+        );
+
+    $safe_name =
+        time() .
+        "_pwdcard." .
+        $ext;
+
+    $target =
+        $upload_dir .
+        $safe_name;
+
+    if (
+        move_uploaded_file(
+            $_FILES["pwd_id_card"]["tmp_name"],
+            $target
+        )
+    ) {
+        $pwd_id_card =
+            "uploads/pwd_id_cards/" .
+            $safe_name;
+    }
+}
+    
 
 /* =========================
    UPDATE RESIDENT
@@ -240,7 +294,8 @@ UPDATE residents SET
     idexpiration_date = ?,
 
     profile = ?,
-    med_cert = ?
+    med_cert = ?,
+    pwd_id_card = ?
 
 WHERE ID = ?
 ";
@@ -249,7 +304,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 mysqli_stmt_bind_param(
     $stmt,
-    "sssssssssssssssi",
+    "ssssssssssssssssi",
     $first_name,
     $middle_name,
     $last_name,
@@ -265,6 +320,7 @@ mysqli_stmt_bind_param(
     $idexpiration_date,
     $profile,
     $med_cert,
+    $pwd_id_card,
     $id
 );
 
