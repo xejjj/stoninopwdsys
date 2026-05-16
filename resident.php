@@ -1,4 +1,17 @@
 <?php 
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
+
+// Embedded Tracker: Updates session when user clicks the "View" eye icon
+if (isset($_GET['track_view_id'])) {
+    $id = intval($_GET['track_view_id']);
+    if (!isset($_SESSION['recent_views'])) { $_SESSION['recent_views'] = []; }
+    $pos = array_search($id, $_SESSION['recent_views']);
+    if ($pos !== false) { unset($_SESSION['recent_views'][$pos]); }
+    array_unshift($_SESSION['recent_views'], $id);
+    $_SESSION['recent_views'] = array_slice($_SESSION['recent_views'], 0, 5);
+    exit;
+}
+
 require_once("func/auth.php");
 require_once("func/getResidents.php"); 
 ?>
@@ -11,7 +24,16 @@ require_once("func/getResidents.php");
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/resident.css" />
 <style>
-/* Scoped Modal Styles */
+.header-left { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; }
+.breadcrumb { display: flex; align-items: center; gap: 6px; list-style: none; padding: 0; margin: 0 0 0 24px; font-size: 12.5px; font-weight: 500; color: #6B7280; }
+.breadcrumb a { color: #A84040; text-decoration: none; transition: opacity 0.2s; }
+.breadcrumb a:hover { text-decoration: underline; opacity: 0.8; }
+.breadcrumb .active { color: #1A1A1A; font-weight: 600; }
+.breadcrumb-separator { width: 12px; height: 12px; opacity: 0.5; }
+
+.menu-toggle-btn { display: none; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px; cursor: pointer; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.menu-toggle-btn svg { stroke: #333; width: 20px; height: 20px; }
+
 #viewModalOverlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; padding:20px; font-family:'DM Sans', sans-serif; }
 #viewModalContainer { background:#f5f4f2; border-radius:20px; width:100%; max-width:1100px; max-height:90vh; display:flex; flex-direction:column; position:relative; box-shadow:0 10px 40px rgba(0,0,0,0.3); }
 #viewModalBody { padding:24px; overflow-y:auto; flex:1; }
@@ -55,11 +77,37 @@ require_once("func/getResidents.php");
 .m-badge-speech { background:#FFE9D7; color:#D13E0D; border:1px solid #F2D1C4; }
 .m-badge-psycho { background:#E6FBE6; color:#15A44E; border:1px solid #C4F2D2; }
 .m-badge-others { background:#F0F0F0; color:#666; border:1px solid #DDD; }
+
+@media (max-width: 992px) {
+  .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; box-shadow: 2px 0 15px rgba(0,0,0,0.1); }
+  .sidebar.mobile-open { transform: translateX(0); }
+  .main-content { margin-left: 0 !important; padding: 16px !important; }
+  .menu-toggle-btn { display: flex; }
+  .breadcrumb { margin-left: 10px; }
+  .card-header { flex-direction: column !important; align-items: stretch !important; gap: 15px !important; }
+  #searchForm { width: 100% !important; margin-bottom: 0; }
+  .search-bar { width: 100% !important; }
+  #viewModalContainer { max-height: 95vh; }
+  .m-profile-content { flex-direction: column; align-items: center; text-align: center; padding: 0 20px 20px 20px; }
+  .m-profile-left { flex-direction: column; align-items: center; gap: 10px; }
+  .m-profile-name-row { flex-direction: column; gap: 6px; }
+  .m-classification-box { margin-top: 15px; align-items: center; padding: 15px; width: 100%; }
+  #m-dis-badges { justify-content: center !important; }
+  .m-details-grid { grid-template-columns: 1fr; gap: 15px; }
+  .m-contact-grid { grid-template-columns: 1fr; gap: 15px; }
+  .m-card { padding: 20px; }
+}
+
+@media (max-width: 576px) {
+  .pagination { flex-direction: column !important; align-items: center !important; text-align: center; gap: 15px; }
+  .pagination > div { width: 100%; justify-content: center !important; }
+  .pagination-btns { width: 100%; justify-content: center; }
+}
 </style>
 </head>
 <body>
 
-<aside class="sidebar">
+<aside class="sidebar" id="appSidebar">
   <div class="sidebar-brand">
     <div class="brand-icon">
       <img src="assets/barangay-logo.png" width="50">
@@ -72,14 +120,12 @@ require_once("func/getResidents.php");
 
   <nav class="sidebar-nav">
     <div class="nav-section-label">Main Menu</div>
-
     <div class="nav-group">
       <a class="nav-item" href="dashboard.php">
         <img src="assets/overviewicon.png" width="20">
         Overview
       </a>
     </div>
-
     <div class="nav-group">
       <a class="nav-item active" href="#" onclick="toggleMenu(event,'mgmt-sub')">
         <img src="assets/users.png" width="20">
@@ -92,14 +138,12 @@ require_once("func/getResidents.php");
         <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
-
     <div class="nav-group">
       <a class="nav-item" href="reports.php">
         <img src="assets/reporticon.png" width="20">
         Reports
       </a>
     </div>
-
     <?php 
     $isAdmin = ($_SESSION["role"] ?? "") === "admin";
     $isEncoder = ($_SESSION["role"] ?? "") === "encoder"; 
@@ -130,13 +174,24 @@ require_once("func/getResidents.php");
 
 <main class="main-content">
   <div class="content-card">
-
-    <div class="card-header">
-      <div class="page-title">
-        <img style="cursor:pointer;" src="assets/leftchevron.png" width="12" onclick="toDashboard()">
-        <h1>Residents List</h1>
+    <div class="card-header" style="align-items: flex-end;">
+      <div class="header-left">
+        <ul class="breadcrumb">
+          <li><a href="dashboard.php">Dashboard</a></li>
+          <li><svg class="breadcrumb-separator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></li>
+          <li>Management</li>
+          <li><svg class="breadcrumb-separator" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></li>
+          <li class="active">Residents List</li>
+        </ul>
+        <div class="page-title" style="display: flex; gap: 10px; align-items: center;">
+          <button class="menu-toggle-btn" onclick="toggleSidebarMenu()" title="Toggle Menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <img style="cursor:pointer;" src="assets/leftchevron.png" width="12" onclick="toDashboard()">
+          <h1>Residents List</h1>
+        </div>
       </div>
-      <form method="GET" action="resident.php" id="searchForm" style="display:flex;gap:10px;align-items:center;">
+      <form method="GET" action="resident.php" id="searchForm" style="display:flex;gap:10px;align-items:center; margin-bottom: 2px;">
         <?php if (!empty($filter_cat)):    ?><input type="hidden" name="category"   value="<?= htmlspecialchars($filter_cat) ?>"><?php endif; ?>
         <?php if (!empty($filter_sex)):    ?><input type="hidden" name="sex"        value="<?= htmlspecialchars($filter_sex) ?>"><?php endif; ?>
         <?php if (!empty($filter_status)): ?><input type="hidden" name="status"     value="<?= htmlspecialchars($filter_status) ?>"><?php endif; ?>
@@ -182,7 +237,7 @@ require_once("func/getResidents.php");
       </select>
     </form>
 
-    <div class="table-wrap">
+    <div class="table-wrap" style="-webkit-overflow-scrolling: touch;">
       <table class="data-table">
         <thead>
           <tr>
@@ -238,7 +293,6 @@ require_once("func/getResidents.php");
                 }
 
                 $status = htmlspecialchars($status);
-
                 $status_cls = "status-" . strtolower(str_replace(" ", "-", $status));
                 $is_expiring_soon = false;
 
@@ -252,8 +306,6 @@ require_once("func/getResidents.php");
                     }
                 }
                 $types_arr  = array_filter(array_map('trim', explode(",", $disability)));
-
-                // Embed JSON data inside the View Button
                 $json_data = htmlspecialchars(json_encode($user), ENT_QUOTES, 'UTF-8');
               ?>
               <tr>
@@ -289,9 +341,7 @@ require_once("func/getResidents.php");
     </div>
 
     <div class="pagination" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
-      
       <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; flex: 1;">
-        
         <span class="pagination-info">
           Page <?= $current_page ?> of <?= $total_pages ?> &nbsp;·&nbsp; <?= $total_rows ?> resident<?= $total_rows !== 1 ? "s" : "" ?>
         </span>
@@ -331,9 +381,7 @@ require_once("func/getResidents.php");
           <a href="<?= buildQuery($current_page + 1) ?>" class="page-btn <?= $current_page >= $total_pages ? 'disabled' : '' ?>">›</a>
         </div>
       </div>
-
     </div>
-
   </div>
 </main>
 
@@ -346,13 +394,11 @@ require_once("func/getResidents.php");
     <div style="padding:15px 24px; background:#fff; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center; border-radius: 20px 20px 0 0;">
       <h2 style="margin:0; font-size:18px; font-weight:700; color:#1A1A1A;">Resident Profile</h2>
       <div style="display:flex; gap:10px;">
-        
         <?php if ($isAdmin): ?>
         <button id="m-archive-btn" data-id="" onclick="confirmArchive(this.dataset.id)" style="border:none; cursor:pointer; padding:8px 16px; background:#FEF2F2; color:#EF4444; border-radius:8px; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg> Archive
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="12" x2="14" y2="12"/></svg> Archive
         </button>
         <?php endif; ?>
-
         <a id="m-edit-btn" href="#" style="text-decoration:none; padding:8px 16px; background:#EFF6FF; color:#3B82F6; border-radius:8px; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit
         </a>
@@ -475,11 +521,14 @@ function toggleMenu(event, id) {
   document.getElementById(id).classList.toggle("open");
 }
 function toDashboard() { window.location.href = "dashboard.php"; }
+function toggleSidebarMenu() { document.getElementById('appSidebar').classList.toggle('mobile-open'); }
 function logout() { window.location.href = "func/logout.php"; }
 
-// View Profile Modal Logic
 function openViewModal(btnElement) {
     const data = JSON.parse(btnElement.getAttribute('data-info'));
+    
+    // PING CURRENT PAGE TO UPDATE SESSION TRACKER
+    fetch(window.location.pathname + '?track_view_id=' + data.ID);
 
     document.getElementById('m-edit-btn').href = 'editResident.php?id=' + data.ID;
     
@@ -561,6 +610,7 @@ function openViewModal(btnElement) {
 
 function confirmArchive(id) {
   document.getElementById("archiveId").value = id;
+  document.getElementById('viewModalOverlay').style.display = 'none'; 
   document.getElementById("archiveModal").style.display = "flex";
 }
 
@@ -614,9 +664,7 @@ const searchForm = document.getElementById("searchForm");
 const searchInput = document.getElementById("liveSearchInput");
 let searchTimer;
 
-searchForm.addEventListener("submit", function(e) {
-  e.preventDefault();
-});
+searchForm.addEventListener("submit", function(e) { e.preventDefault(); });
 
 searchInput.addEventListener("input", function() {
   clearTimeout(searchTimer);
@@ -683,7 +731,6 @@ const filterOptions = {
 };
 
 let activeDropdown = null;
-
 function closeDropdown() {
   const dropdown = document.getElementById('filterDropdown');
   dropdown.style.display = 'none';
@@ -728,12 +775,8 @@ function openFilter(selectId, thElement) {
   let left = rect.left;
   let top  = rect.bottom + 4;
 
-  if (left + dropWidth > viewWidth - 8) {
-    left = viewWidth - dropWidth - 8;
-  }
-  if (top + dropHeight > viewHeight - 8) {
-    top = rect.top - dropHeight - 4;
-  }
+  if (left + dropWidth > viewWidth - 8) { left = viewWidth - dropWidth - 8; }
+  if (top + dropHeight > viewHeight - 8) { top = rect.top - dropHeight - 4; }
   if (left < 8) left = 8;
 
   dropdown.style.left       = left + 'px';
@@ -745,11 +788,10 @@ function openFilter(selectId, thElement) {
 document.addEventListener('click', (e) => {
   if (activeDropdown === null) return;
   const dropdown = document.getElementById('filterDropdown');
-  if (!dropdown.contains(e.target) && !e.target.closest('.th-filter')) {
+  if (!dropdown.contains(e.target) && !e.target.closest('.th-filter') && !e.target.closest('.menu-toggle-btn')) {
     closeDropdown();
   }
 });
 </script>
-
 </body>
 </html>
