@@ -202,10 +202,9 @@ require_once("func/auth.php"); ?>
             <input
   type="text"
   name="contact_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -224,10 +223,9 @@ require_once("func/auth.php"); ?>
             <input
   type="text"
   name="emergency_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -279,7 +277,7 @@ require_once("func/auth.php"); ?>
   <label class="file-input-wrap">
     <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
     <span id="medCertLabel">Upload medical certificate…</span>
-    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
+    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" id="medCertInput" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
   </label>
 </div>
         </div>
@@ -315,10 +313,9 @@ require_once("func/auth.php"); ?>
       <input
   type="text"
   name="guardian_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -367,8 +364,17 @@ require_once("func/auth.php"); ?>
             <label class="file-input-wrap">
             <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
             <span id="pwdCardLabel">Upload PWD ID Card</span>
-            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png"
+            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png" id="pwdCardInput"
             onchange="document.getElementById('pwdCardLabel').textContent = this.files[0]?.name || 'Upload PWD ID Card'">
+  </label>
+</div>
+          <div class="field">
+            <label>Valid ID</label>
+            <label class="file-input-wrap">
+            <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            <span id="validIdLabel">Upload Valid ID</span>
+            <input type="file" name="valid_id" accept=".pdf,.jpg,.jpeg,.png" id="validIdInput"
+            onchange="document.getElementById('validIdLabel').textContent = this.files[0]?.name || 'Upload Valid ID'">
   </label>
 </div>
         </div>
@@ -377,7 +383,7 @@ require_once("func/auth.php"); ?>
       <!-- Actions -->
       <div class="form-footer">
         <button class="btn btn-cancel" type="button" onclick="window.location.href='resident.php'">Cancel</button>
-        <button class="btn btn-save" type="submit">Save</button>
+        <button class="btn btn-save" type="button" onclick="validateAndSubmit()">Save</button>
       </div>
 
     </form>
@@ -443,6 +449,111 @@ function toggleSpouse(val) {
 toggleSpouse(document.querySelector('select[name="civil_status"]').value);
 
 // ── GUARDIAN RELATIONSHIP DROPDOWN ────────────────────────────────────
+function validateAndSubmit() {
+  // Clear old errors
+  document.querySelectorAll('.field-error').forEach(el => el.remove());
+  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+  let valid = true;
+
+  // ── Text / select fields ──
+  const requiredFields = [
+    { name: 'first_name',     label: 'First Name' },
+    { name: 'last_name',      label: 'Last Name' },
+    { name: 'dob',            label: 'Date of Birth' },
+    { name: 'contact_number', label: 'Contact Number' },
+    { name: 'address',        label: 'Full Address' },
+  ];
+
+  requiredFields.forEach(function (f) {
+    const el = document.querySelector('[name="' + f.name + '"]');
+    if (!el) return;
+    let val = el.value.trim();
+    
+    // Phone number validation: must be exactly 10 digits
+    if (f.name.includes('contact_number') || f.name.includes('emergency_number') || f.name.includes('guardian_number')) {
+      if (val.length !== 10 || !/^\d{10}$/.test(val)) {
+        valid = false;
+        el.classList.add('input-error');
+        const msg = document.createElement('span');
+        msg.className = 'field-error';
+        msg.textContent = f.label + ' must be exactly 10 digits.';
+        el.parentNode.appendChild(msg);
+        return;
+      }
+    }
+    
+    if (!val) {
+      valid = false;
+      el.classList.add('input-error');
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent = f.label + ' is required.';
+      el.parentNode.appendChild(msg);
+    }
+  });
+
+  // ── Phone number fields (emergency & guardian) - validate if filled ──
+  ['emergency_number', 'guardian_number'].forEach(fieldName => {
+    const el = document.querySelector('[name="' + fieldName + '"]');
+    if (!el) return;
+    const val = el.value.trim();
+    if (val && (val.length !== 10 || !/^\d{10}$/.test(val))) {
+      valid = false;
+      el.classList.add('input-error');
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent = 'Phone number must be exactly 10 digits.';
+      el.parentNode.appendChild(msg);
+    }
+  });
+
+  // ── Disability checkboxes ──
+  const disabilityChecked = document.querySelectorAll('input[name="disability_type[]"]:checked').length > 0;
+  if (!disabilityChecked) {
+    valid = false;
+    const grid = document.querySelector('.checkbox-grid');
+    const msg = document.createElement('span');
+    msg.className = 'field-error';
+    msg.textContent = 'Please select at least one disability type.';
+    grid.parentNode.appendChild(msg);
+  }
+
+  // ── File uploads ──
+  [
+    { input: document.getElementById('medCertInput'), labelId: 'medCertLabel' },
+    { input: document.getElementById('pwdCardInput'), labelId: 'pwdCardLabel' },
+    { input: document.getElementById('validIdInput'), labelId: 'validIdLabel' },
+  ].forEach(({ input, labelId }) => {
+    const wrap = input.closest('.file-input-wrap');
+    const errId = labelId + 'Err';
+    let errEl = document.getElementById(errId);
+
+    if (!input.files.length) {
+      valid = false;
+      wrap.style.borderColor = '#dc2626';
+      wrap.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.12)';
+      wrap.style.background = '#fff5f5';
+      wrap.style.color = '#dc2626';
+      if (!errEl) {
+        errEl = document.createElement('span');
+        errEl.id = errId;
+        errEl.className = 'field-error';
+        errEl.textContent = 'This field is required.';
+        wrap.parentElement.appendChild(errEl);
+      }
+    } else {
+      wrap.style.borderColor = '';
+      wrap.style.boxShadow = '';
+      wrap.style.background = '';
+      wrap.style.color = '';
+      if (errEl) errEl.remove();
+    }
+  });
+
+  if (!valid) return;
+  document.getElementById('regForm').submit();
+}
 function toggleRelativeSpecify(select) {
   const field = document.getElementById('relativeSpecifyField');
   const input = field.querySelector('input');
@@ -476,50 +587,17 @@ function toggleEmergencySpecify(select) {
     input.value = '';
   }
 }
-// ── FORM VALIDATION ───────────────────────────────────────────────────
-document.getElementById('regForm').addEventListener('submit', function (e) {
-  // Clear old errors
-  document.querySelectorAll('.field-error').forEach(el => el.remove());
-  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
 
-  const required = [
-    { name: 'first_name',    label: 'First Name' },
-    { name: 'last_name',     label: 'Last Name' },
-    { name: 'civil_status',  label: 'Civil Status' },
-    { name: 'dob',           label: 'Date of Birth' },
-    { name: 'Gender',        label: 'Gender' },
-    { name: 'contact_number',label: 'Contact Number' },
-    { name: 'address',       label: 'Full Address' },
-  ];
-
-  let hasError = false;
-  required.forEach(function (f) {
-    const el = document.querySelector('[name="' + f.name + '"]');
-    if (!el) return;
-    const val = el.value.trim();
-    if (!val) {
-      hasError = true;
-      el.classList.add('input-error');
-      const msg = document.createElement('span');
-      msg.className = 'field-error';
-      msg.textContent = '* ' + f.label + ' is required';
-      el.parentNode.appendChild(msg);
+  // Clear red highlight as soon as user fills a field
+  document.getElementById('regForm').addEventListener('input', function(e) {
+    const el = e.target;
+    if (el.classList.contains('input-error')) {
+      el.classList.remove('input-error');
+      const err = el.parentNode.querySelector('.field-error');
+      if (err) err.remove();
     }
   });
 
-  // At least one disability
-  const disabilityChecked = document.querySelectorAll('input[name="disability_type[]"]:checked').length > 0;
-  if (!disabilityChecked) {
-    hasError = true;
-    const grid = document.querySelector('.checkbox-grid');
-    const msg = document.createElement('span');
-    msg.className = 'field-error';
-    msg.textContent = '* Please select at least one disability type';
-    grid.parentNode.appendChild(msg);
-  }
-
-  if (hasError) e.preventDefault();
-});
   function closeDuplicateModal() {
 
     const modal =

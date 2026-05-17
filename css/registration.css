@@ -525,7 +525,6 @@
   opacity: .92;
 }
 
-/* ── VALIDATION ── */
 .input-error {
   border-color: #dc2626 !important;
   box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
