@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($username) || empty($password)) {
         $_SESSION["login_error"] = "Please fill in all fields.";
-        header("Location: ../login.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!$stmt) {
         $_SESSION["login_error"] = "Database error: " . mysqli_error($conn);
-        header("Location: ../login.php");
+        header("Location: ../index.php");
         exit();
     }
 
@@ -57,16 +57,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         } else {
             $_SESSION["login_error"] = "Incorrect password.";
-            header("Location: ../login.php");
+            header("Location: ../index.php");
             exit();
         }
     } else {
         $_SESSION["login_error"] = "Invalid username or password.";
-        header("Location: ../login.php");
+        header("Location: ../index.php");
         exit();
     }
 }
 
-header("Location: ../login.php");
+header("Location: ../index.php");
 exit();
 ?>

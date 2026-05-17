@@ -5,7 +5,7 @@ require_once("func/auth.php"); ?>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PWD/CWD Hub – New Registration</title>
+<title>PWD/CWD Hub – New Application</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/registration.css" />
 </head>
@@ -41,7 +41,7 @@ require_once("func/auth.php"); ?>
       </a>
       <div class="nav-sub open" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
-        <a class="nav-sub-item active" href="registration.php">New Registration</a>
+        <a class="nav-sub-item active" href="registration.php">New Application</a>
         <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
@@ -84,7 +84,7 @@ require_once("func/auth.php"); ?>
 <!-- ─── MAIN ─────────────────────────────────────── -->
 <div class="main">
   <header class="topbar">
-    <h1 class="topbar-title">New Registration</h1>
+    <h1 class="topbar-title">New Application</h1>
   </header>
 
   <div class="content">
@@ -344,7 +344,7 @@ require_once("func/auth.php"); ?>
 
       <!-- ID Registration Details -->
       <div class="card">
-        <div class="card-title">ID Registration Details</div>
+        <div class="card-title">ID Application Details</div>
         <div class="form-grid cols-4">
           <div class="field">
             <label>PWD ID Number</label>
@@ -394,7 +394,7 @@ require_once("func/auth.php"); ?>
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Resident Registered!</h2>
-    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The registration was saved successfully. What would you like to do next?</p>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The Application was saved successfully. What would you like to do next?</p>
     <div style="display:flex; gap:10px; justify-content:center;">
       <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
         View Residents
