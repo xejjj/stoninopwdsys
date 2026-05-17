@@ -183,7 +183,11 @@ require_once("func/auth.php"); ?>
             </select>
           </div>
           <div class="field">
-            <label>Upload Profile</label>
+            <label class="tooltip-wrap">Upload Profile
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload a clear, recent photo of the applicant. Accepted formats: JPG, PNG. This will appear on their profile record.</span>
+              </span>
+            </label>
             <label class="file-input-wrap">
               <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
               <span id="fileLabel">Choose file…</span>
@@ -273,7 +277,11 @@ require_once("func/auth.php"); ?>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize: none;"></textarea>
           </div>
           <div class="field span-all">
-  <label>Medical Certificate</label>
+  <label class="tooltip-wrap">Medical Certificate
+    <span class="tooltip-icon">?
+    <span class="tooltip-box">Upload a signed medical certificate from a licensed physician confirming the applicant's disability. Accepted formats: PDF, JPG, PNG.</span>
+    </span>
+  </label>
   <label class="file-input-wrap">
     <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
     <span id="medCertLabel">Upload medical certificate…</span>
@@ -344,11 +352,19 @@ require_once("func/auth.php"); ?>
         <div class="card-title">ID Application Details</div>
         <div class="form-grid cols-4">
           <div class="field">
-            <label>PWD ID Number</label>
+            <label class="tooltip-wrap">PWD ID Number
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">The unique identification number printed on the applicant's PWD ID card issued by the local government unit.</span>
+              </span>
+            </label>
             <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
-            <label>Control Number</label>
+            <label class="tooltip-wrap">Control Number
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">The barangay or municipal control number assigned during the PWD ID application process. Found on the registration form or ID stub.</span>
+              </span>
+            </label>
             <input type="text" name="control_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
@@ -360,7 +376,11 @@ require_once("func/auth.php"); ?>
             <input type="date" name="expiration_date">
           </div>
           <div class="field">
-            <label>PWD ID Card</label>
+            <label class="tooltip-wrap">PWD ID Card
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload a photo or scan of the applicant's PWD ID card (front and back side). Accepted formats: PDF, JPG, PNG.</span>
+              </span>
+            </label>
             <label class="file-input-wrap">
             <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
             <span id="pwdCardLabel">Upload PWD ID Card</span>
@@ -369,7 +389,11 @@ require_once("func/auth.php"); ?>
   </label>
 </div>
           <div class="field">
-            <label>Valid ID</label>
+            <label class="tooltip-wrap">Valid ID
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload any government-issued valid ID (e.g. PhilSys, Passport, Voter's ID). Accepted formats: PDF, JPG, PNG.</span>
+              </span>
+            </label>
             <label class="file-input-wrap">
             <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
             <span id="validIdLabel">Upload Valid ID</span>
