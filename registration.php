@@ -5,7 +5,7 @@ require_once("func/auth.php"); ?>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PWD/CWD Hub – New Registration</title>
+<title>PWD/CWD Hub – New Application</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/registration.css" />
 </head>
@@ -41,7 +41,7 @@ require_once("func/auth.php"); ?>
       </a>
       <div class="nav-sub open" id="mgmt-sub">
         <a class="nav-sub-item" href="resident.php">View Residents</a>
-        <a class="nav-sub-item active" href="registration.php">New Registration</a>
+        <a class="nav-sub-item active" href="registration.php">New Application</a>
         <a class="nav-sub-item" href="review.php">Review Submissions</a>
       </div>
     </div>
@@ -84,7 +84,7 @@ require_once("func/auth.php"); ?>
 <!-- ─── MAIN ─────────────────────────────────────── -->
 <div class="main">
   <header class="topbar">
-    <h1 class="topbar-title">New Registration</h1>
+    <h1 class="topbar-title">New Application</h1>
   </header>
 
   <div class="content">
@@ -183,7 +183,11 @@ require_once("func/auth.php"); ?>
             </select>
           </div>
           <div class="field">
-            <label>Upload Profile</label>
+            <label class="tooltip-wrap">Upload Profile
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload a clear, recent photo of the applicant. Accepted formats: JPG, PNG. This will appear on their profile record.</span>
+              </span>
+            </label>
             <label class="file-input-wrap">
               <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
               <span id="fileLabel">Choose file…</span>
@@ -202,10 +206,9 @@ require_once("func/auth.php"); ?>
             <input
   type="text"
   name="contact_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['contact_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -224,10 +227,9 @@ require_once("func/auth.php"); ?>
             <input
   type="text"
   name="emergency_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['emergency_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -275,11 +277,15 @@ require_once("func/auth.php"); ?>
             <textarea name="remarks" rows="3" placeholder="Additional notes about the disability..." style="resize: none;"></textarea>
           </div>
           <div class="field span-all">
-  <label>Medical Certificate</label>
+  <label class="tooltip-wrap">Medical Certificate
+    <span class="tooltip-icon">?
+    <span class="tooltip-box">Upload a signed medical certificate from a licensed physician confirming the applicant's disability. Accepted formats: PDF, JPG, PNG.</span>
+    </span>
+  </label>
   <label class="file-input-wrap">
     <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
     <span id="medCertLabel">Upload medical certificate…</span>
-    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
+    <input type="file" name="med_cert" accept=".pdf,.jpg,.jpeg,.png" id="medCertInput" onchange="document.getElementById('medCertLabel').textContent = this.files[0]?.name || 'Upload medical certificate…'">
   </label>
 </div>
         </div>
@@ -315,10 +321,9 @@ require_once("func/auth.php"); ?>
       <input
   type="text"
   name="guardian_number"
-  maxlength="11"
-  pattern="^09\d{9}$"
+  maxlength="10"
   inputmode="numeric"
-  placeholder="09XXXXXXXXX"
+  placeholder="+63 | 9XXXXXXXXX"
   value="<?= htmlspecialchars($form_data['guardian_number'] ?? '') ?>"
   oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 >
@@ -344,14 +349,22 @@ require_once("func/auth.php"); ?>
 
       <!-- ID Registration Details -->
       <div class="card">
-        <div class="card-title">ID Registration Details</div>
+        <div class="card-title">ID Application Details</div>
         <div class="form-grid cols-4">
           <div class="field">
-            <label>PWD ID Number</label>
+            <label class="tooltip-wrap">PWD ID Number
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">The unique identification number printed on the applicant's PWD ID card issued by the local government unit.</span>
+              </span>
+            </label>
             <input type="text" name="pwd_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
-            <label>Control Number</label>
+            <label class="tooltip-wrap">Control Number
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">The barangay or municipal control number assigned during the PWD ID application process. Found on the registration form or ID stub.</span>
+              </span>
+            </label>
             <input type="text" name="control_id" placeholder="XXXXXXXXXXXX">
           </div>
           <div class="field">
@@ -363,12 +376,29 @@ require_once("func/auth.php"); ?>
             <input type="date" name="expiration_date">
           </div>
           <div class="field">
-            <label>PWD ID Card</label>
+            <label class="tooltip-wrap">PWD ID Card
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload a photo or scan of the applicant's PWD ID card (front and back side). Accepted formats: PDF, JPG, PNG.</span>
+              </span>
+            </label>
             <label class="file-input-wrap">
             <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
             <span id="pwdCardLabel">Upload PWD ID Card</span>
-            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png"
+            <input type="file" name="pwd_id_card" accept=".pdf,.jpg,.jpeg,.png" id="pwdCardInput"
             onchange="document.getElementById('pwdCardLabel').textContent = this.files[0]?.name || 'Upload PWD ID Card'">
+  </label>
+</div>
+          <div class="field">
+            <label class="tooltip-wrap">Valid ID
+              <span class="tooltip-icon">?
+              <span class="tooltip-box">Upload any government-issued valid ID (e.g. PhilSys, Passport, Voter's ID). Accepted formats: PDF, JPG, PNG.</span>
+              </span>
+            </label>
+            <label class="file-input-wrap">
+            <svg viewBox="0 0 24 24"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
+            <span id="validIdLabel">Upload Valid ID</span>
+            <input type="file" name="valid_id" accept=".pdf,.jpg,.jpeg,.png" id="validIdInput"
+            onchange="document.getElementById('validIdLabel').textContent = this.files[0]?.name || 'Upload Valid ID'">
   </label>
 </div>
         </div>
@@ -377,7 +407,7 @@ require_once("func/auth.php"); ?>
       <!-- Actions -->
       <div class="form-footer">
         <button class="btn btn-cancel" type="button" onclick="window.location.href='resident.php'">Cancel</button>
-        <button class="btn btn-save" type="submit">Save</button>
+        <button class="btn btn-save" type="button" onclick="validateAndSubmit()">Save</button>
       </div>
 
     </form>
@@ -394,7 +424,7 @@ require_once("func/auth.php"); ?>
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38C966" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <h2 style="font-size:18px; font-weight:800; color:#1c0202; margin-bottom:8px;">Resident Registered!</h2>
-    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The registration was saved successfully. What would you like to do next?</p>
+    <p style="font-size:13.5px; color:rgba(28,2,2,0.55); margin-bottom:28px;">The Application was saved successfully. What would you like to do next?</p>
     <div style="display:flex; gap:10px; justify-content:center;">
       <button onclick="window.location.href='resident.php'" style="padding:10px 22px; border-radius:10px; border:1.5px solid rgba(0,0,0,0.1); background:#fff; font-family:inherit; font-size:13.5px; font-weight:700; color:rgba(28,2,2,0.6); cursor:pointer;">
         View Residents
@@ -443,6 +473,111 @@ function toggleSpouse(val) {
 toggleSpouse(document.querySelector('select[name="civil_status"]').value);
 
 // ── GUARDIAN RELATIONSHIP DROPDOWN ────────────────────────────────────
+function validateAndSubmit() {
+  // Clear old errors
+  document.querySelectorAll('.field-error').forEach(el => el.remove());
+  document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+  let valid = true;
+
+  // ── Text / select fields ──
+  const requiredFields = [
+    { name: 'first_name',     label: 'First Name' },
+    { name: 'last_name',      label: 'Last Name' },
+    { name: 'dob',            label: 'Date of Birth' },
+    { name: 'contact_number', label: 'Contact Number' },
+    { name: 'address',        label: 'Full Address' },
+  ];
+
+  requiredFields.forEach(function (f) {
+    const el = document.querySelector('[name="' + f.name + '"]');
+    if (!el) return;
+    let val = el.value.trim();
+    
+    // Phone number validation: must be exactly 10 digits
+    if (f.name.includes('contact_number') || f.name.includes('emergency_number') || f.name.includes('guardian_number')) {
+      if (val.length !== 10 || !/^\d{10}$/.test(val)) {
+        valid = false;
+        el.classList.add('input-error');
+        const msg = document.createElement('span');
+        msg.className = 'field-error';
+        msg.textContent = f.label + ' must be exactly 10 digits.';
+        el.parentNode.appendChild(msg);
+        return;
+      }
+    }
+    
+    if (!val) {
+      valid = false;
+      el.classList.add('input-error');
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent = f.label + ' is required.';
+      el.parentNode.appendChild(msg);
+    }
+  });
+
+  // ── Phone number fields (emergency & guardian) - validate if filled ──
+  ['emergency_number', 'guardian_number'].forEach(fieldName => {
+    const el = document.querySelector('[name="' + fieldName + '"]');
+    if (!el) return;
+    const val = el.value.trim();
+    if (val && (val.length !== 10 || !/^\d{10}$/.test(val))) {
+      valid = false;
+      el.classList.add('input-error');
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent = 'Phone number must be exactly 10 digits.';
+      el.parentNode.appendChild(msg);
+    }
+  });
+
+  // ── Disability checkboxes ──
+  const disabilityChecked = document.querySelectorAll('input[name="disability_type[]"]:checked').length > 0;
+  if (!disabilityChecked) {
+    valid = false;
+    const grid = document.querySelector('.checkbox-grid');
+    const msg = document.createElement('span');
+    msg.className = 'field-error';
+    msg.textContent = 'Please select at least one disability type.';
+    grid.parentNode.appendChild(msg);
+  }
+
+  // ── File uploads ──
+  [
+    { input: document.getElementById('medCertInput'), labelId: 'medCertLabel' },
+    { input: document.getElementById('pwdCardInput'), labelId: 'pwdCardLabel' },
+    { input: document.getElementById('validIdInput'), labelId: 'validIdLabel' },
+  ].forEach(({ input, labelId }) => {
+    const wrap = input.closest('.file-input-wrap');
+    const errId = labelId + 'Err';
+    let errEl = document.getElementById(errId);
+
+    if (!input.files.length) {
+      valid = false;
+      wrap.style.borderColor = '#dc2626';
+      wrap.style.boxShadow = '0 0 0 3px rgba(220,38,38,0.12)';
+      wrap.style.background = '#fff5f5';
+      wrap.style.color = '#dc2626';
+      if (!errEl) {
+        errEl = document.createElement('span');
+        errEl.id = errId;
+        errEl.className = 'field-error';
+        errEl.textContent = 'This field is required.';
+        wrap.parentElement.appendChild(errEl);
+      }
+    } else {
+      wrap.style.borderColor = '';
+      wrap.style.boxShadow = '';
+      wrap.style.background = '';
+      wrap.style.color = '';
+      if (errEl) errEl.remove();
+    }
+  });
+
+  if (!valid) return;
+  document.getElementById('regForm').submit();
+}
 function toggleRelativeSpecify(select) {
   const field = document.getElementById('relativeSpecifyField');
   const input = field.querySelector('input');
