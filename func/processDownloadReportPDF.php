@@ -1,7 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Manila');
 require_once("db.php");
-require_once("reportFunctions.php"); // <--- Included the new file here
 require_once("../fpdf/fpdf.php");
 
 $type = $_GET['type'] ?? '';
@@ -92,6 +91,83 @@ if ($type === "resident_list") {
     }
 }
 
+function getTitle($type, $category, $resType, $disType, $sex, $search, $filter_cat, $filter_sex, $filter_status, $filter_disab) {
+    if ($type === "resident_list") {
+        $parts = [];
+        if (!empty($filter_cat)) $parts[] = $filter_cat;
+        if (!empty($filter_sex)) $parts[] = ucfirst($filter_sex);
+        if (!empty($filter_status)) $parts[] = $filter_status;
+        if (!empty($filter_disab)) $parts[] = $filter_disab;
+        if (!empty($search)) $parts[] = "Search: '" . $search . "'";
+        if (empty($parts)) return "Complete Residents List";
+        return "Filtered Residents List: " . implode(" | ", $parts);
+    }
+    if ($type === "custom") {
+        $parts = [];
+        if ($resType !== "All") $parts[] = $resType;
+        if ($sex !== "All") $parts[] = $sex;
+        if ($disType !== "All") $parts[] = $disType;
+        if (empty($parts)) return "Complete Master List";
+        return "Filtered List: " . implode(" | ", $parts);
+    }
+    if ($type === "master") return "Master List of Registered PWDs and CWDs";
+    if ($type === "pwdcwd") return $category === "ALL" ? "PWD/CWD Summary Report" : "$category Summary Report";
+    if ($type === "disability") return $category === "ALL" ? "PWD/CWD Disability Classification Summary" : "$category Disability Classification Details";
+    return "Report";
+}
+
+function getAge($birthdate) {
+    if (empty($birthdate) || $birthdate === '0000-00-00') return "--";
+    try {
+        return date_diff(date_create($birthdate), date_create("today"))->y;
+    } catch (Exception $e) {
+        return "--";
+    }
+}
+
+function fmt($val) {
+    $trimVal = trim($val ?? '');
+    if ($trimVal === '' || $trimVal === 'N/A' || $trimVal === '0000-00-00') return "--";
+    return htmlspecialchars($trimVal);
+}
+
+function fmtDate($val) {
+    $trimVal = trim($val ?? '');
+    if ($trimVal === '' || $trimVal === 'N/A' || $trimVal === '0000-00-00') return "--";
+    // Changed to Y-m-d to match the column header formatting
+    return date('Y-m-d', strtotime($trimVal));
+}
+
+function getResidentReportSql($extraWhere = "") {
+    return "
+    SELECT
+        residents.*,
+        resident_contacts.contact_num,
+        GROUP_CONCAT(
+            DISTINCT resident_disabilities.disability_type
+            SEPARATOR ', '
+        ) AS disability_type,
+        MAX(resident_disabilities.notes) AS disability_remarks,
+        MAX(
+            CASE
+                WHEN resident_family_members.relationship NOT IN ('Father','Mother','Spouse')
+                THEN resident_family_members.name
+            END
+        ) AS guardian_name
+    FROM residents
+    LEFT JOIN resident_contacts
+    ON residents.ID = resident_contacts.resident_id
+    LEFT JOIN resident_disabilities
+    ON residents.ID = resident_disabilities.resident_id
+    LEFT JOIN resident_family_members
+    ON residents.ID = resident_family_members.resident_id
+    WHERE residents.record_status != 'archived'
+    $extraWhere
+    GROUP BY residents.ID
+    ORDER BY residents.resident_type, residents.last_name, residents.first_name
+    ";
+}
+
 // Extension of FPDF to handle repeating headers
 class ReportPDF extends FPDF {
     public $reportTitle = '';
@@ -115,12 +191,31 @@ class ReportPDF extends FPDF {
         $this->Ln(4);
 
         if (!empty($this->tableCols)) {
-            $this->SetFont('Times', 'B', 6.5);
+            $this->SetFont('Times', 'B', 6);
             $this->SetFillColor(240, 240, 240);
+            
+            $startY = $this->GetY();
             foreach ($this->tableCols as $col) {
-                $this->Cell($col['w'], 8, $col['label'], 1, 0, 'C', true);
+                $startX = $this->GetX();
+                
+                // Draw standard cell background/border manually
+                $this->Rect($startX, $startY, $col['w'], 8, 'DF');
+                
+                // Detect linebreaks and split text
+                if (strpos($col['label'], "\n") !== false) {
+                    $lines = explode("\n", $col['label']);
+                    $this->SetXY($startX, $startY + 1.5);
+                    $this->Cell($col['w'], 2.5, $lines[0], 0, 2, 'C');
+                    $this->Cell($col['w'], 2.5, $lines[1], 0, 0, 'C');
+                } else {
+                    $this->SetXY($startX, $startY);
+                    $this->Cell($col['w'], 8, $col['label'], 0, 0, 'C');
+                }
+                
+                // Advance X to the next column
+                $this->SetXY($startX + $col['w'], $startY);
             }
-            $this->Ln();
+            $this->Ln(8);
         }
     }
 }
@@ -138,7 +233,7 @@ if ($type === "master" || $type === "custom" || $type === "resident_list") {
         ['w' => 12, 'label' => 'Type'],
         ['w' => 8,  'label' => 'Sex'],
         ['w' => 7,  'label' => 'Age'],
-        ['w' => 16, 'label' => 'Birthdate'],
+        ['w' => 16, 'label' => "Birthdate\n(yyyy-mm-dd)"],
         ['w' => 30, 'label' => 'Address'],
         ['w' => 18, 'label' => 'Contact No.'],
         ['w' => 20, 'label' => 'Guardian'],
@@ -153,7 +248,7 @@ if ($type === "master" || $type === "custom" || $type === "resident_list") {
         ['w' => 32, 'label' => 'Full Name'],
         ['w' => 8,  'label' => 'Sex'],
         ['w' => 7,  'label' => 'Age'],
-        ['w' => 16, 'label' => 'Birthdate'],
+        ['w' => 16, 'label' => "Birthdate\n(yyyy-mm-dd)"],
         ['w' => 30, 'label' => 'Address'],
         ['w' => 18, 'label' => 'Contact No.'],
         ['w' => 20, 'label' => 'Guardian'],
@@ -170,7 +265,7 @@ if ($type === "master" || $type === "custom" || $type === "resident_list") {
         ['w' => 10, 'label' => 'Type'],
         ['w' => 7,  'label' => 'Sex'],
         ['w' => 6,  'label' => 'Age'],
-        ['w' => 15, 'label' => 'Birthdate'],
+        ['w' => 15, 'label' => "Birthdate\n(yyyy-mm-dd)"],
         ['w' => 28, 'label' => 'Address'],
         ['w' => 16, 'label' => 'Contact No.'],
         ['w' => 18, 'label' => 'Guardian'],

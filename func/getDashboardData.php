@@ -2,16 +2,8 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require_once("db.php");
 
-/* =========================
-   TOTAL ACTIVE RESIDENTS
-========================= */
-
 $total_result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM residents WHERE record_status = 'active'");
 $total = mysqli_fetch_assoc($total_result)["total"] ?? 0;
-
-/* =========================
-   AGE BRACKETS
-========================= */
 
 $minors_result = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM residents WHERE record_status = 'active' AND TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) BETWEEN 0 AND 17");
 $minors_count = mysqli_fetch_assoc($minors_result)["cnt"] ?? 0;
@@ -26,20 +18,12 @@ $minors_pct  = $total > 0 ? max(4, round(($minors_count / $total) * 100)) : 0;
 $adults_pct  = $total > 0 ? max(4, round(($adults_count / $total) * 100)) : 0;
 $seniors_pct = $total > 0 ? max(4, round(($seniors_count / $total) * 100)) : 0;
 
-/* =========================
-   STATUS COUNTS
-========================= */
-
 $active_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM residents WHERE record_status = 'active'"))["cnt"] ?? 0;
 $under_review_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM residents WHERE application_status = 'under review'"))["cnt"] ?? 0;
 $needs_correction_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM residents WHERE application_status = 'needs correction'"))["cnt"] ?? 0;
 $expired_count = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM residents WHERE record_status = 'expired'"))["cnt"] ?? 0;
 
 $status_total = $active_count + $under_review_count + $needs_correction_count + $expired_count;
-
-/* =========================
-   PIE CHART
-========================= */
 
 if (!function_exists('pieSlice')) {
     function pieSlice($cx, $cy, $r, $startDeg, $endDeg) {
@@ -63,10 +47,6 @@ $active_path = $status_total > 0 ? pieSlice(90,90,80,0,$active_deg) : "";
 $under_review_path = $status_total > 0 ? pieSlice(90, 90, 80, $active_deg, $active_deg + $under_review_deg) : "";
 $needs_correction_path = $status_total > 0 ? pieSlice(90, 90, 80, $active_deg + $under_review_deg, $active_deg + $under_review_deg + $needs_correction_deg) : "";
 $expired_path = $status_total > 0 ? pieSlice(90, 90, 80, $active_deg + $under_review_deg + $needs_correction_deg, 360) : "";
-
-/* =========================
-   DIRECTORY
-========================= */
 
 $search = trim($_GET["search"] ?? "");
 $dash_filter_disab = trim($_GET["disability"] ?? "");
@@ -127,32 +107,40 @@ if ($is_filtered) {
         $where[] = "resident_disabilities.disability_type = '" . mysqli_real_escape_string($conn, $dash_filter_disab) . "'";
     }
 } else {
-    // Show recently viewed 5 if available
+    // THIS IS THE CRITICAL CHANGE: Tell SQL to look for the IDs
     if (!empty($_SESSION['recent_views'])) {
         $clean_ids = array_map('intval', $_SESSION['recent_views']);
-        $where[] = "residents.ID IN (" . implode(',', $clean_ids) . ")";
+        $id_list = implode(',', $clean_ids);
+        $where[] = "residents.ID IN ($id_list)";
+        
+        // Use FIELD() to retain the exact ordering of the session array
+        $order_by_clause = "ORDER BY FIELD(residents.ID, $id_list)";
     } else {
-        $where[] = "1=0";
+        $where[] = "1=0"; // Returns empty table if no recent views exist
     }
 }
 
 $where[] = "residents.record_status != 'archived'";
 $query .= " WHERE " . implode(" AND ", $where);
 
-// Prioritize sorting sequence: Expired > Needs Correction > Under Review > Active
-// Inside each status group, order chronologically by ID DESC (newest residents first)
-$query .= "
-GROUP BY residents.ID
-ORDER BY
-CASE
-    WHEN residents.record_status = 'expired' THEN 0
-    WHEN residents.application_status = 'needs correction' THEN 1
-    WHEN residents.application_status = 'under review' THEN 2
-    WHEN residents.record_status = 'active' THEN 3
-    ELSE 4
-END,
-residents.ID ASC
-";
+$query .= " GROUP BY residents.ID ";
+
+// Apply the custom ordering ONLY if pulling recent views, otherwise apply standard sorts
+if (!$is_filtered && !empty($_SESSION['recent_views'])) {
+    $query .= $order_by_clause;
+} else {
+    $query .= "
+    ORDER BY
+    CASE
+        WHEN residents.record_status = 'expired' THEN 0
+        WHEN residents.application_status = 'needs correction' THEN 1
+        WHEN residents.application_status = 'under review' THEN 2
+        WHEN residents.record_status = 'active' THEN 3
+        ELSE 4
+    END,
+    residents.ID DESC
+    ";
+}
 
 $residents_result = mysqli_query($conn, $query);
 

@@ -20,7 +20,7 @@
         
         <div class="left-panel">
             <div class="admin-badge">
-                <div class="shield-icon"></div>
+                <div class="shield-icon"><img src="assets/barangay-logo.png" width="50"></div>
                 Admin Portal
             </div>
             <h1>PWD & CWD<br>Database</h1>
@@ -30,9 +30,6 @@
             <h2>Mabuhay!</h2>
             <p class="subtitle">Enter your credentials to access the<br>dashboard.</p>
 
-          
-
-            <!-- success and error FOR NOW, will replace with popups later -->
             <?php if (isset($_SESSION["login_error"])): ?>
             <div class="error-msg">
                 <?= htmlspecialchars($_SESSION["login_error"]) ?>
@@ -40,11 +37,18 @@
             <?php unset($_SESSION["login_error"]); ?>
             <?php endif; ?>
 
+            <?php if (isset($_SESSION["forgot_msg"])): ?>
+            <div class="success-msg">
+                <?= htmlspecialchars($_SESSION["forgot_msg"]) ?>
+            </div>
+            <?php unset($_SESSION["forgot_msg"]); ?>
+            <?php endif; ?>
+
             <form action="func/processLogin.php" method="POST">
                 <div class="input-group">
                     <label for="username">Username</label>
                     <div class="input-wrapper">
-                        <input type="text" id="username" name="username" placeholder="Enter Username">
+                        <input type="text" id="username" name="username" placeholder="Enter Username" value="<?= isset($_COOKIE['remembered_username']) ? htmlspecialchars($_COOKIE['remembered_username']) : '' ?>">
                     </div>
                 </div>
 
@@ -56,12 +60,40 @@
                     </div>
                 </div>
 
+                <div class="login-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember_me" <?= isset($_COOKIE['remembered_username']) ? 'checked' : '' ?>>
+                        <span class="checkmark"></span>
+                        Remember Me
+                    </label>
+                    <a href="#" class="forgot-pwd" onclick="openForgotModal(event)">Forgot Password?</a>
+                </div>
+
                 <button type="submit" class="submit-btn">
                     Sign In to dashboard 
                 </button>
             </form>
         </div>
 
+    </div>
+
+    <div id="forgotModalOverlay" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="close-btn" onclick="closeForgotModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Enter the email address associated with your account and we will send you a link to reset your password.</p>
+                <form action="func/processForgotPass.php" method="POST">
+                    <div class="input-group">
+                        <label for="forgot_email">Email Address</label>
+                        <input type="email" id="forgot_email" name="email" placeholder="e.g. admin@stonino.gov.ph" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Recovery Email</button>
+                </form>
+            </div>
+        </div>
     </div>
 
 <script>
@@ -76,6 +108,15 @@
 
     function toHome() {
         window.location.href = "index.php";
+    }
+
+    function openForgotModal(e) {
+        e.preventDefault();
+        document.getElementById('forgotModalOverlay').style.display = 'flex';
+    }
+
+    function closeForgotModal() {
+        document.getElementById('forgotModalOverlay').style.display = 'none';
     }
 </script>
 

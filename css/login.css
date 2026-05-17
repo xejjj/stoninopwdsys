@@ -1,198 +1,316 @@
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: #f4f5f6;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .error-msg {
-        background-color: #fee2e2;
-        color: #b91c1c;
-        border: 1px solid #fca5a5;
-        border-radius: 8px;
-        padding: 10px 14px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        font-weight: 500;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
 }
 
-        /* retorn boton */
-        .return-btn {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            background: white;
-            border: 1px solid #e2e8f0;
-            padding: 10px 25px;
-            border-radius: 7px;
-            color: black;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-            display: inline;
-            align-items: center;
-            row-gap: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            transition: all 0.2s ease;
-        }
+body {
+    background-color: #f4f5f6;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
 
-        .return-btn:active {
-            transform: scale(.95);
-        }
+.error-msg {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
 
-        .return-btn:hover {
-            background: #f8fafc;
-            color: #334155;
-        }
+.success-msg {
+    background-color: #d1fae5;
+    color: #047857;
+    border: 1px solid #6ee7b7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    font-weight: 500;
+}
 
-        /* main panel */
-        .card-container {
-            display: flex;
-            width: 1300px;
-            height: 700px;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-        }
+/* return button */
+.return-btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    padding: 10px 25px;
+    border-radius: 7px;
+    color: black;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.2s ease;
+}
 
-        /* gradient thing */
-        .left-panel {
-            flex: 1;
-            background: linear-gradient(190deg, #d3ab79 0%, #871115 100%);
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: white;
-        }
-        /* text sa tabi ng admin icon */
-        .admin-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 30px;
-            font-weight: 600;
-            opacity: 0.9;
-        }
+.return-btn:active {
+    transform: scale(.95);
+}
 
-        /* border lang ng shield icon lakihan if needed */
-        .shield-icon {
-            width: 30px;
-            height: 30px;
-            border: 1px solid rgba(255,255,255,0.5);
-            padding: 4px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-        }
-        /* main text sa left banner */
-        .left-panel h1 {
-            font-size: 52px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 10px;
-            margin-left: 30px;
-        }
+.return-btn:hover {
+    background: #f8fafc;
+    color: #334155;
+}
 
-        /* da right panel */
-        .right-panel {
-            flex: 1.1;
-            padding: 60px 70px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        /* mabuhay!!!!!!! */
-        .right-panel h2 {
-            font-size: 40px;
-            color: darkred;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
+/* main panel */
+.card-container {
+    display: flex;
+    width: 1300px;
+    height: 700px;
+    background: white;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
 
-        /* ilalim ng mabohy */
-        .subtitle {
-            color: gray;
-            font-size: 15px;
-            margin-bottom: 40px;
-            line-height: 1.5;
-        }
+/* gradient thing */
+.left-panel {
+    flex: 1;
+    background: linear-gradient(190deg, #d3ab79 0%, #871115 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+}
 
-        .input-group {
-            margin-bottom: 24px;
-        }
+/* text beside admin icon */
+.admin-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 30px;
+    font-weight: 600;
+    opacity: 0.9;
+}
 
-        .input-group label {
-            display: block;
-            color: #475569;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+.shield-icon {
+    width: 50px;
+    height: 50px;
+    border: 1px solid rgba(255,255,255,0.5);
+    padding: 4px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+}
+.shield-icon img {
+    width: 35px;
+    height: auto;
+}
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+/* main text left banner */
+.left-panel h1 {
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 10px;
+    margin-left: 30px;
+}
 
-        .input-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 15px;
-            color: #334155;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
+/* da right panel */
+.right-panel {
+    flex: 1.1;
+    padding: 60px 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
-        .input-group input::placeholder {
-            color: #94a3b8;
-        }
+/* mabuhay!!!!!!! */
+.right-panel h2 {
+    font-size: 40px;
+    color: darkred;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
 
-        /* kapag pinindot mo mag iiba outliune */
-        .input-group input:focus {
-            border-color: #871115;
-            box-shadow: 0 0 0 3px rgba(135, 17, 21, 0.1);
-        }
+.subtitle {
+    color: gray;
+    font-size: 15px;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
 
+.input-group {
+    margin-bottom: 24px;
+}
 
-        .submit-btn {
-            width: 100%;
-            background-color: #98171d;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
+.input-group label {
+    display: block;
+    color: #475569;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
 
-        .submit-btn:hover {
-            background-color: #7a1217;
-        }
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
 
-        .submit-btn:active {
-            transform: scale(0.95);
-        }
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #334155;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.input-group input::placeholder {
+    color: #94a3b8;
+}
+
+.input-group input:focus {
+    border-color: #871115;
+    box-shadow: 0 0 0 3px rgba(135, 17, 21, 0.1);
+}
+
+/* --- Options Row --- */
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    margin-top: -10px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #475569;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+}
+
+.remember-me input {
+    accent-color: #871115;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.forgot-pwd {
+    font-size: 14px;
+    color: #871115;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.forgot-pwd:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.submit-btn {
+    width: 100%;
+    background-color: #98171d;
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover {
+    background-color: #7a1217;
+}
+
+.submit-btn:active {
+    transform: scale(0.95);
+}
+
+/* --- Modal Styles --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    color: #1e293b;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94a3b8;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #1e293b;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.modal-body p {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}

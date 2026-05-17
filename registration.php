@@ -484,6 +484,7 @@ document.getElementById('regForm').addEventListener('submit', function (e) {
 
   const required = [
     { name: 'first_name',    label: 'First Name' },
+    { name: 'middle_name',   label: 'Middle Name' },
     { name: 'last_name',     label: 'Last Name' },
     { name: 'civil_status',  label: 'Civil Status' },
     { name: 'dob',           label: 'Date of Birth' },
